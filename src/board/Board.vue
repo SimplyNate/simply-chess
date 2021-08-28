@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid board">
+    <div class="container board" :style="`margin-left: ${margins}px; margin-right: ${margins}px; width: ${containerHeight}px`">
         <div class="row m-0 p-0" v-for="(h, i) of height" v-bind:key="i">
             <div class="col m-0 p-0 cell" :style="`height: ${cellHeight}px`" v-for="(w, j) of width" v-bind:key="`${i}-${j}`">
                 {{ w }}-{{ h }}
@@ -19,6 +19,10 @@ export default defineComponent({
             type: Number,
             default: 100,
         },
+        containerWidth: {
+            type: Number,
+            default: 100,
+        },
     },
     computed: {
         cellHeight() {
@@ -29,7 +33,26 @@ export default defineComponent({
         return {
             width: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
             height: [8, 7, 6, 5, 4, 3, 2, 1],
+            margins: 0,
         };
+    },
+    watch: {
+        containerHeight() {
+            this.calculateMargins();
+        },
+        containerWidth() {
+            this.calculateMargins();
+        },
+    },
+    mounted() {
+        this.calculateMargins();
+    },
+    methods: {
+        calculateMargins() {
+            const width = window.innerWidth;
+            const diff = width - this.containerHeight;
+            this.margins = diff / 2;
+        },
     },
 });
 </script>

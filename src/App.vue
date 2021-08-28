@@ -1,6 +1,6 @@
 <template>
     <div id="#app">
-        <board :container-height="containerHeight" />
+        <board :container-height="containerHeight" :container-width="containerWidth" />
     </div>
 </template>
 
@@ -16,6 +16,7 @@ export default defineComponent({
     data() {
         return {
             containerHeight: 0,
+            containerWidth: 0,
         };
     },
     mounted() {
@@ -25,6 +26,7 @@ export default defineComponent({
     methods: {
         onResize() {
             this.containerHeight = window.innerHeight;
+            this.containerWidth = window.innerWidth;
         },
     },
 });
