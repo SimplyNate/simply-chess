@@ -1,5 +1,5 @@
 <template>
-    <div class="container board" :style="`margin-left: ${margins}px; margin-right: ${margins}px; width: ${containerHeight}px`">
+    <div class="board" :style="`margin-left: ${margins}px; margin-right: ${margins}px; width: ${sideLength}px`">
         <div class="row m-0 p-0" v-for="(h, i) of height" v-bind:key="i">
             <div class="col m-0 p-0 cell" :style="`height: ${cellHeight}px`" v-for="(w, j) of width" v-bind:key="`${i}-${j}`">
                 {{ w }}-{{ h }}
@@ -26,7 +26,11 @@ export default defineComponent({
     },
     computed: {
         cellHeight() {
-            return this.containerHeight / this.height.length;
+            return this.sideLength / this.height.length;
+        },
+        // Return the value with the smallest length
+        sideLength() {
+            return this.containerWidth > this.containerHeight ? this.containerHeight : this.containerWidth;
         },
     },
     data() {
@@ -51,7 +55,12 @@ export default defineComponent({
         calculateMargins() {
             const width = window.innerWidth;
             const diff = width - this.containerHeight;
-            this.margins = diff / 2;
+            if (diff > 0) {
+                this.margins = diff / 2;
+            }
+            else {
+                this.margins = 0;
+            }
         },
     },
 });
