@@ -20,7 +20,7 @@ export default defineComponent({
         };
     },
     mounted() {
-        this.containerHeight = window.innerHeight;
+        this.onResize();
         window.addEventListener('resize', this.onResize);
     },
     methods: {
