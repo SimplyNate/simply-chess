@@ -14,7 +14,10 @@ import { defineComponent } from 'vue';
 export default defineComponent({
     name: 'Board',
     props: {
-        currentBoardRepresentation: String,
+        currentBoardRepresentation: {
+            type: String,
+            default: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+        },
         containerHeight: {
             type: Number,
             default: 100,
