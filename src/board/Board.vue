@@ -50,6 +50,9 @@ export default defineComponent({
         containerWidth() {
             this.calculateMargins();
         },
+        currentBoardRepresentation() {
+            this.placePieces();
+        },
     },
     mounted() {
         this.calculateMargins();
@@ -65,14 +68,15 @@ export default defineComponent({
                 this.margins = 0;
             }
         },
-        lightOrDark(column: string, row: number) {
+        lightOrDark(column: string, row: number): string {
             const charCode = column.charCodeAt(0);
             if (charCode % 2 !== 0) {
                 return row % 2 === 0 ? 'light' : 'dark';
             }
-            else {
-                return row % 2 === 0 ? 'dark' : 'light';
-            }
+            return row % 2 === 0 ? 'dark' : 'light';
+        },
+        placePieces() {
+
         },
     },
 });
