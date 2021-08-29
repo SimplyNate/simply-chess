@@ -1,7 +1,7 @@
 <template>
     <div class="board" :style="`margin-left: ${margins}px; margin-right: ${margins}px; width: ${sideLength}px`">
         <div class="row m-0 p-0" v-for="(h, i) of height" v-bind:key="i">
-            <div class="col m-0 p-0 cell" :style="`height: ${cellHeight}px`" v-for="(w, j) of width" v-bind:key="`${i}-${j}`">
+            <div :class="`col m-0 p-0 cell ${lightOrDark(w, h)}`" :style="`height: ${cellHeight}px`" v-for="(w, j) of width" v-bind:key="`${i}-${j}`">
                 {{ w }}-{{ h }}
             </div>
         </div>
@@ -65,6 +65,15 @@ export default defineComponent({
                 this.margins = 0;
             }
         },
+        lightOrDark(column: string, row: number) {
+            const charCode = column.charCodeAt(0);
+            if (charCode % 2 !== 0) {
+                return row % 2 === 0 ? 'light' : 'dark';
+            }
+            else {
+                return row % 2 === 0 ? 'dark' : 'light';
+            }
+        },
     },
 });
 </script>
@@ -76,5 +85,11 @@ export default defineComponent({
 }
 .cell {
     border: 1px solid white;
+}
+.dark {
+    background-color: #b58863;
+}
+.light {
+    background-color: #f0d9b5;
 }
 </style>
