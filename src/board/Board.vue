@@ -41,6 +41,7 @@ export default defineComponent({
             width: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
             height: [8, 7, 6, 5, 4, 3, 2, 1],
             margins: 0,
+            boardMap: {},
         };
     },
     watch: {
@@ -56,6 +57,7 @@ export default defineComponent({
     },
     mounted() {
         this.calculateMargins();
+        this.placePieces();
     },
     methods: {
         calculateMargins() {
