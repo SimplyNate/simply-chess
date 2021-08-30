@@ -1,8 +1,14 @@
 <template>
     <div class="board" :style="`margin-left: ${margins}px; margin-right: ${margins}px; width: ${sideLength}px`">
         <div class="row m-0 p-0" v-for="(h, i) of height" v-bind:key="i">
-            <div :class="`col m-0 p-0 cell ${lightOrDark(w, h)}`" :style="`height: ${cellHeight}px`" v-for="(w, j) of width" v-bind:key="`${i}-${j}`">
-                {{ w }}-{{ h }}
+            <div
+                :class="`col m-0 p-0 cell ${lightOrDark(w, h)}`"
+                :style="`height: ${cellHeight}px`"
+                v-for="(w, j) of width"
+                v-bind:key="`${i}-${j}`">
+                <div v-if="hasPieceInSpace(w, h)">
+                    <img :src="importFromMap(w, h)" :height="cellHeight - 5" :width="cellHeight - 5" alt="piece" />
+                </div>
             </div>
         </div>
     </div>
@@ -10,6 +16,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { BoardMap, parsePlacementToMap, separateFEN } from '@/board/utils';
 
 export default defineComponent({
     name: 'Board',
@@ -41,7 +48,7 @@ export default defineComponent({
             width: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
             height: [8, 7, 6, 5, 4, 3, 2, 1],
             margins: 0,
-            boardMap: {},
+            boardMap: {} as BoardMap,
         };
     },
     watch: {
@@ -60,7 +67,7 @@ export default defineComponent({
         this.placePieces();
     },
     methods: {
-        calculateMargins() {
+        calculateMargins(): void {
             const width = window.innerWidth;
             const diff = width - this.containerHeight;
             if (diff > 0) {
@@ -77,8 +84,18 @@ export default defineComponent({
             }
             return row % 2 === 0 ? 'dark' : 'light';
         },
-        placePieces() {
-
+        placePieces(): void {
+            const separated = separateFEN(this.currentBoardRepresentation);
+            this.boardMap = parsePlacementToMap(separated.piecePlacement);
+        },
+        importFromMap(column: string, rank: string | number): string | boolean {
+            // const baseUrl = '../assets/';
+            const value = this.boardMap[`${column}-${rank}`];
+            // return require(`${baseUrl}${value.charCodeAt(0)}.svg`);
+            return require('../assets/pieces/' + value.charCodeAt(0) + '.svg');
+        },
+        hasPieceInSpace(column: string, rank: string | number): boolean {
+            return !!(this.boardMap[`${column}-${rank}`] && this.boardMap[`${column}-${rank}`] !== 'x');
         },
     },
 });

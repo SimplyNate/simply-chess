@@ -41,8 +41,12 @@ function convertRowToArray(row: string): string[] {
     return positions;
 }
 
-export function parsePlacementToMap(piecePlacement: string) {
-    const map = {};
+export interface BoardMap {
+    [index: string]: string,
+}
+
+export function parsePlacementToMap(piecePlacement: string): BoardMap {
+    const map: BoardMap = {};
     const rows = piecePlacement.split('/');
     let rank = 8;
     const columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
