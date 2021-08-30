@@ -28,14 +28,12 @@ export function separateFEN(fen: string): FEN {
 
 function convertRowToArray(row: string): string[] {
     const positions = row.split('');
-    if (positions.length < 8) {
-        for (let i = 0; i < positions.length; i++) {
-            const char = positions[i].charCodeAt(0);
-            if (char > 48 && char < 58) {
-                const number = char - 48;
-                const fillArray = Array(number).fill('x');
-                positions.splice(i, 1, ...fillArray);
-            }
+    for (let i = 0; i < positions.length; i++) {
+        const char = positions[i].charCodeAt(0);
+        if (char > 48 && char < 58) {
+            const number = char - 48;
+            const fillArray = Array(number).fill('x');
+            positions.splice(i, 1, ...fillArray);
         }
     }
     return positions;
