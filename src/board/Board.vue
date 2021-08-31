@@ -105,7 +105,7 @@ export default defineComponent({
         emitSelection(selection: string): void {
             this.$emit('selected', selection);
         },
-        emitDeselection(selection: string): void {
+        emitDeselect(selection: string): void {
             this.$emit('deselect', selection);
         },
     },
