@@ -7,7 +7,7 @@
                 v-for="(w, j) of width"
                 v-bind:key="`${i}-${j}`">
                 <div v-if="hasPieceInSpace(w, h)">
-                    <img :src="importFromMap(w, h)" :height="cellHeight - 5" :width="cellHeight - 5" alt="piece" />
+                    <img :src="importFromMap(w, h)" :height="cellHeight - 5" :width="cellHeight - 5" alt="piece" @dragstart="emitSelection(`${w}-${h}`)" @dragend="emitDeselect(`${w}-${h}`)" />
                 </div>
             </div>
         </div>
@@ -33,7 +33,12 @@ export default defineComponent({
             type: Number,
             default: 100,
         },
+        legalMovesForSelection: {
+            type: Array,
+            default: () => [],
+        },
     },
+    emits: ['selected', 'deselect'],
     computed: {
         cellHeight() {
             return this.sideLength / this.height.length;
@@ -96,6 +101,12 @@ export default defineComponent({
         },
         hasPieceInSpace(column: string, rank: string | number): boolean {
             return !!(this.boardMap[`${column}-${rank}`] && this.boardMap[`${column}-${rank}`] !== 'x');
+        },
+        emitSelection(selection: string): void {
+            this.$emit('selected', selection);
+        },
+        emitDeselection(selection: string): void {
+            this.$emit('deselect', selection);
         },
     },
 });
