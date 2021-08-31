@@ -2,12 +2,12 @@
     <div class="board" :style="`margin-left: ${margins}px; margin-right: ${margins}px; width: ${sideLength}px`">
         <div class="row m-0 p-0" v-for="(h, i) of height" v-bind:key="i">
             <div
-                :class="`col m-0 p-0 cell ${lightOrDark(w, h)}`"
+                :class="`col m-0 p-0 ${lightOrDark(w, h)}`"
                 :style="`height: ${cellHeight}px`"
                 v-for="(w, j) of width"
                 v-bind:key="`${i}-${j}`">
                 <div v-if="hasPieceInSpace(w, h)">
-                    <img :src="importFromMap(w, h)" :height="cellHeight - 5" :width="cellHeight - 5" alt="piece" @dragstart="emitSelection(`${w}-${h}`)" @dragend="emitDeselect(`${w}-${h}`)" />
+                    <img :src="importFromMap(w, h)" :class="isSelected(w, h)" :height="cellHeight" :width="cellHeight" alt="piece" @dragstart="emitSelection(`${w}-${h}`)" @dragend="emitDeselect(`${w}-${h}`)" />
                 </div>
             </div>
         </div>
@@ -54,6 +54,7 @@ export default defineComponent({
             height: [8, 7, 6, 5, 4, 3, 2, 1],
             margins: 0,
             boardMap: {} as BoardMap,
+            selected: '',
         };
     },
     watch: {
@@ -102,10 +103,15 @@ export default defineComponent({
         hasPieceInSpace(column: string, rank: string | number): boolean {
             return !!(this.boardMap[`${column}-${rank}`] && this.boardMap[`${column}-${rank}`] !== 'x');
         },
+        isSelected(column: string, rank: string | number): string {
+            return this.selected === `${column}-${rank}` ? 'selected' : '';
+        },
         emitSelection(selection: string): void {
+            this.selected = selection;
             this.$emit('selected', selection);
         },
         emitDeselect(selection: string): void {
+            this.selected = '';
             this.$emit('deselect', selection);
         },
     },
@@ -117,13 +123,16 @@ export default defineComponent({
     margin: 0;
     padding: 0;
 }
-.cell {
-    border: 1px solid white;
-}
 .dark {
     background-color: #b58863;
 }
 .light {
     background-color: #f0d9b5;
+}
+.selected {
+    border: 5px solid orange;
+}
+.validMove {
+    border: 10px solid red;
 }
 </style>
