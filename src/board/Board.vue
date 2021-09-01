@@ -7,7 +7,19 @@
                 v-for="(w, j) of width"
                 v-bind:key="`${i}-${j}`">
                 <div v-if="hasPieceInSpace(w, h)">
-                    <img :src="importFromMap(w, h)" :class="isSelected(w, h)" :height="cellHeight" :width="cellHeight" alt="piece" @dragstart="emitSelection(`${w}-${h}`)" @dragend="emitDeselect(`${w}-${h}`)" />
+                    <img
+                        draggable="true"
+                        :src="importFromMap(w, h)"
+                        :class="isSelected(w, h)"
+                        :height="cellHeight"
+                        :width="cellHeight"
+                        alt="piece"
+                        ondragstart="event.dataTransfer.setData('text/plain', '')"
+                        @dragstart="emitSelection(`${w}-${h}`)"
+                        @dragend="emitDeselect(`${w}-${h}`)" />
+                </div>
+                <div v-else>
+                    <div :style="`width: ${cellHeight}; height: ${cellHeight}`" ondragover ></div>
                 </div>
             </div>
         </div>
@@ -133,6 +145,9 @@ export default defineComponent({
     border: 5px solid orange;
 }
 .validMove {
-    border: 10px solid red;
+    border: 5px solid red;
+}
+.dropTarget {
+    border: 5px solid white;
 }
 </style>
