@@ -1,15 +1,20 @@
 import * as PIXI from 'pixi.js';
 
 export class Chessboard {
-    private width: number;
-    private height: number;
+    private containerWidth: number;
+    private containerHeight: number;
     private squareLength: number;
     private app: PIXI.Application;
 
-    constructor(target: Element, width: number, height: number) {
-        this.width = width;
-        this.height = height;
-        this.app = new PIXI.Application({ width: this.width, height: this.height, antialias: true });
+    constructor(target: Element, width: number, height: number, pixelRatio: number = 1) {
+        this.containerWidth = width;
+        this.containerHeight = height;
+        this.app = new PIXI.Application({
+            width: this.containerWidth,
+            height: this.containerHeight,
+            antialias: true,
+            resolution: pixelRatio,
+        });
         target.appendChild(this.app.view);
         this.drawBoard();
     }
@@ -22,6 +27,7 @@ export class Chessboard {
         square.beginFill(color);
         square.drawRect(x, y, this.squareLength, this.squareLength);
         square.endFill();
+        return square;
     }
 
     drawPiece() {
@@ -29,10 +35,10 @@ export class Chessboard {
     }
 
     setWidth(newWidth: number): void {
-        this.width = newWidth;
+        this.containerWidth = newWidth;
     }
 
     setHeight(newHeight: number): void {
-        this.height = newHeight;
+        this.containerHeight = newHeight;
     }
 }
