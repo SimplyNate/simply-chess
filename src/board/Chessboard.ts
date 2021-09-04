@@ -51,18 +51,22 @@ export class Chessboard {
         this.drawBoard();
     }
 
-    drawBoard() {
+    drawBoard(): void {
 
     }
 
-    loadSprites() {
+    loadSprites(): void {
         for (const piece of Object.keys(this.pieceMap)) {
             const texture = PIXI.Texture.from('../assets/pieces/' + piece + '.svg');
             this.pieces[piece] = new PIXI.Sprite(texture);
         }
     }
 
-    placePieces(boardMap: BoardMap) {
+    parsePlacementToMap(piecePlacement: string): void {
+
+    }
+
+    placePieces(boardMap: BoardMap): void {
 
     }
 
@@ -74,7 +78,7 @@ export class Chessboard {
         return square;
     }
 
-    drawPiece() {
+    drawPiece(): void {
 
     }
 
