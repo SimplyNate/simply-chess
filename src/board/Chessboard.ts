@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js';
-import { BoardMap, separateFEN, parsePlacementToMap } from '@/board/utils';
+import { BoardMap, separateFEN, parsePlacementToMap, FEN } from '@/board/utils';
 
 interface Pieces {
     [index: string]: PIXI.Sprite,
 }
 
 interface SquareMap {
-    [index: string]: PIXI.Graphics,
+    [index: string]: PIXI.Container,
 }
 
 export class Chessboard {
@@ -18,9 +18,20 @@ export class Chessboard {
     private app: PIXI.Application;
     private pieces: Pieces = {};
     private squareMap: SquareMap = {};
-    private fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+    private boardMap: BoardMap = {};
+    private fen: FEN = {
+        piecePlacement: '',
+        activeColor: '',
+        castlingAvailability: '',
+        enPassantTargetSquare: '',
+        halfMoveClock: 0,
+        fullMoveNumber: 0,
+    };
+
     private readonly row = [8, 7, 6, 5, 4, 3, 2, 1];
     private readonly rank = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    private readonly dark = 0xb58863;
+    private readonly light = 0xf0d9b5
     private readonly pieceMap = {
         66: 'B',
         75: 'K',
@@ -36,7 +47,7 @@ export class Chessboard {
         114: 'r',
     };
 
-    constructor(target: Element, width: number, height: number, pixelRatio: number = 1, fen: string | null = null) {
+    constructor(target: Element, width: number, height: number, pixelRatio: number = 1, fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1') {
         this.parentWidth = width;
         this.parentHeight = height;
         this.app = new PIXI.Application({
@@ -45,9 +56,6 @@ export class Chessboard {
             antialias: true,
             resolution: pixelRatio,
         });
-        if (fen) {
-            this.fen = fen;
-        }
         this.calculateContainerLength();
         this.calculateSquareLength();
         this.loadSprites();
@@ -60,6 +68,7 @@ export class Chessboard {
         this.boardContainer = container;
         target.appendChild(this.app.view);
         this.drawBoard();
+        this.updateFEN(fen);
         this.placePieces();
     }
 
@@ -78,9 +87,9 @@ export class Chessboard {
     private getColorForSquare(rank: string, row: number) {
         const charCode = rank.charCodeAt(0);
         if (charCode % 2 !== 0) {
-            return row % 2 === 0 ? 0xf0d9b5 : 0xb58863;
+            return row % 2 === 0 ? this.light : this.dark;
         }
-        return row % 2 === 0 ? 0xb58863 : 0xf0d9b5;
+        return row % 2 === 0 ? this.dark : this.light;
     }
 
     private loadSprites(): void {
@@ -90,20 +99,29 @@ export class Chessboard {
         }
     }
 
-    placePieces(boardMap: BoardMap): void {
+    public updateFEN(fen: string): void {
+        this.fen = separateFEN(fen);
+        this.boardMap = parsePlacementToMap(this.fen.piecePlacement);
+        this.placePieces();
+    }
+
+    private placePieces(): void {
 
     }
 
-    drawSquare(x: number, y: number, color: number) {
+    private drawPiece(): void {
+
+    }
+
+    private drawSquare(x: number, y: number, color: number) {
+        const squareContainer = new PIXI.Container();
+        this.app.stage.addChild(squareContainer);
         const square = new PIXI.Graphics();
         square.beginFill(color);
         square.drawRect(x, y, this.squareLength, this.squareLength);
         square.endFill();
-        return square;
-    }
-
-    drawPiece(): void {
-
+        squareContainer.addChild(square);
+        return squareContainer;
     }
 
     setWidth(newWidth: number): void {

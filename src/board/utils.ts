@@ -1,4 +1,4 @@
-interface FEN {
+export interface FEN {
     piecePlacement: string,
     activeColor: string,
     castlingAvailability: string,
