@@ -5,6 +5,10 @@ interface Pieces {
     [index: string]: PIXI.Sprite,
 }
 
+interface SquareMap {
+    [index: string]: PIXI.Graphics,
+}
+
 export class Chessboard {
     private parentWidth: number;
     private parentHeight: number;
@@ -13,6 +17,7 @@ export class Chessboard {
     private boardContainer: PIXI.Container;
     private app: PIXI.Application;
     private pieces: Pieces = {};
+    private squareMap: SquareMap = {};
     private fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
     private readonly row = [8, 7, 6, 5, 4, 3, 2, 1];
     private readonly rank = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -49,23 +54,36 @@ export class Chessboard {
         const container = new PIXI.Container();
         container.x = this.app.screen.width / 2;
         container.y = this.app.screen.height / 2;
+        container.pivot.x = container.width / 2;
+        container.pivot.y = container.height / 2;
         this.app.stage.addChild(container);
         this.boardContainer = container;
         target.appendChild(this.app.view);
-        this.drawBoard(this.fen);
+        this.drawBoard();
+        this.placePieces();
     }
 
-    drawBoard(fen: string): void {
-        let x = 0;
-        let y = 0;
-        for (const row of this.row) {
-            for (const rank of this.rank) {
-
+    private drawBoard(): void {
+        for (let y = 0; y < this.row.length; y++) {
+            for (let x = 0; x < this.rank.length; x++) {
+                const id = `${this.rank[x]}-${this.row[y]}`;
+                const startX = x * this.squareLength;
+                const startY = y * this.squareLength;
+                const color = this.getColorForSquare(this.rank[x], this.row[y]);
+                this.squareMap[id] = this.drawSquare(startX, startY, color);
             }
         }
     }
 
-    loadSprites(): void {
+    private getColorForSquare(rank: string, row: number) {
+        const charCode = rank.charCodeAt(0);
+        if (charCode % 2 !== 0) {
+            return row % 2 === 0 ? 0xf0d9b5 : 0xb58863;
+        }
+        return row % 2 === 0 ? 0xb58863 : 0xf0d9b5;
+    }
+
+    private loadSprites(): void {
         for (const piece of Object.keys(this.pieceMap)) {
             const texture = PIXI.Texture.from('../assets/pieces/' + piece + '.svg');
             this.pieces[piece] = new PIXI.Sprite(texture);
