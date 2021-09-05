@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { BoardMap } from '@/board/utils';
+import { BoardMap, separateFEN, parsePlacementToMap } from '@/board/utils';
 
 interface Pieces {
     [index: string]: PIXI.Sprite,
@@ -8,11 +8,12 @@ interface Pieces {
 export class Chessboard {
     private parentWidth: number;
     private parentHeight: number;
-    private containerLength: number;
-    private squareLength: number;
+    private containerLength: number = 0;
+    private squareLength: number = 0;
     private boardContainer: PIXI.Container;
     private app: PIXI.Application;
     private pieces: Pieces = {};
+    private fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
     private readonly row = [8, 7, 6, 5, 4, 3, 2, 1];
     private readonly rank = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
     private readonly pieceMap = {
@@ -30,7 +31,7 @@ export class Chessboard {
         114: 'r',
     };
 
-    constructor(target: Element, width: number, height: number, pixelRatio: number = 1) {
+    constructor(target: Element, width: number, height: number, pixelRatio: number = 1, fen: string | null = null) {
         this.parentWidth = width;
         this.parentHeight = height;
         this.app = new PIXI.Application({
@@ -39,20 +40,29 @@ export class Chessboard {
             antialias: true,
             resolution: pixelRatio,
         });
+        if (fen) {
+            this.fen = fen;
+        }
+        this.calculateContainerLength();
+        this.calculateSquareLength();
         this.loadSprites();
         const container = new PIXI.Container();
-        this.containerLength = width > height ? height : width;
-        this.squareLength = this.containerLength / this.row.length;
         container.x = this.app.screen.width / 2;
         container.y = this.app.screen.height / 2;
         this.app.stage.addChild(container);
         this.boardContainer = container;
         target.appendChild(this.app.view);
-        this.drawBoard();
+        this.drawBoard(this.fen);
     }
 
-    drawBoard(): void {
+    drawBoard(fen: string): void {
+        let x = 0;
+        let y = 0;
+        for (const row of this.row) {
+            for (const rank of this.rank) {
 
+            }
+        }
     }
 
     loadSprites(): void {
@@ -60,10 +70,6 @@ export class Chessboard {
             const texture = PIXI.Texture.from('../assets/pieces/' + piece + '.svg');
             this.pieces[piece] = new PIXI.Sprite(texture);
         }
-    }
-
-    parsePlacementToMap(piecePlacement: string): void {
-
     }
 
     placePieces(boardMap: BoardMap): void {
@@ -83,10 +89,18 @@ export class Chessboard {
     }
 
     setWidth(newWidth: number): void {
-        this.containerWidth = newWidth;
+        this.parentWidth = newWidth;
     }
 
     setHeight(newHeight: number): void {
-        this.containerHeight = newHeight;
+        this.parentHeight = newHeight;
+    }
+
+    private calculateContainerLength() {
+        this.containerLength = this.parentWidth > this.parentHeight ? this.parentHeight : this.parentWidth;
+    }
+
+    private calculateSquareLength() {
+        this.squareLength = this.containerLength / this.row.length;
     }
 }
