@@ -1,17 +1,20 @@
 <template>
     <div id="#app">
-        <board :container-height="containerHeight" :container-width="containerWidth" />
+        <!-- <board :container-height="containerHeight" :container-width="containerWidth" /> -->
+        <canvas-board :container-height="containerHeight" :container-width="containerWidth" />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Board from '@/board/Board.vue';
+// import Board from '@/board/Board.vue';
+import CanvasBoard from '@/board/CanvasBoard.vue';
 
 export default defineComponent({
     name: 'App',
     components: {
-        Board,
+        // Board,
+        CanvasBoard,
     },
     data() {
         return {

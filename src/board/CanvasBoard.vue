@@ -1,9 +1,10 @@
 <template>
-    <div id="board"></div>
+    <div id="board" ref="board"></div>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
+import { Chessboard } from '@/board/Chessboard';
 
 export default defineComponent({
     name: 'CanvasBoard',
@@ -24,6 +25,15 @@ export default defineComponent({
             type: Array,
             default: () => [],
         },
+    },
+    data() {
+        return {
+            chessboard: null,
+        };
+    },
+    mounted() {
+        const element = this.$refs.board;
+        this.chessboard = new Chessboard(element, this.containerWidth, this.containerHeight, window.devicePixelRatio);
     },
 });
 </script>

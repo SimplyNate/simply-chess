@@ -10,8 +10,8 @@ interface SquareMap {
 }
 
 export class Chessboard {
-    private parentWidth: number;
-    private parentHeight: number;
+    private parentWidth: number = 0;
+    private parentHeight: number = 0;
     private containerLength: number = 0;
     private squareLength: number = 0;
     private boardContainer: PIXI.Container;
