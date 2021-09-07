@@ -31,9 +31,16 @@ export default defineComponent({
             chessboard: null,
         };
     },
+    watch: {
+    },
     mounted() {
         const element = this.$refs.board;
-        this.chessboard = new Chessboard(element, this.containerWidth, this.containerHeight, window.devicePixelRatio);
+        element.style.width = this.containerWidth + 'px';
+        element.style.height = this.containerHeight + 'px';
+        this.chessboard = new Chessboard(element, window.devicePixelRatio);
+        console.log(this.chessboard.app.view.width, this.chessboard.app.view.height);
+    },
+    methods: {
     },
 });
 </script>

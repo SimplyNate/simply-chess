@@ -10,8 +10,6 @@ interface SquareMap {
 }
 
 export class Chessboard {
-    private parentWidth: number = 0;
-    private parentHeight: number = 0;
     private containerLength: number = 0;
     private squareLength: number = 0;
     private boardContainer: PIXI.Container;
@@ -47,14 +45,12 @@ export class Chessboard {
         114: 'r',
     };
 
-    constructor(target: Element, width: number, height: number, pixelRatio: number = 1, fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1') {
-        this.parentWidth = width;
-        this.parentHeight = height;
+    constructor(target: HTMLElement, pixelRatio: number = 1, fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1') {
         this.app = new PIXI.Application({
-            width: this.parentWidth,
-            height: this.parentHeight,
             antialias: true,
             resolution: pixelRatio,
+            backgroundAlpha: 1,
+            resizeTo: target,
         });
         this.calculateContainerLength();
         this.calculateSquareLength();
@@ -124,16 +120,16 @@ export class Chessboard {
         return squareContainer;
     }
 
-    setWidth(newWidth: number): void {
-        this.parentWidth = newWidth;
-    }
-
-    setHeight(newHeight: number): void {
-        this.parentHeight = newHeight;
-    }
-
     private calculateContainerLength() {
         this.containerLength = this.parentWidth > this.parentHeight ? this.parentHeight : this.parentWidth;
+    }
+
+    get parentWidth() {
+        return this.app.view.width;
+    }
+
+    get parentHeight() {
+        return this.app.view.height;
     }
 
     private calculateSquareLength() {

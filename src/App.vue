@@ -18,8 +18,8 @@ export default defineComponent({
     },
     data() {
         return {
-            containerHeight: 0,
-            containerWidth: 0,
+            containerHeight: 300,
+            containerWidth: 300,
         };
     },
     mounted() {
@@ -38,6 +38,8 @@ export default defineComponent({
 <style>
 body {
     margin: 0;
+    padding: 0;
+    border: 0;
 }
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -50,5 +52,6 @@ body {
     padding: 0;
     margin: 0;
     height: 100vh;
+    width: 100vw;
 }
 </style>
