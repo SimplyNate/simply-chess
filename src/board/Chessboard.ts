@@ -31,25 +31,25 @@ export class Chessboard {
     private readonly dark = 0xb58863;
     private readonly light = 0xf0d9b5
     private readonly pieceMap = {
-        66: 'B',
-        75: 'K',
-        78: 'N',
-        80: 'P',
-        81: 'Q',
-        82: 'R',
-        98: 'b',
-        107: 'k',
-        110: 'n',
-        112: 'p',
-        113: 'q',
-        114: 'r',
+        B: 66,
+        K: 75,
+        N: 78,
+        P: 80,
+        Q: 81,
+        R: 82,
+        b: 98,
+        k: 107,
+        n: 110,
+        p: 112,
+        q: 113,
+        r: 114,
     };
 
     constructor(target: HTMLElement, pixelRatio: number = 1, fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1') {
         this.app = new PIXI.Application({
             antialias: true,
             resolution: pixelRatio,
-            backgroundAlpha: 1,
+            backgroundAlpha: 0,
             resizeTo: target,
         });
         this.calculateContainerLength();
@@ -90,9 +90,10 @@ export class Chessboard {
 
     private loadSprites(): void {
         for (const piece of Object.keys(this.pieceMap)) {
-            const texture = PIXI.Texture.from('../assets/pieces/' + piece + '.svg');
+            const texture = PIXI.Texture.from('@/src/assets/pieces/' + piece.charCodeAt(0) + '.svg');
             this.pieces[piece] = new PIXI.Sprite(texture);
         }
+        console.log(this.pieces);
     }
 
     public updateFEN(fen: string): void {
@@ -102,7 +103,15 @@ export class Chessboard {
     }
 
     private placePieces(): void {
-
+        for (const place of Object.keys(this.boardMap)) {
+            const piece = this.boardMap[place];
+            if (piece !== 'x') {
+                console.log(piece, place);
+                const sprite = this.pieces[piece];
+                const boardSquare = this.squareMap[place];
+                boardSquare.addChild(sprite);
+            }
+        }
     }
 
     private drawPiece(): void {
