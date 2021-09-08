@@ -90,7 +90,7 @@ export class Chessboard {
 
     private loadSprites(): void {
         for (const piece of Object.keys(this.pieceMap)) {
-            const texture = PIXI.Texture.from('@/src/assets/pieces/' + piece.charCodeAt(0) + '.svg');
+            const texture = PIXI.Texture.from('./assets/pieces/66.svg');
             this.pieces[piece] = new PIXI.Sprite(texture);
         }
         console.log(this.pieces);
