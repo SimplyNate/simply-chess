@@ -11,6 +11,10 @@ interface Pieces {
     [index: string]: PIXI.Sprite,
 }
 
+interface Textures {
+    [index: string]: PIXI.Texture,
+}
+
 interface SquareMap {
     [index: string]: PIXI.Container,
 }
@@ -21,6 +25,7 @@ interface ICanvasBoard {
     squareLength: number,
     boardContainer: PIXI.Container,
     pieces: Pieces,
+    textures: Textures,
     squareMap: SquareMap,
     boardMap: BoardMap,
     fen: FEN,
@@ -58,6 +63,7 @@ export default defineComponent({
             squareLength: 0,
             boardContainer: new PIXI.Container(),
             pieces: {},
+            textures: {},
             squareMap: {},
             boardMap: {},
             fen: {
@@ -90,6 +96,7 @@ export default defineComponent({
             });
             this.calculateContainerLength();
             this.calculateSquareLength();
+            this.loadTextures();
             this.loadSprites();
             const container = new PIXI.Container();
             container.x = this.app.screen.width / 2;
@@ -126,6 +133,20 @@ export default defineComponent({
             }
             return row % 2 === 0 ? this.dark : this.light;
         },
+        loadTextures(): void {
+            this.textures[String.fromCharCode(66)] = PIXI.Texture.from(require('../assets/pieces/66.svg'));
+            this.textures[String.fromCharCode(75)] = PIXI.Texture.from(require('../assets/pieces/75.svg'));
+            this.textures[String.fromCharCode(78)] = PIXI.Texture.from(require('../assets/pieces/78.svg'));
+            this.textures[String.fromCharCode(80)] = PIXI.Texture.from(require('../assets/pieces/80.svg'));
+            this.textures[String.fromCharCode(81)] = PIXI.Texture.from(require('../assets/pieces/81.svg'));
+            this.textures[String.fromCharCode(82)] = PIXI.Texture.from(require('../assets/pieces/82.svg'));
+            this.textures[String.fromCharCode(98)] = PIXI.Texture.from(require('../assets/pieces/98.svg'));
+            this.textures[String.fromCharCode(107)] = PIXI.Texture.from(require('../assets/pieces/107.svg'));
+            this.textures[String.fromCharCode(110)] = PIXI.Texture.from(require('../assets/pieces/110.svg'));
+            this.textures[String.fromCharCode(112)] = PIXI.Texture.from(require('../assets/pieces/112.svg'));
+            this.textures[String.fromCharCode(113)] = PIXI.Texture.from(require('../assets/pieces/113.svg'));
+            this.textures[String.fromCharCode(114)] = PIXI.Texture.from(require('../assets/pieces/114.svg'));
+        },
         loadSprites(): void {
             this.pieces[String.fromCharCode(66)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/66.svg')));
             this.pieces[String.fromCharCode(75)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/75.svg')));
@@ -139,7 +160,6 @@ export default defineComponent({
             this.pieces[String.fromCharCode(112)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/112.svg')));
             this.pieces[String.fromCharCode(113)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/113.svg')));
             this.pieces[String.fromCharCode(114)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/114.svg')));
-            console.log(this.pieces);
         },
         updateFEN(fen: string): void {
             this.fen = separateFEN(fen);
@@ -150,9 +170,10 @@ export default defineComponent({
             for (const place of Object.keys(this.boardMap)) {
                 const piece = this.boardMap[place];
                 if (piece !== 'x') {
-                    const sprite = this.pieces[piece];
-                    const boardSquare = this.squareMap[place];
+                    const texture = this.textures[piece];
                     // @ts-ignore: TS2345
+                    const sprite = new PIXI.Sprite(texture);
+                    const boardSquare = this.squareMap[place];
                     boardSquare.addChild(sprite);
                 }
             }
