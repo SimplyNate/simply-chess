@@ -127,18 +127,19 @@ export default defineComponent({
             return row % 2 === 0 ? this.dark : this.light;
         },
         loadSprites(): void {
-            this.pieces[String.fromCharCode(66)] = new PIXI.Sprite(PIXI.Texture.from('../assets/pieces/66.svg'));
-            this.pieces[String.fromCharCode(75)] = new PIXI.Sprite(PIXI.Texture.from('../assets/pieces/75.svg'));
-            this.pieces[String.fromCharCode(78)] = new PIXI.Sprite(PIXI.Texture.from('../assets/pieces/78.svg'));
-            this.pieces[String.fromCharCode(80)] = new PIXI.Sprite(PIXI.Texture.from('../assets/pieces/80.svg'));
-            this.pieces[String.fromCharCode(81)] = new PIXI.Sprite(PIXI.Texture.from('../assets/pieces/81.svg'));
-            this.pieces[String.fromCharCode(82)] = new PIXI.Sprite(PIXI.Texture.from('../assets/pieces/82.svg'));
-            this.pieces[String.fromCharCode(98)] = new PIXI.Sprite(PIXI.Texture.from('../assets/pieces/98.svg'));
-            this.pieces[String.fromCharCode(107)] = new PIXI.Sprite(PIXI.Texture.from('../assets/pieces/107.svg'));
-            this.pieces[String.fromCharCode(110)] = new PIXI.Sprite(PIXI.Texture.from('../assets/pieces/110.svg'));
-            this.pieces[String.fromCharCode(112)] = new PIXI.Sprite(PIXI.Texture.from('../assets/pieces/112.svg'));
-            this.pieces[String.fromCharCode(113)] = new PIXI.Sprite(PIXI.Texture.from('../assets/pieces/113.svg'));
-            this.pieces[String.fromCharCode(114)] = new PIXI.Sprite(PIXI.Texture.from('../assets/pieces/114.svg'));
+            this.pieces[String.fromCharCode(66)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/66.svg')));
+            this.pieces[String.fromCharCode(75)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/75.svg')));
+            this.pieces[String.fromCharCode(78)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/78.svg')));
+            this.pieces[String.fromCharCode(80)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/80.svg')));
+            this.pieces[String.fromCharCode(81)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/81.svg')));
+            this.pieces[String.fromCharCode(82)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/82.svg')));
+            this.pieces[String.fromCharCode(98)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/98.svg')));
+            this.pieces[String.fromCharCode(107)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/107.svg')));
+            this.pieces[String.fromCharCode(110)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/110.svg')));
+            this.pieces[String.fromCharCode(112)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/112.svg')));
+            this.pieces[String.fromCharCode(113)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/113.svg')));
+            this.pieces[String.fromCharCode(114)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/114.svg')));
+            console.log(this.pieces);
         },
         updateFEN(fen: string): void {
             this.fen = separateFEN(fen);
@@ -151,17 +152,19 @@ export default defineComponent({
                 if (piece !== 'x') {
                     const sprite = this.pieces[piece];
                     const boardSquare = this.squareMap[place];
+                    // @ts-ignore: TS2345
                     boardSquare.addChild(sprite);
                 }
             }
         },
         drawSquare(x: number, y: number, color: number): PIXI.Container {
             const squareContainer = new PIXI.Container();
+            squareContainer.position.set(x, y);
             if (this.app) {
                 this.app.stage.addChild(squareContainer);
                 const square = new PIXI.Graphics();
                 square.beginFill(color);
-                square.drawRect(x, y, this.squareLength, this.squareLength);
+                square.drawRect(0, 0, this.squareLength, this.squareLength);
                 square.endFill();
                 squareContainer.addChild(square);
             }
