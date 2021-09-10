@@ -99,19 +99,19 @@ export default defineComponent({
             this.loadTextures();
             this.loadSprites();
             const container = new PIXI.Container();
-            container.x = this.app.screen.width / 2;
-            container.y = this.app.screen.height / 2;
-            container.pivot.x = container.width / 2;
-            container.pivot.y = container.height / 2;
             this.app.stage.addChild(container);
             this.boardContainer = container;
             element.appendChild(this.app.view);
             this.drawBoard();
             this.updateFEN(this.currentBoardRepresentation);
             this.placePieces();
+            container.x = this.app.screen.width / 2;
+            container.y = this.app.screen.height / 2;
+            container.pivot.x = container.width / 2;
+            container.pivot.y = container.height / 2;
         }
         else {
-            console.error('');
+            console.error('Some Error');
         }
     },
     methods: {
@@ -173,6 +173,7 @@ export default defineComponent({
                     const texture = this.textures[piece];
                     // @ts-ignore: TS2345
                     const sprite = new PIXI.Sprite(texture);
+                    sprite.anchor.set(0.5);
                     const boardSquare = this.squareMap[place];
                     boardSquare.addChild(sprite);
                 }
@@ -182,12 +183,12 @@ export default defineComponent({
             const squareContainer = new PIXI.Container();
             squareContainer.position.set(x, y);
             if (this.app) {
-                this.app.stage.addChild(squareContainer);
                 const square = new PIXI.Graphics();
                 square.beginFill(color);
                 square.drawRect(0, 0, this.squareLength, this.squareLength);
                 square.endFill();
                 squareContainer.addChild(square);
+                this.boardContainer.addChild(squareContainer);
             }
             return squareContainer;
         },
