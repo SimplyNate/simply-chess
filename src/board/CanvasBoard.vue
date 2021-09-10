@@ -187,6 +187,8 @@ export default defineComponent({
                 square.beginFill(color);
                 square.drawRect(0, 0, this.squareLength, this.squareLength);
                 square.endFill();
+                square.pivot.x = square.width / 2;
+                square.pivot.y = square.height / 2;
                 squareContainer.addChild(square);
                 this.boardContainer.addChild(squareContainer);
             }

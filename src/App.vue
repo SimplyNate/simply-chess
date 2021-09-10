@@ -1,7 +1,7 @@
 <template>
     <div id="#app">
         <!-- <board :container-height="containerHeight" :container-width="containerWidth" /> -->
-        <canvas-board :container-height="containerHeight" :container-width="containerWidth" />
+        <canvas-board v-if="isMounted" :container-height="containerHeight" :container-width="containerWidth" />
     </div>
 </template>
 
@@ -20,11 +20,13 @@ export default defineComponent({
         return {
             containerHeight: 300,
             containerWidth: 300,
+            isMounted: false,
         };
     },
     mounted() {
         this.onResize();
         window.addEventListener('resize', this.onResize);
+        this.isMounted = true;
     },
     methods: {
         onResize() {
