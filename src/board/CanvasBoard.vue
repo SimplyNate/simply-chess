@@ -97,7 +97,6 @@ export default defineComponent({
             this.calculateContainerLength();
             this.calculateSquareLength();
             this.loadTextures();
-            this.loadSprites();
             const container = new PIXI.Container();
             this.app.stage.addChild(container);
             this.boardContainer = container;
@@ -146,20 +145,6 @@ export default defineComponent({
             this.textures[String.fromCharCode(112)] = PIXI.Texture.from(require('../assets/pieces/112.svg'));
             this.textures[String.fromCharCode(113)] = PIXI.Texture.from(require('../assets/pieces/113.svg'));
             this.textures[String.fromCharCode(114)] = PIXI.Texture.from(require('../assets/pieces/114.svg'));
-        },
-        loadSprites(): void {
-            this.pieces[String.fromCharCode(66)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/66.svg')));
-            this.pieces[String.fromCharCode(75)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/75.svg')));
-            this.pieces[String.fromCharCode(78)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/78.svg')));
-            this.pieces[String.fromCharCode(80)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/80.svg')));
-            this.pieces[String.fromCharCode(81)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/81.svg')));
-            this.pieces[String.fromCharCode(82)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/82.svg')));
-            this.pieces[String.fromCharCode(98)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/98.svg')));
-            this.pieces[String.fromCharCode(107)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/107.svg')));
-            this.pieces[String.fromCharCode(110)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/110.svg')));
-            this.pieces[String.fromCharCode(112)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/112.svg')));
-            this.pieces[String.fromCharCode(113)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/113.svg')));
-            this.pieces[String.fromCharCode(114)] = new PIXI.Sprite(PIXI.Texture.from(require('../assets/pieces/114.svg')));
         },
         updateFEN(fen: string): void {
             this.fen = separateFEN(fen);
