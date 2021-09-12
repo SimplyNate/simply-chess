@@ -18,6 +18,9 @@
         "paths": {
             "@/*": [
                 "src/*"
+            ],
+            "mini-signals": [
+                "node_modules/resource-loader/typings/mini-signals.d.ts"
             ]
         },
         "lib": [

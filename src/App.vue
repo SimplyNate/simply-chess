@@ -1,5 +1,5 @@
 <template>
-    <div id="#app">
+    <div id="#app" :style="`width: ${containerWidth}px; height: ${containerHeight}px`">
         <!-- <board :container-height="containerHeight" :container-width="containerWidth" /> -->
         <canvas-board v-if="isMounted" :container-height="containerHeight" :container-width="containerWidth" />
     </div>
@@ -53,7 +53,5 @@ body {
     border: 0;
     padding: 0;
     margin: 0;
-    height: 100vh;
-    width: 100vw;
 }
 </style>
