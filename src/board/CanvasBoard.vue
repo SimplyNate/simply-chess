@@ -140,44 +140,44 @@ export default defineComponent({
             return row % 2 === 0 ? this.dark : this.light;
         },
         loadSVGs(): void {
-            this.svgs[String.fromCharCode(66)] = new PIXI.SVGResource(require('../assets/pieces/66.svg'), { width: this.squareLength, height: this.squareLength });
-            this.svgs[String.fromCharCode(75)] = new PIXI.SVGResource(require('../assets/pieces/75.svg'), { width: this.squareLength, height: this.squareLength });
-            this.svgs[String.fromCharCode(78)] = new PIXI.SVGResource(require('../assets/pieces/78.svg'), { width: this.squareLength, height: this.squareLength });
-            this.svgs[String.fromCharCode(80)] = new PIXI.SVGResource(require('../assets/pieces/80.svg'), { width: this.squareLength, height: this.squareLength });
-            this.svgs[String.fromCharCode(81)] = new PIXI.SVGResource(require('../assets/pieces/81.svg'), { width: this.squareLength, height: this.squareLength });
-            this.svgs[String.fromCharCode(82)] = new PIXI.SVGResource(require('../assets/pieces/82.svg'), { width: this.squareLength, height: this.squareLength });
-            this.svgs[String.fromCharCode(98)] = new PIXI.SVGResource(require('../assets/pieces/98.svg'), { width: this.squareLength, height: this.squareLength });
-            this.svgs[String.fromCharCode(107)] = new PIXI.SVGResource(require('../assets/pieces/107.svg'), { width: this.squareLength, height: this.squareLength });
-            this.svgs[String.fromCharCode(110)] = new PIXI.SVGResource(require('../assets/pieces/110.svg'), { width: this.squareLength, height: this.squareLength });
-            this.svgs[String.fromCharCode(112)] = new PIXI.SVGResource(require('../assets/pieces/112.svg'), { width: this.squareLength, height: this.squareLength });
-            this.svgs[String.fromCharCode(113)] = new PIXI.SVGResource(require('../assets/pieces/113.svg'), { width: this.squareLength, height: this.squareLength });
-            this.svgs[String.fromCharCode(114)] = new PIXI.SVGResource(require('../assets/pieces/114.svg'), { width: this.squareLength, height: this.squareLength });
+            this.svgs.B = new PIXI.SVGResource(require('../assets/pieces/66.svg'), { width: this.squareLength, height: this.squareLength });
+            this.svgs.K = new PIXI.SVGResource(require('../assets/pieces/75.svg'), { width: this.squareLength, height: this.squareLength });
+            this.svgs.N = new PIXI.SVGResource(require('../assets/pieces/78.svg'), { width: this.squareLength, height: this.squareLength });
+            this.svgs.P = new PIXI.SVGResource(require('../assets/pieces/80.svg'), { width: this.squareLength, height: this.squareLength });
+            this.svgs.Q = new PIXI.SVGResource(require('../assets/pieces/81.svg'), { width: this.squareLength, height: this.squareLength });
+            this.svgs.R = new PIXI.SVGResource(require('../assets/pieces/82.svg'), { width: this.squareLength, height: this.squareLength });
+            this.svgs.b = new PIXI.SVGResource(require('../assets/pieces/98.svg'), { width: this.squareLength, height: this.squareLength });
+            this.svgs.k = new PIXI.SVGResource(require('../assets/pieces/107.svg'), { width: this.squareLength, height: this.squareLength });
+            this.svgs.n = new PIXI.SVGResource(require('../assets/pieces/110.svg'), { width: this.squareLength, height: this.squareLength });
+            this.svgs.p = new PIXI.SVGResource(require('../assets/pieces/112.svg'), { width: this.squareLength, height: this.squareLength });
+            this.svgs.q = new PIXI.SVGResource(require('../assets/pieces/113.svg'), { width: this.squareLength, height: this.squareLength });
+            this.svgs.r = new PIXI.SVGResource(require('../assets/pieces/114.svg'), { width: this.squareLength, height: this.squareLength });
         },
         loadTextures(): void {
             // @ts-ignore TS2345
-            this.textures[String.fromCharCode(66)] = PIXI.Texture.from(this.svgs[String.fromCharCode(66)]);
+            this.textures.B = PIXI.Texture.from(this.svgs.B);
             // @ts-ignore TS2345
-            this.textures[String.fromCharCode(75)] = PIXI.Texture.from(this.svgs[String.fromCharCode(75)]);
+            this.textures.K = PIXI.Texture.from(this.svgs.K);
             // @ts-ignore TS2345
-            this.textures[String.fromCharCode(78)] = PIXI.Texture.from(this.svgs[String.fromCharCode(78)]);
+            this.textures.N = PIXI.Texture.from(this.svgs.N);
             // @ts-ignore TS2345
-            this.textures[String.fromCharCode(80)] = PIXI.Texture.from(this.svgs[String.fromCharCode(80)]);
+            this.textures.P = PIXI.Texture.from(this.svgs.P);
             // @ts-ignore TS2345
-            this.textures[String.fromCharCode(81)] = PIXI.Texture.from(this.svgs[String.fromCharCode(81)]);
+            this.textures.Q = PIXI.Texture.from(this.svgs.Q);
             // @ts-ignore TS2345
-            this.textures[String.fromCharCode(82)] = PIXI.Texture.from(this.svgs[String.fromCharCode(82)]);
+            this.textures.R = PIXI.Texture.from(this.svgs.R);
             // @ts-ignore TS2345
-            this.textures[String.fromCharCode(98)] = PIXI.Texture.from(this.svgs[String.fromCharCode(98)]);
+            this.textures.b = PIXI.Texture.from(this.svgs.b);
             // @ts-ignore TS2345
-            this.textures[String.fromCharCode(107)] = PIXI.Texture.from(this.svgs[String.fromCharCode(107)]);
+            this.textures.k = PIXI.Texture.from(this.svgs.k);
             // @ts-ignore TS2345
-            this.textures[String.fromCharCode(110)] = PIXI.Texture.from(this.svgs[String.fromCharCode(110)]);
+            this.textures.n = PIXI.Texture.from(this.svgs.n);
             // @ts-ignore TS2345
-            this.textures[String.fromCharCode(112)] = PIXI.Texture.from(this.svgs[String.fromCharCode(112)]);
+            this.textures.p = PIXI.Texture.from(this.svgs.p);
             // @ts-ignore TS2345
-            this.textures[String.fromCharCode(113)] = PIXI.Texture.from(this.svgs[String.fromCharCode(113)]);
+            this.textures.q = PIXI.Texture.from(this.svgs.q);
             // @ts-ignore TS2345
-            this.textures[String.fromCharCode(114)] = PIXI.Texture.from(this.svgs[String.fromCharCode(114)]);
+            this.textures.r = PIXI.Texture.from(this.svgs.r);
         },
         updateFEN(fen: string): void {
             this.fen = separateFEN(fen);
