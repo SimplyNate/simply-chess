@@ -106,8 +106,8 @@ export default defineComponent({
             this.placePieces();
             container.x = this.app.screen.width / 2;
             container.y = this.app.screen.height / 2;
-            container.pivot.x = container.width / 2;
-            container.pivot.y = container.height / 2;
+            container.pivot.x = container.width / 2.28;
+            container.pivot.y = container.height / 2.28;
         }
         else {
             console.error('Some Error');
