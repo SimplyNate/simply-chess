@@ -43,6 +43,7 @@ interface ICanvasBoard {
 
 export default defineComponent({
     name: 'CanvasBoard',
+    emits: ['selected', 'deselected'],
     props: {
         currentBoardRepresentation: {
             type: String,
@@ -129,6 +130,7 @@ export default defineComponent({
                     const startY = y * this.squareLength;
                     const color = this.getColorForSquare(this.rank[x], this.row[y]);
                     this.squareMap[id] = this.drawSquare(startX, startY, color);
+                    this.squareMap[id].name = id;
                 }
             }
         },
@@ -191,7 +193,11 @@ export default defineComponent({
                     const texture = this.textures[piece];
                     // @ts-ignore: TS2345
                     const sprite = new PIXI.Sprite(texture);
+                    sprite.interactive = true;
+                    sprite.buttonMode = true;
+                    sprite.on('pointerdown', this.onPointerDown);
                     sprite.anchor.set(0.5);
+                    sprite.name = piece;
                     const boardSquare = this.squareMap[place];
                     boardSquare.addChild(sprite);
                 }
@@ -211,6 +217,12 @@ export default defineComponent({
                 this.boardContainer.addChild(squareContainer);
             }
             return squareContainer;
+        },
+        onPointerDown(event: PIXI.InteractionEvent): void {
+            const selected = event.currentTarget;
+            const piece = selected.name;
+            const place = selected.parent.name;
+            this.$emit('selected', { piece, place });
         },
         calculateContainerLength(): void {
             this.containerLength = this.parentWidth() > this.parentHeight() ? this.parentHeight() : this.parentWidth();
