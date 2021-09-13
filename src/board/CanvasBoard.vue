@@ -39,6 +39,7 @@ interface ICanvasBoard {
     dark: number,
     light: number,
     pieceMap: number[],
+    dragReferenceData: null | PIXI.InteractionData,
 }
 
 export default defineComponent({
@@ -86,6 +87,7 @@ export default defineComponent({
             dark: 0xb58863,
             light: 0xf0d9b5,
             pieceMap: [66, 75, 78, 80, 81, 82, 98, 107, 110, 112, 113, 114],
+            dragReferenceData: null,
         };
     },
     watch: {
@@ -195,9 +197,11 @@ export default defineComponent({
                     const sprite = new PIXI.Sprite(texture);
                     sprite.interactive = true;
                     sprite.buttonMode = true;
-                    sprite.on('pointerdown', this.onPointerDown);
-                    sprite.on('pointerup', this.onPointerUp);
-                    sprite.on('pointerover', this.onPointerOver);
+                    sprite.on('pointerdown', this.onDragStart)
+                        .on('pointerup', this.onDragEnd)
+                        .on('pointerupoutside', this.onDragEnd)
+                        .on('pointermove', this.onDragMove)
+                        .on('pointerover', this.onPointerOver);
                     sprite.anchor.set(0.5);
                     sprite.name = piece;
                     const boardSquare = this.squareMap[place];
@@ -220,17 +224,31 @@ export default defineComponent({
             }
             return squareContainer;
         },
-        onPointerDown(event: PIXI.InteractionEvent): void {
+        onDragStart(event: PIXI.InteractionEvent): void {
             const selected = event.currentTarget;
             const piece = selected.name;
             const place = selected.parent.name;
             this.$emit('selected', { piece, place });
+            this.dragReferenceData = event.data;
+            selected.alpha = 0.5;
         },
-        onPointerUp(event: PIXI.InteractionEvent): void {
-            console.log(event);
+        onDragEnd(event: PIXI.InteractionEvent): void {
+            const selected = event.currentTarget;
+            selected.alpha = 1;
+            this.dragReferenceData = event.data;
+        },
+        onDragMove(event: PIXI.InteractionEvent): void {
+            if (this.dragReferenceData) {
+                const newPosition = this.dragReferenceData.getLocalPosition(event.currentTarget.parent);
+                event.currentTarget.x = newPosition.x;
+                event.currentTarget.y = newPosition.y;
+            }
         },
         onPointerOver(event: PIXI.InteractionEvent): void {
-            console.log(event);
+            const selected = event.currentTarget;
+            const piece = selected.name;
+            const place = selected.parent.name;
+            this.$emit('selected', { piece, place });
         },
         calculateContainerLength(): void {
             this.containerLength = this.parentWidth() > this.parentHeight() ? this.parentHeight() : this.parentWidth();
