@@ -115,7 +115,6 @@ export default defineComponent({
             element.appendChild(this.app.view);
             this.drawBoard();
             this.updateFEN(this.currentBoardRepresentation);
-            this.placePieces();
             container.x = this.app.screen.width / 2;
             container.y = this.app.screen.height / 2;
             container.pivot.x = container.width / 2.28;
