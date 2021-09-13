@@ -196,6 +196,8 @@ export default defineComponent({
                     sprite.interactive = true;
                     sprite.buttonMode = true;
                     sprite.on('pointerdown', this.onPointerDown);
+                    sprite.on('pointerup', this.onPointerUp);
+                    sprite.on('pointerover', this.onPointerOver);
                     sprite.anchor.set(0.5);
                     sprite.name = piece;
                     const boardSquare = this.squareMap[place];
@@ -223,6 +225,12 @@ export default defineComponent({
             const piece = selected.name;
             const place = selected.parent.name;
             this.$emit('selected', { piece, place });
+        },
+        onPointerUp(event: PIXI.InteractionEvent): void {
+            console.log(event);
+        },
+        onPointerOver(event: PIXI.InteractionEvent): void {
+            console.log(event);
         },
         calculateContainerLength(): void {
             this.containerLength = this.parentWidth() > this.parentHeight() ? this.parentHeight() : this.parentWidth();
