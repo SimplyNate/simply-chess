@@ -40,6 +40,7 @@ interface ICanvasBoard {
     light: number,
     pieceMap: number[],
     dragReferenceData: null | PIXI.InteractionData,
+    dragReference: null | PIXI.DisplayObject,
 }
 
 export default defineComponent({
@@ -88,6 +89,7 @@ export default defineComponent({
             light: 0xf0d9b5,
             pieceMap: [66, 75, 78, 80, 81, 82, 98, 107, 110, 112, 113, 114],
             dragReferenceData: null,
+            dragReference: null,
         };
     },
     watch: {
@@ -225,23 +227,27 @@ export default defineComponent({
             return squareContainer;
         },
         onDragStart(event: PIXI.InteractionEvent): void {
+            this.dragReferenceData = event.data;
+            this.dragReference = event.currentTarget;
             const selected = event.currentTarget;
             const piece = selected.name;
             const place = selected.parent.name;
             this.$emit('selected', { piece, place });
-            this.dragReferenceData = event.data;
-            selected.alpha = 0.5;
+            this.dragReference.alpha = 0.5;
         },
-        onDragEnd(event: PIXI.InteractionEvent): void {
-            const selected = event.currentTarget;
-            selected.alpha = 1;
-            this.dragReferenceData = event.data;
+        onDragEnd(): void {
+            if (this.dragReference) {
+                this.dragReference.alpha = 1;
+            }
+            this.dragReference = null;
+            this.dragReferenceData = null;
         },
-        onDragMove(event: PIXI.InteractionEvent): void {
-            if (this.dragReferenceData) {
-                const newPosition = this.dragReferenceData.getLocalPosition(event.currentTarget.parent);
-                event.currentTarget.x = newPosition.x;
-                event.currentTarget.y = newPosition.y;
+        onDragMove(): void {
+            if (this.dragReferenceData && this.dragReference) {
+                // @ts-ignore TS2345
+                const newPosition = this.dragReferenceData.getLocalPosition(this.dragReference.parent);
+                this.dragReference.x = newPosition.x;
+                this.dragReference.y = newPosition.y;
             }
         },
         onPointerOver(event: PIXI.InteractionEvent): void {
