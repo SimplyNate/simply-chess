@@ -248,6 +248,7 @@ export default defineComponent({
             this.drag.dragNode.alpha = 0.5;
             // @ts-ignore TS2345
             this.drag.dragNode.setParent(this.drag.tempContainer);
+            this.onDragMove();
         },
         onDragEnd(): void {
             if (this.drag.dragNode) {
