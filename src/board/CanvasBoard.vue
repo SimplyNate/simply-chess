@@ -254,6 +254,8 @@ export default defineComponent({
                 this.drag.dragNode.alpha = 1;
                 // @ts-ignore TS2345
                 this.drag.dragNode.setParent(this.drag.originalParent);
+                this.drag.dragNode.x = 0;
+                this.drag.dragNode.y = 0;
             }
             this.drag.dragNode = null;
             this.drag.dragData = null;
