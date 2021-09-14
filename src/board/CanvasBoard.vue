@@ -23,6 +23,13 @@ interface SquareMap {
     [index: string]: PIXI.Container,
 }
 
+interface IDrag {
+    dragData: null | PIXI.InteractionData,
+    dragNode: null | PIXI.DisplayObject,
+    originalParent: null | PIXI.DisplayObject,
+    tempContainer: PIXI.Container,
+}
+
 interface ICanvasBoard {
     app: PIXI.Application,
     containerLength: number,
@@ -39,8 +46,7 @@ interface ICanvasBoard {
     dark: number,
     light: number,
     pieceMap: number[],
-    dragReferenceData: null | PIXI.InteractionData,
-    dragReference: null | PIXI.DisplayObject,
+    drag: IDrag,
 }
 
 export default defineComponent({
@@ -88,8 +94,12 @@ export default defineComponent({
             dark: 0xb58863,
             light: 0xf0d9b5,
             pieceMap: [66, 75, 78, 80, 81, 82, 98, 107, 110, 112, 113, 114],
-            dragReferenceData: null,
-            dragReference: null,
+            drag: {
+                dragData: null,
+                dragNode: null,
+                tempContainer: new PIXI.Container(),
+                originalParent: null,
+            },
         };
     },
     watch: {
@@ -115,6 +125,8 @@ export default defineComponent({
             element.appendChild(this.app.view);
             this.drawBoard();
             this.updateFEN(this.currentBoardRepresentation);
+            // @ts-ignore TS2345
+            this.app.stage.addChild(this.drag.tempContainer);
             container.x = this.app.screen.width / 2;
             container.y = this.app.screen.height / 2;
             container.pivot.x = container.width / 2.28;
@@ -226,27 +238,33 @@ export default defineComponent({
             return squareContainer;
         },
         onDragStart(event: PIXI.InteractionEvent): void {
-            this.dragReferenceData = event.data;
-            this.dragReference = event.currentTarget;
+            this.drag.dragData = event.data;
+            this.drag.dragNode = event.currentTarget;
+            this.drag.originalParent = this.drag.dragNode.parent;
             const selected = event.currentTarget;
             const piece = selected.name;
             const place = selected.parent.name;
             this.$emit('selected', { piece, place });
-            this.dragReference.alpha = 0.5;
+            this.drag.dragNode.alpha = 0.5;
+            // @ts-ignore TS2345
+            this.drag.dragNode.setParent(this.drag.tempContainer);
         },
         onDragEnd(): void {
-            if (this.dragReference) {
-                this.dragReference.alpha = 1;
+            if (this.drag.dragNode) {
+                this.drag.dragNode.alpha = 1;
+                // @ts-ignore TS2345
+                this.drag.dragNode.setParent(this.drag.originalParent);
             }
-            this.dragReference = null;
-            this.dragReferenceData = null;
+            this.drag.dragNode = null;
+            this.drag.dragData = null;
+            this.drag.originalParent = null;
         },
         onDragMove(): void {
-            if (this.dragReferenceData && this.dragReference) {
+            if (this.drag.dragNode && this.drag.dragData) {
                 // @ts-ignore TS2345
-                const newPosition = this.dragReferenceData.getLocalPosition(this.dragReference.parent);
-                this.dragReference.x = newPosition.x;
-                this.dragReference.y = newPosition.y;
+                const newPosition = this.drag.dragData.getLocalPosition(this.drag.dragNode.parent);
+                this.drag.dragNode.x = newPosition.x;
+                this.drag.dragNode.y = newPosition.y;
             }
         },
         onPointerOver(event: PIXI.InteractionEvent): void {
