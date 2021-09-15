@@ -30,6 +30,12 @@ interface IDrag {
     tempContainer: PIXI.Container,
 }
 
+interface IHighlight {
+    originalPlace: null | PIXI.Graphics,
+    closestTarget: null | PIXI.Graphics,
+    legalTargets: PIXI.Graphics[]
+}
+
 interface ICanvasBoard {
     app: PIXI.Application,
     containerLength: number,
@@ -47,6 +53,7 @@ interface ICanvasBoard {
     light: number,
     pieceMap: number[],
     drag: IDrag,
+    highlight: IHighlight,
 }
 
 export default defineComponent({
@@ -99,6 +106,11 @@ export default defineComponent({
                 dragNode: null,
                 tempContainer: new PIXI.Container(),
                 originalParent: null,
+            },
+            highlight: {
+                originalPlace: null,
+                closestTarget: null,
+                legalTargets: [],
             },
         };
     },
@@ -241,6 +253,17 @@ export default defineComponent({
             this.drag.dragData = event.data;
             this.drag.dragNode = event.currentTarget;
             this.drag.originalParent = this.drag.dragNode.parent;
+            const originalHighlight = new PIXI.Graphics();
+            originalHighlight.beginFill(0xffffff);
+            originalHighlight.drawRect(0, 0, this.squareLength, this.squareLength);
+            originalHighlight.endFill();
+            originalHighlight.pivot.x = originalHighlight.width / 2;
+            originalHighlight.pivot.y = originalHighlight.height / 2;
+            originalHighlight.beginHole();
+            originalHighlight.drawRect(this.squareLength / 20, this.squareLength / 20, this.squareLength - (this.squareLength / 10), this.squareLength - (this.squareLength / 10));
+            originalHighlight.endHole();
+            // @ts-ignore TS2339
+            this.drag.originalParent.addChild(originalHighlight);
             const selected = event.currentTarget;
             const piece = selected.name;
             const place = selected.parent.name;
