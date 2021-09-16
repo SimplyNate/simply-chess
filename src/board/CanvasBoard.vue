@@ -262,6 +262,7 @@ export default defineComponent({
             originalHighlight.beginHole();
             originalHighlight.drawRect(this.squareLength / 20, this.squareLength / 20, this.squareLength - (this.squareLength / 10), this.squareLength - (this.squareLength / 10));
             originalHighlight.endHole();
+            this.highlight.originalPlace = originalHighlight;
             // @ts-ignore TS2339
             this.drag.originalParent.addChild(originalHighlight);
             const selected = event.currentTarget;
@@ -274,16 +275,18 @@ export default defineComponent({
             this.onDragMove();
         },
         onDragEnd(): void {
-            if (this.drag.dragNode) {
+            if (this.drag.dragNode && this.highlight.originalPlace) {
                 this.drag.dragNode.alpha = 1;
                 // @ts-ignore TS2345
                 this.drag.dragNode.setParent(this.drag.originalParent);
                 this.drag.dragNode.x = 0;
                 this.drag.dragNode.y = 0;
+                this.highlight.originalPlace.destroy();
             }
             this.drag.dragNode = null;
             this.drag.dragData = null;
             this.drag.originalParent = null;
+            this.highlight.originalPlace = null;
         },
         onDragMove(): void {
             if (this.drag.dragNode && this.drag.dragData) {
