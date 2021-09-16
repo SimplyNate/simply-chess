@@ -275,18 +275,29 @@ export default defineComponent({
             this.onDragMove();
         },
         onDragEnd(): void {
-            if (this.drag.dragNode && this.highlight.originalPlace) {
+            if (this.drag.dragNode) {
                 this.drag.dragNode.alpha = 1;
                 // @ts-ignore TS2345
                 this.drag.dragNode.setParent(this.drag.originalParent);
                 this.drag.dragNode.x = 0;
                 this.drag.dragNode.y = 0;
+            }
+            if (this.highlight.originalPlace) {
                 this.highlight.originalPlace.destroy();
+            }
+            if (this.highlight.closestTarget) {
+                this.highlight.closestTarget.destroy();
+            }
+            for (let i = this.highlight.legalTargets.length - 1; i >= 0; i--) {
+                const node = this.highlight.legalTargets[i];
+                node.destroy();
+                this.highlight.legalTargets.pop();
             }
             this.drag.dragNode = null;
             this.drag.dragData = null;
             this.drag.originalParent = null;
             this.highlight.originalPlace = null;
+            this.highlight.closestTarget = null;
         },
         onDragMove(): void {
             if (this.drag.dragNode && this.drag.dragData) {
