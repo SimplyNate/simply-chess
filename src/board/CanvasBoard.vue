@@ -253,18 +253,9 @@ export default defineComponent({
             this.drag.dragData = event.data;
             this.drag.dragNode = event.currentTarget;
             this.drag.originalParent = this.drag.dragNode.parent;
-            const originalHighlight = new PIXI.Graphics();
-            originalHighlight.beginFill(0xffffff);
-            originalHighlight.drawRect(0, 0, this.squareLength, this.squareLength);
-            originalHighlight.endFill();
-            originalHighlight.pivot.x = originalHighlight.width / 2;
-            originalHighlight.pivot.y = originalHighlight.height / 2;
-            originalHighlight.beginHole();
-            originalHighlight.drawRect(this.squareLength / 20, this.squareLength / 20, this.squareLength - (this.squareLength / 10), this.squareLength - (this.squareLength / 10));
-            originalHighlight.endHole();
-            this.highlight.originalPlace = originalHighlight;
+            this.highlight.originalPlace = this.createHighlight(0xffffff);
             // @ts-ignore TS2339
-            this.drag.originalParent.addChild(originalHighlight);
+            this.drag.originalParent.addChild(this.highlight.originalPlace);
             const selected = event.currentTarget;
             const piece = selected.name;
             const place = selected.parent.name;
@@ -273,6 +264,18 @@ export default defineComponent({
             // @ts-ignore TS2345
             this.drag.dragNode.setParent(this.drag.tempContainer);
             this.onDragMove();
+        },
+        createHighlight(color: number): PIXI.Graphics {
+            const highlight = new PIXI.Graphics();
+            highlight.beginFill(color);
+            highlight.drawRect(0, 0, this.squareLength, this.squareLength);
+            highlight.endFill();
+            highlight.pivot.x = highlight.width / 2;
+            highlight.pivot.y = highlight.height / 2;
+            highlight.beginHole();
+            highlight.drawRect(this.squareLength / 20, this.squareLength / 20, this.squareLength - (this.squareLength / 10), this.squareLength - (this.squareLength / 10));
+            highlight.endHole();
+            return highlight;
         },
         onDragEnd(): void {
             if (this.drag.dragNode) {
