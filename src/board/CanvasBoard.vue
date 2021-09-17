@@ -311,10 +311,23 @@ export default defineComponent({
             }
         },
         onPointerOver(event: PIXI.InteractionEvent): void {
+            if (this.highlight.closestTarget) {
+                this.highlight.closestTarget.destroy();
+                this.highlight.closestTarget = null;
+            }
             const selected = event.currentTarget;
             const piece = selected.name;
             const place = selected.parent.name;
             this.$emit('selected', { piece, place });
+            if (this.drag.dragNode) {
+                // We are dragging so highlight closest drop point
+                // If selected is blank according to boardMap
+                if (this.boardMap[place] === 'x') {
+                    this.highlight.closestTarget = this.createHighlight(0x0000ff);
+                    // @ts-ignore TS2345
+                    selected.parent.addChild(this.highlight.closestTarget);
+                }
+            }
         },
         calculateContainerLength(): void {
             this.containerLength = this.parentWidth() > this.parentHeight() ? this.parentHeight() : this.parentWidth();
