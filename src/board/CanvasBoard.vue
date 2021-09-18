@@ -232,6 +232,17 @@ export default defineComponent({
                     const boardSquare = this.squareMap[place];
                     boardSquare.addChild(sprite);
                 }
+                else {
+                    const sprite = new PIXI.Sprite();
+                    sprite.interactive = true;
+                    sprite.on('pointerover', this.onPointerOver);
+                    sprite.anchor.set(0.5);
+                    sprite.width = this.squareLength;
+                    sprite.height = this.squareLength;
+                    sprite.alpha = 0;
+                    const boardSquare = this.squareMap[place];
+                    boardSquare.addChild(sprite);
+                }
             }
         },
         drawSquare(x: number, y: number, color: number): PIXI.Container {
@@ -244,6 +255,7 @@ export default defineComponent({
                 square.endFill();
                 square.pivot.x = square.width / 2;
                 square.pivot.y = square.height / 2;
+                square.on('pointerover', this.onPointerOver);
                 squareContainer.addChild(square);
                 this.boardContainer.addChild(squareContainer);
             }
@@ -318,6 +330,7 @@ export default defineComponent({
             const selected = event.currentTarget;
             const piece = selected.name;
             const place = selected.parent.name;
+            console.log(piece, place);
             this.$emit('selected', { piece, place });
             if (this.drag.dragNode) {
                 // We are dragging so highlight closest drop point
