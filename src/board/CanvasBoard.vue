@@ -213,6 +213,10 @@ export default defineComponent({
             this.boardMap = parsePlacementToMap(this.fen.piecePlacement);
             this.placePieces();
         },
+        isPieceInteractive(piece: string): boolean {
+            return (this.fen.activeColor === 'w' && piece.charCodeAt(0) < 97) ||
+                (this.fen.activeColor === 'b' && piece.charCodeAt(0) > 97);
+        },
         placePieces(): void {
             for (const place of Object.keys(this.boardMap)) {
                 const piece = this.boardMap[place];
@@ -220,14 +224,15 @@ export default defineComponent({
                     const texture = this.textures[piece];
                     // @ts-ignore: TS2345
                     const sprite = new PIXI.Sprite(texture);
-                    // TODO: If the color can move, make it interactive
-                    sprite.interactive = true;
-                    sprite.buttonMode = true;
-                    sprite.on('pointerdown', this.onDragStart)
-                        .on('pointerup', this.onDragEnd)
-                        .on('pointerupoutside', this.onDragEnd)
-                        .on('pointermove', this.onDragMove)
-                        .on('pointerover', this.onPointerOver);
+                    if (this.isPieceInteractive(piece)) {
+                        sprite.interactive = true;
+                        sprite.buttonMode = true;
+                        sprite.on('pointerdown', this.onDragStart)
+                            .on('pointerup', this.onDragEnd)
+                            .on('pointerupoutside', this.onDragEnd)
+                            .on('pointermove', this.onDragMove)
+                            .on('pointerover', this.onPointerOver);
+                    }
                     sprite.anchor.set(0.5);
                     sprite.name = piece;
                     const boardSquare = this.squareMap[place];
