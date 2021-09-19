@@ -220,6 +220,7 @@ export default defineComponent({
                     const texture = this.textures[piece];
                     // @ts-ignore: TS2345
                     const sprite = new PIXI.Sprite(texture);
+                    // TODO: If the color can move, make it interactive
                     sprite.interactive = true;
                     sprite.buttonMode = true;
                     sprite.on('pointerdown', this.onDragStart)
