@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import * as PIXI from 'pixi.js';
 import { BoardMap, separateFEN, parsePlacementToMap, FEN } from '@/board/utils';
 
@@ -56,6 +56,8 @@ interface ICanvasBoard {
     highlight: IHighlight,
 }
 
+type LegalMovesForSelection = string[];
+
 export default defineComponent({
     name: 'CanvasBoard',
     emits: ['selected', 'deselected'],
@@ -73,7 +75,7 @@ export default defineComponent({
             default: 100,
         },
         legalMovesForSelection: {
-            type: Array,
+            type: Array as PropType<LegalMovesForSelection>,
             default: () => [],
         },
     },
@@ -115,6 +117,12 @@ export default defineComponent({
         };
     },
     watch: {
+        legalMovesForSelection: {
+            deep: true,
+            handler() {
+                this.highlightLegalMoves();
+            },
+        },
     },
     mounted() {
         const element = document.getElementById('board');
@@ -231,7 +239,8 @@ export default defineComponent({
                             .on('pointerup', this.onDragEnd)
                             .on('pointerupoutside', this.onDragEnd)
                             .on('pointermove', this.onDragMove)
-                            .on('pointerover', this.onPointerOver);
+                            .on('pointerover', this.onPointerOver)
+                            .on('pointerleave', this.onPointerLeave);
                     }
                     sprite.anchor.set(0.5);
                     sprite.name = piece;
@@ -346,6 +355,21 @@ export default defineComponent({
                     // @ts-ignore TS2345
                     selected.parent.addChild(this.highlight.closestTarget);
                 }
+            }
+        },
+        onPointerLeave(): void {
+            for (let i = this.highlight.legalTargets.length - 1; i >= 0; i--) {
+                const node = this.highlight.legalTargets[i];
+                node.destroy();
+                this.highlight.legalTargets.pop();
+            }
+        },
+        highlightLegalMoves() {
+            for (const move of this.legalMovesForSelection) {
+                const square = this.squareMap[move];
+                const highlight = this.createHighlight(0x00ff00);
+                square.addChild(highlight);
+                this.highlight.legalTargets.push(highlight);
             }
         },
         calculateContainerLength(): void {
