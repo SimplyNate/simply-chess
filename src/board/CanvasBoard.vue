@@ -123,6 +123,9 @@ export default defineComponent({
                 this.highlightLegalMoves();
             },
         },
+        currentBoardRepresentation() {
+            this.updateFEN(this.currentBoardRepresentation);
+        },
     },
     mounted() {
         const element = document.getElementById('board');
@@ -357,7 +360,7 @@ export default defineComponent({
             this.$emit('deselected', true);
             console.log('left');
         },
-        highlightLegalMoves() {
+        highlightLegalMoves(): void {
             for (const move of this.legalMovesForSelection) {
                 const square = this.squareMap[move];
                 const highlight = this.createHighlight(0x00ff00);
@@ -365,19 +368,19 @@ export default defineComponent({
                 this.highlight.legalTargets.push(highlight);
             }
         },
-        clearLegalMoves() {
+        clearLegalMoves(): void {
             for (let i = this.highlight.legalTargets.length - 1; i >= 0; i--) {
                 const node = this.highlight.legalTargets[i];
                 node.destroy();
                 this.highlight.legalTargets.pop();
             }
         },
-        clearDrag() {
+        clearDrag(): void {
             this.drag.dragNode = null;
             this.drag.dragData = null;
             this.drag.originalParent = null;
         },
-        clearHighlight() {
+        clearHighlight(): void {
             this.highlight.originalPlace = null;
             this.highlight.closestTarget = null;
             this.clearLegalMoves();
