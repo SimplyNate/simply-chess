@@ -240,7 +240,7 @@ export default defineComponent({
                             .on('pointerupoutside', this.onDragEnd)
                             .on('pointermove', this.onDragMove)
                             .on('pointerover', this.onPointerOver)
-                            .on('pointerleave', this.onPointerLeave);
+                            .on('pointerout', this.onPointerLeave);
                     }
                     sprite.anchor.set(0.5);
                     sprite.name = piece;
@@ -318,16 +318,9 @@ export default defineComponent({
             if (this.highlight.closestTarget) {
                 this.highlight.closestTarget.destroy();
             }
-            for (let i = this.highlight.legalTargets.length - 1; i >= 0; i--) {
-                const node = this.highlight.legalTargets[i];
-                node.destroy();
-                this.highlight.legalTargets.pop();
-            }
-            this.drag.dragNode = null;
-            this.drag.dragData = null;
-            this.drag.originalParent = null;
-            this.highlight.originalPlace = null;
-            this.highlight.closestTarget = null;
+            this.clearDrag();
+            this.clearHighlight();
+            this.$emit('deselected', true);
         },
         onDragMove(): void {
             if (this.drag.dragNode && this.drag.dragData) {
@@ -346,7 +339,9 @@ export default defineComponent({
             const piece = selected.name;
             const place = selected.parent.name;
             console.log(piece, place);
-            this.$emit('selected', { piece, place });
+            if (piece) {
+                this.$emit('selected', { piece, place });
+            }
             if (this.drag.dragNode) {
                 // We are dragging so highlight closest drop point
                 // If selected is blank according to boardMap
@@ -358,11 +353,9 @@ export default defineComponent({
             }
         },
         onPointerLeave(): void {
-            for (let i = this.highlight.legalTargets.length - 1; i >= 0; i--) {
-                const node = this.highlight.legalTargets[i];
-                node.destroy();
-                this.highlight.legalTargets.pop();
-            }
+            this.clearLegalMoves();
+            this.$emit('deselected', true);
+            console.log('left');
         },
         highlightLegalMoves() {
             for (const move of this.legalMovesForSelection) {
@@ -371,6 +364,23 @@ export default defineComponent({
                 square.addChild(highlight);
                 this.highlight.legalTargets.push(highlight);
             }
+        },
+        clearLegalMoves() {
+            for (let i = this.highlight.legalTargets.length - 1; i >= 0; i--) {
+                const node = this.highlight.legalTargets[i];
+                node.destroy();
+                this.highlight.legalTargets.pop();
+            }
+        },
+        clearDrag() {
+            this.drag.dragNode = null;
+            this.drag.dragData = null;
+            this.drag.originalParent = null;
+        },
+        clearHighlight() {
+            this.highlight.originalPlace = null;
+            this.highlight.closestTarget = null;
+            this.clearLegalMoves();
         },
         calculateContainerLength(): void {
             this.containerLength = this.parentWidth() > this.parentHeight() ? this.parentHeight() : this.parentWidth();

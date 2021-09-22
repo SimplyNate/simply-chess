@@ -7,6 +7,7 @@
             :container-width="containerWidth"
             :legal-moves-for-selection="legalMoves"
             @selected="calculateLegalMoves"
+            @deselected="clearLegalMoves"
         />
     </div>
 </template>
@@ -50,6 +51,9 @@ export default defineComponent({
         calculateLegalMoves() {
             this.legalMoves.length = 0;
             this.legalMoves.push('d-6');
+        },
+        clearLegalMoves() {
+            this.legalMoves.length = 0;
         },
     },
 });
