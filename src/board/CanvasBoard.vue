@@ -310,8 +310,14 @@ export default defineComponent({
         onDragEnd(): void {
             if (this.drag.dragNode) {
                 this.drag.dragNode.alpha = 1;
-                // @ts-ignore TS2345
-                this.drag.dragNode.setParent(this.drag.originalParent);
+                if (this.highlight.closestTarget?.name && this.legalMovesForSelection.includes(this.highlight.closestTarget.name)) {
+                    // @ts-ignore TS2345
+                    this.drag.dragNode.setParent(this.highlight.closestTarget.parent);
+                }
+                else {
+                    // @ts-ignore TS2345
+                    this.drag.dragNode.setParent(this.drag.originalParent);
+                }
                 this.drag.dragNode.x = 0;
                 this.drag.dragNode.y = 0;
             }
