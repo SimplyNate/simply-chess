@@ -5,58 +5,8 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import * as PIXI from 'pixi.js';
-import { BoardMap, separateFEN, parsePlacementToMap, FEN } from '@/board/utils';
-
-interface Pieces {
-    [index: string]: PIXI.Sprite,
-}
-
-interface Textures {
-    [index: string]: PIXI.Texture,
-}
-
-interface SVGs {
-    [index: string]: PIXI.SVGResource,
-}
-
-interface SquareMap {
-    [index: string]: PIXI.Container,
-}
-
-interface IDrag {
-    dragData: null | PIXI.InteractionData,
-    dragNode: null | PIXI.DisplayObject,
-    originalParent: null | PIXI.DisplayObject,
-    tempContainer: PIXI.Container,
-}
-
-interface IHighlight {
-    originalPlace: null | PIXI.Graphics,
-    closestTarget: null | PIXI.Graphics,
-    legalTargets: PIXI.Graphics[]
-}
-
-interface ICanvasBoard {
-    app: PIXI.Application,
-    containerLength: number,
-    squareLength: number,
-    boardContainer: PIXI.Container,
-    pieces: Pieces,
-    textures: Textures,
-    svgs: SVGs,
-    squareMap: SquareMap,
-    boardMap: BoardMap,
-    fen: FEN,
-    row: number[],
-    rank: string[],
-    dark: number,
-    light: number,
-    pieceMap: number[],
-    drag: IDrag,
-    highlight: IHighlight,
-}
-
-type LegalMovesForSelection = string[];
+import { separateFEN, parsePlacementToMap } from '@/board/utils';
+import { ICanvasBoard, LegalMovesForSelection } from '@/board/CanvasBoard';
 
 export default defineComponent({
     name: 'CanvasBoard',
