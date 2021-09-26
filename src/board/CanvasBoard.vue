@@ -178,6 +178,30 @@ export default defineComponent({
             return (this.fen.activeColor === 'w' && piece.charCodeAt(0) < 97) ||
                 (this.fen.activeColor === 'b' && piece.charCodeAt(0) > 97);
         },
+        isColliding(): PIXI.DisplayObject[] {
+            const collisions = [];
+            if (this.drag.dragNode) {
+                const dragX = this.drag.dragNode.x;
+                const dragY = this.drag.dragNode.y;
+                // @ts-ignore TS2339
+                const dragW = this.drag.dragNode.width;
+                // @ts-ignore TS2339
+                const dragH = this.drag.dragNode.height;
+                const dragX2 = dragX + dragW;
+                const dragY2 = dragY + dragH;
+                for (const place of Object.keys(this.squareMap)) {
+                    const square = this.squareMap[place];
+                    const { x, y, width, height } = square;
+                    const x2 = x + width;
+                    const y2 = y + height;
+                    if (dragX < x2 && dragX2 > x && dragY < y2 && dragY2 > y) {
+                        collisions.push(square);
+                    }
+                }
+            }
+            // @ts-ignore TS2322
+            return collisions;
+        },
         placePieces(): void {
             for (const place of Object.keys(this.boardMap)) {
                 const piece = this.boardMap[place];
@@ -287,6 +311,7 @@ export default defineComponent({
                 const newPosition = this.drag.dragData.getLocalPosition(this.drag.dragNode.parent);
                 this.drag.dragNode.x = newPosition.x;
                 this.drag.dragNode.y = newPosition.y;
+                // Check which position mouse is closest to
             }
         },
         onPointerOver(event: PIXI.InteractionEvent): void {
