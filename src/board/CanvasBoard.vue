@@ -355,7 +355,15 @@ export default defineComponent({
                 this.drag.dragNode.y = newPosition.y;
                 // Check which position mouse is closest to
                 const collisions = this.isColliding();
-                this.sortCollisionsByNearest(collisions, newPosition.x, newPosition.y);
+                if (collisions.length > 0) {
+                    this.sortCollisionsByNearest(collisions, newPosition.x, newPosition.y);
+                    const closestCollision = collisions[0];
+                    if (this.boardMap[closestCollision.parent.name] === 'x') {
+                        this.highlight.closestTarget = this.createHighlight(0x0000ff);
+                        // @ts-ignore TS2345
+                        closestCollision.parent.addChild(this.highlight.closestTarget);
+                    }
+                }
             }
         },
         onPointerOver(event: PIXI.InteractionEvent): void {
