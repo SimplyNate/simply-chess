@@ -202,6 +202,9 @@ export default defineComponent({
             // @ts-ignore TS2322
             return collisions;
         },
+        hypotenuse(a: number, b: number): number {
+            return Math.sqrt((a * a) + (b * b));
+        },
         sortCollisionsByNearest(collisions: PIXI.DisplayObject[], currentX: number, currentY: number): void {
             collisions.sort((a, b) => {
                 const aParams = {
@@ -232,11 +235,13 @@ export default defineComponent({
                     x: Math.abs(currentX - aCenter.x),
                     y: Math.abs(currentY - aCenter.y),
                 };
+                const aHypotenuse = this.hypotenuse(aDelta.x, aDelta.y);
                 const bDelta = {
                     x: Math.abs(currentX - bCenter.x),
                     y: Math.abs(currentY - bCenter.y),
                 };
-                return (aDelta.x - bDelta.x) - (aDelta.y - bDelta.y);
+                const bHypotenuse = this.hypotenuse(bDelta.x, bDelta.y);
+                return aHypotenuse - bHypotenuse;
             });
         },
         placePieces(): void {
