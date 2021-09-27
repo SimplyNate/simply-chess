@@ -202,6 +202,43 @@ export default defineComponent({
             // @ts-ignore TS2322
             return collisions;
         },
+        sortCollisionsByNearest(collisions: PIXI.DisplayObject[], currentX: number, currentY: number): void {
+            collisions.sort((a, b) => {
+                const aParams = {
+                    x1: a.x,
+                    // @ts-ignore TS2339
+                    x2: a.x + a.width,
+                    y1: a.y,
+                    // @ts-ignore TS2339
+                    y2: a.y + a.height,
+                };
+                const bParams = {
+                    x1: b.x,
+                    // @ts-ignore TS2339
+                    x2: b.x + b.width,
+                    y1: b.y,
+                    // @ts-ignore TS2339
+                    y2: b.y + b.height,
+                };
+                const aCenter = {
+                    x: aParams.x2 - aParams.x1,
+                    y: aParams.y2 - aParams.y1,
+                };
+                const bCenter = {
+                    x: bParams.x2 - bParams.x1,
+                    y: bParams.y2 - bParams.y1,
+                };
+                const aDelta = {
+                    x: Math.abs(currentX - aCenter.x),
+                    y: Math.abs(currentY - aCenter.y),
+                };
+                const bDelta = {
+                    x: Math.abs(currentX - bCenter.x),
+                    y: Math.abs(currentY - bCenter.y),
+                };
+                return (aDelta.x - bDelta.x) - (aDelta.y - bDelta.y);
+            });
+        },
         placePieces(): void {
             for (const place of Object.keys(this.boardMap)) {
                 const piece = this.boardMap[place];
@@ -312,6 +349,8 @@ export default defineComponent({
                 this.drag.dragNode.x = newPosition.x;
                 this.drag.dragNode.y = newPosition.y;
                 // Check which position mouse is closest to
+                const collisions = this.isColliding();
+                this.sortCollisionsByNearest(collisions, newPosition.x, newPosition.y);
             }
         },
         onPointerOver(event: PIXI.InteractionEvent): void {
