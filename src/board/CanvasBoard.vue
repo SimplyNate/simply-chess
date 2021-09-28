@@ -106,7 +106,7 @@ export default defineComponent({
             container.pivot.y = container.height / 2.28;
         }
         else {
-            console.error('Some Error');
+            console.error('Failed to find element with id "board"');
         }
     },
     methods: {
