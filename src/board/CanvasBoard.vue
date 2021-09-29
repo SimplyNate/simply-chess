@@ -78,36 +78,32 @@ export default defineComponent({
         },
     },
     mounted() {
-        const element = document.getElementById('board');
-        if (element) {
-            element.style.width = this.containerWidth + 'px';
-            element.style.height = this.containerHeight + 'px';
-            this.app = new PIXI.Application({
-                antialias: true,
-                resolution: window.devicePixelRatio,
-                backgroundAlpha: 0,
-                resizeTo: element,
-            });
-            this.calculateContainerLength();
-            this.calculateSquareLength();
-            this.loadSVGs();
-            this.loadTextures();
-            const container = new PIXI.Container();
-            this.app.stage.addChild(container);
-            this.boardContainer = container;
-            element.appendChild(this.app.view);
-            this.drawBoard();
-            this.updateFEN(this.currentBoardRepresentation);
-            // @ts-ignore TS2345
-            this.app.stage.addChild(this.drag.tempContainer);
-            container.x = this.app.screen.width / 2;
-            container.y = this.app.screen.height / 2;
-            container.pivot.x = container.width / 2.28;
-            container.pivot.y = container.height / 2.28;
-        }
-        else {
-            console.error('Failed to find element with id "board"');
-        }
+        // @ts-ignore TS2322
+        const element: HTMLDivElement = this.$refs.board;
+        element.style.width = this.containerWidth + 'px';
+        element.style.height = this.containerHeight + 'px';
+        this.app = new PIXI.Application({
+            antialias: true,
+            resolution: window.devicePixelRatio,
+            backgroundAlpha: 0,
+            resizeTo: element,
+        });
+        this.calculateContainerLength();
+        this.calculateSquareLength();
+        this.loadSVGs();
+        this.loadTextures();
+        const container = new PIXI.Container();
+        this.app.stage.addChild(container);
+        this.boardContainer = container;
+        element.appendChild(this.app.view);
+        this.drawBoard();
+        this.updateFEN(this.currentBoardRepresentation);
+        // @ts-ignore TS2345
+        this.app.stage.addChild(this.drag.tempContainer);
+        container.x = this.app.screen.width / 2;
+        container.y = this.app.screen.height / 2;
+        container.pivot.x = container.width / 2.28;
+        container.pivot.y = container.height / 2.28;
     },
     methods: {
         drawBoard(): void {
