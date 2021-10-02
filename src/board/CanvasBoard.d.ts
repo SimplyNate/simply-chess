@@ -51,3 +51,8 @@ export interface ICanvasBoard {
 }
 
 export type LegalMovesForSelection = string[];
+
+export interface BoardConfig {
+    light: number | undefined,
+    dark: number | undefined,
+}

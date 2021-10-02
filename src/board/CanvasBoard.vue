@@ -6,7 +6,7 @@
 import { defineComponent, PropType } from 'vue';
 import * as PIXI from 'pixi.js';
 import { separateFEN, parsePlacementToMap } from '@/board/utils';
-import { ICanvasBoard, LegalMovesForSelection } from '@/board/CanvasBoard';
+import { ICanvasBoard, LegalMovesForSelection, BoardConfig } from '@/board/CanvasBoard';
 
 export default defineComponent({
     name: 'CanvasBoard',
@@ -27,6 +27,9 @@ export default defineComponent({
         legalMovesForSelection: {
             type: Array as PropType<LegalMovesForSelection>,
             default: () => [],
+        },
+        boardConfig: {
+            type: Object as PropType<BoardConfig>,
         },
     },
     data(): ICanvasBoard {
@@ -78,6 +81,7 @@ export default defineComponent({
         },
     },
     mounted() {
+        this.applyConfig();
         // @ts-ignore TS2322
         const element: HTMLDivElement = this.$refs.board;
         element.style.width = this.containerWidth + 'px';
@@ -106,6 +110,16 @@ export default defineComponent({
         container.pivot.y = container.height / 2.28;
     },
     methods: {
+        applyConfig() {
+            if (this.boardConfig) {
+                if (this.boardConfig.light) {
+                    this.light = this.boardConfig.light;
+                }
+                if (this.boardConfig.dark) {
+                    this.dark = this.boardConfig.dark;
+                }
+            }
+        },
         drawBoard(): void {
             for (let y = 0; y < this.row.length; y++) {
                 for (let x = 0; x < this.rank.length; x++) {
