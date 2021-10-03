@@ -48,6 +48,7 @@ export interface ICanvasBoard {
     pieceMap: number[],
     drag: IDrag,
     highlight: IHighlight,
+    placedPieces: PIXI.Container[],
 }
 
 export type LegalMovesForSelection = string[];

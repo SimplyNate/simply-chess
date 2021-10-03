@@ -67,6 +67,7 @@ export default defineComponent({
                 closestTarget: null,
                 legalTargets: [],
             },
+            placedPieces: [],
         };
     },
     watch: {
@@ -253,7 +254,12 @@ export default defineComponent({
             });
         },
         clearPieces(): void {
-            console.log('reseting pieces');
+            for (let i = this.placedPieces.length - 1; i <= 0; i--) {
+                const piece = this.placedPieces.pop();
+                if (piece) {
+                    piece.destroy();
+                }
+            }
         },
         placePieces(): void {
             for (const place of Object.keys(this.boardMap)) {
@@ -276,6 +282,7 @@ export default defineComponent({
                     sprite.name = piece;
                     const boardSquare = this.squareMap[place];
                     boardSquare.addChild(sprite);
+                    this.placedPieces.push(sprite);
                 }
                 else {
                     const sprite = new PIXI.Sprite();
@@ -287,6 +294,7 @@ export default defineComponent({
                     sprite.alpha = 0;
                     const boardSquare = this.squareMap[place];
                     boardSquare.addChild(sprite);
+                    this.placedPieces.push(sprite);
                 }
             }
         },
