@@ -182,7 +182,7 @@ export default defineComponent({
         updateFEN(fen: string): void {
             this.fen = separateFEN(fen);
             this.boardMap = parsePlacementToMap(this.fen.piecePlacement);
-            this.resetPieces();
+            this.clearPieces();
             this.placePieces();
         },
         isPieceInteractive(piece: string): boolean {
@@ -252,7 +252,7 @@ export default defineComponent({
                 return aHypotenuse - bHypotenuse;
             });
         },
-        resetPieces(): void {
+        clearPieces(): void {
             console.log('reseting pieces');
         },
         placePieces(): void {
