@@ -182,6 +182,7 @@ export default defineComponent({
         updateFEN(fen: string): void {
             this.fen = separateFEN(fen);
             this.boardMap = parsePlacementToMap(this.fen.piecePlacement);
+            this.resetPieces();
             this.placePieces();
         },
         isPieceInteractive(piece: string): boolean {
@@ -211,9 +212,6 @@ export default defineComponent({
             }
             // @ts-ignore TS2322
             return collisions;
-        },
-        hypotenuse(a: number, b: number): number {
-            return Math.sqrt((a * a) + (b * b));
         },
         sortCollisionsByNearest(collisions: PIXI.DisplayObject[], currentX: number, currentY: number): void {
             collisions.sort((a, b) => {
@@ -245,14 +243,17 @@ export default defineComponent({
                     x: Math.abs(currentX - aCenter.x),
                     y: Math.abs(currentY - aCenter.y),
                 };
-                const aHypotenuse = this.hypotenuse(aDelta.x, aDelta.y);
+                const aHypotenuse = Math.hypot(aDelta.x, aDelta.y);
                 const bDelta = {
                     x: Math.abs(currentX - bCenter.x),
                     y: Math.abs(currentY - bCenter.y),
                 };
-                const bHypotenuse = this.hypotenuse(bDelta.x, bDelta.y);
+                const bHypotenuse = Math.hypot(bDelta.x, bDelta.y);
                 return aHypotenuse - bHypotenuse;
             });
+        },
+        resetPieces(): void {
+            console.log('reseting pieces');
         },
         placePieces(): void {
             for (const place of Object.keys(this.boardMap)) {
