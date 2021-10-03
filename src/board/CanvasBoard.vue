@@ -202,12 +202,14 @@ export default defineComponent({
                 const dragX2 = dragX + dragW;
                 const dragY2 = dragY + dragH;
                 for (const place of Object.keys(this.squareMap)) {
-                    const square = this.squareMap[place];
-                    const { x, y, width, height } = square;
-                    const x2 = x + width;
-                    const y2 = y + height;
-                    if (dragX < x2 && dragX2 > x && dragY < y2 && dragY2 > y) {
-                        collisions.push(square);
+                    if (place === 'x') {
+                        const square = this.squareMap[place];
+                        const { x, y, width, height } = square;
+                        const x2 = x + width;
+                        const y2 = y + height;
+                        if (dragX < x2 && dragX2 > x && dragY < y2 && dragY2 > y) {
+                            collisions.push(square);
+                        }
                     }
                 }
             }
@@ -373,7 +375,6 @@ export default defineComponent({
                 this.drag.dragNode.x = newPosition.x;
                 this.drag.dragNode.y = newPosition.y;
                 // Check which position mouse is closest to
-                /*
                 const collisions = this.isColliding();
                 if (collisions.length > 0) {
                     // this.sortCollisionsByNearest(collisions, newPosition.x, newPosition.y);
@@ -384,7 +385,6 @@ export default defineComponent({
                         closestCollision.parent.addChild(this.highlight.closestTarget);
                     }
                 }
-                 */
             }
         },
         onPointerOver(event: PIXI.InteractionEvent): void {
