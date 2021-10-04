@@ -256,7 +256,7 @@ export default defineComponent({
             });
         },
         clearPieces(): void {
-            for (let i = this.placedPieces.length - 1; i <= 0; i--) {
+            for (let i = this.placedPieces.length - 1; i >= 0; i--) {
                 const piece = this.placedPieces.pop();
                 if (piece) {
                     piece.destroy();
