@@ -6,6 +6,7 @@
             :container-height="containerHeight"
             :container-width="containerWidth"
             :legal-moves-for-selection="legalMoves"
+            :current-board-representation="fenString"
             @selected="calculateLegalMoves"
             @deselected="clearLegalMoves"
         />
@@ -22,6 +23,7 @@ interface AppData {
     containerWidth: number,
     isMounted: boolean,
     legalMoves: string[],
+    fenString: string,
 }
 
 export default defineComponent({
@@ -36,6 +38,7 @@ export default defineComponent({
             containerWidth: 300,
             isMounted: false,
             legalMoves: [],
+            fenString: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
         };
     },
     mounted() {
