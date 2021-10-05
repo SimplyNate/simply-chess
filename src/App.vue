@@ -5,7 +5,6 @@
             v-if="isMounted"
             :container-height="containerHeight"
             :container-width="containerWidth"
-            :legal-moves-for-selection="legalMoves"
             :current-board-representation="fenString"
             @selected="calculateLegalMoves"
             @deselected="clearLegalMoves"

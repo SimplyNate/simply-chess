@@ -6,7 +6,7 @@
 import { defineComponent, PropType } from 'vue';
 import * as PIXI from 'pixi.js';
 import { separateFEN, parsePlacementToMap } from '@/board/utils';
-import { ICanvasBoard, LegalMovesForSelection, BoardConfig } from '@/board/CanvasBoard';
+import { ICanvasBoard, BoardConfig } from '@/board/CanvasBoard';
 
 export default defineComponent({
     name: 'CanvasBoard',
@@ -23,10 +23,6 @@ export default defineComponent({
         containerWidth: {
             type: Number,
             default: 100,
-        },
-        legalMovesForSelection: {
-            type: Array as PropType<LegalMovesForSelection>,
-            default: () => [],
         },
         boardConfig: {
             type: Object as PropType<BoardConfig>,
@@ -65,18 +61,11 @@ export default defineComponent({
             highlight: {
                 originalPlace: null,
                 closestTarget: null,
-                legalTargets: [],
             },
             placedPieces: [],
         };
     },
     watch: {
-        legalMovesForSelection: {
-            deep: true,
-            handler() {
-                this.highlightLegalMoves();
-            },
-        },
         currentBoardRepresentation() {
             this.updateFEN(this.currentBoardRepresentation);
         },
@@ -399,23 +388,7 @@ export default defineComponent({
             console.log(piece, place);
         },
         onPointerLeave(): void {
-            this.clearLegalMoves();
             console.log('left');
-        },
-        highlightLegalMoves(): void {
-            for (const move of this.legalMovesForSelection) {
-                const square = this.squareMap[move];
-                const highlight = this.createHighlight(0x00ff00);
-                square.addChild(highlight);
-                this.highlight.legalTargets.push(highlight);
-            }
-        },
-        clearLegalMoves(): void {
-            for (let i = this.highlight.legalTargets.length - 1; i >= 0; i--) {
-                const node = this.highlight.legalTargets[i];
-                node.destroy();
-                this.highlight.legalTargets.pop();
-            }
         },
         clearDrag(): void {
             this.drag.dragNode = null;
@@ -425,7 +398,6 @@ export default defineComponent({
         clearHighlight(): void {
             this.highlight.originalPlace = null;
             this.highlight.closestTarget = null;
-            this.clearLegalMoves();
         },
         calculateContainerLength(): void {
             this.containerLength = this.parentWidth() > this.parentHeight() ? this.parentHeight() : this.parentWidth();
