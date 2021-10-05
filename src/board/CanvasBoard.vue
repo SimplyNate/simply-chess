@@ -10,7 +10,7 @@ import { ICanvasBoard, LegalMovesForSelection, BoardConfig } from '@/board/Canva
 
 export default defineComponent({
     name: 'CanvasBoard',
-    emits: ['selected', 'deselected'],
+    emits: ['selected', 'deselected', 'move'],
     props: {
         currentBoardRepresentation: {
             type: String,
@@ -347,9 +347,14 @@ export default defineComponent({
         onDragEnd(): void {
             if (this.drag.dragNode) {
                 this.drag.dragNode.alpha = 1;
-                if (this.highlight.closestTarget?.name && this.legalMovesForSelection.includes(this.highlight.closestTarget.name)) {
-                    // @ts-ignore TS2345
-                    this.drag.dragNode.setParent(this.highlight.closestTarget.parent);
+                if (this.highlight.closestTarget?.name) {
+                    const movePayload = {
+                        to: this.highlight.closestTarget.name,
+                        from: this.highlight.originalPlace?.parent.name,
+                        piece: this.drag.dragNode.name,
+                    };
+                    this.$emit('move', movePayload);
+                    console.log(movePayload);
                 }
                 else {
                     // @ts-ignore TS2345
@@ -377,9 +382,10 @@ export default defineComponent({
                 // Check which position mouse is closest to
                 const collisions = this.isColliding();
                 if (collisions.length > 0) {
-                    // this.sortCollisionsByNearest(collisions, newPosition.x, newPosition.y);
+                    this.sortCollisionsByNearest(collisions, newPosition.x, newPosition.y);
                     const closestCollision = collisions[0];
                     if (this.boardMap[closestCollision.parent.name] === 'x') {
+                        // TODO: Fix this interaction
                         this.highlight.closestTarget = this.createHighlight(0x0000ff);
                         // @ts-ignore TS2345
                         closestCollision.parent.addChild(this.highlight.closestTarget);
