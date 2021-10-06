@@ -1,11 +1,11 @@
 <template>
     <div id="#app" :style="`width: ${containerWidth}px; height: ${containerHeight}px`">
-        <!-- <board :container-height="containerHeight" :container-width="containerWidth" /> -->
         <canvas-board
             v-if="isMounted"
             :container-height="containerHeight"
             :container-width="containerWidth"
             :current-board-representation="fenString"
+            :legal-moves-for-selection="legalMoves"
             @selected="calculateLegalMoves"
             @deselected="clearLegalMoves"
         />
@@ -16,6 +16,7 @@
 import { defineComponent } from 'vue';
 // import Board from '@/board/Board.vue';
 import CanvasBoard from '@/board/CanvasBoard.vue';
+import { Selection } from '@/board/CBoard';
 
 interface AppData {
     containerHeight: number,
@@ -50,7 +51,8 @@ export default defineComponent({
             this.containerHeight = window.innerHeight;
             this.containerWidth = window.innerWidth;
         },
-        calculateLegalMoves() {
+        calculateLegalMoves(selection: Selection) {
+            console.log(`Received: ${selection.piece}, ${selection.place}`);
             this.legalMoves.length = 0;
             this.legalMoves.push('d-6');
         },

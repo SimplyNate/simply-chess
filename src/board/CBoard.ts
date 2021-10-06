@@ -27,6 +27,7 @@ export interface IDrag {
 export interface IHighlight {
     originalPlace: null | PIXI.Graphics,
     closestTarget: null | PIXI.Graphics,
+    legalTargets: PIXI.Graphics[],
 }
 
 export interface ICanvasBoard {
@@ -48,6 +49,13 @@ export interface ICanvasBoard {
     drag: IDrag,
     highlight: IHighlight,
     placedPieces: PIXI.Container[],
+}
+
+export type LegalMovesForSelection = string[];
+
+export interface Selection {
+    piece: string,
+    place: string,
 }
 
 export interface BoardConfig {

@@ -6,11 +6,11 @@
 import { defineComponent, PropType } from 'vue';
 import * as PIXI from 'pixi.js';
 import { separateFEN, parsePlacementToMap } from '@/board/utils';
-import { ICanvasBoard, BoardConfig } from '@/board/CanvasBoard';
+import { ICanvasBoard, BoardConfig, LegalMovesForSelection } from '@/board/CBoard';
 
 export default defineComponent({
     name: 'CanvasBoard',
-    emits: ['move'],
+    emits: ['selected', 'deselected', 'move'],
     props: {
         currentBoardRepresentation: {
             type: String,
@@ -26,6 +26,10 @@ export default defineComponent({
         },
         boardConfig: {
             type: Object as PropType<BoardConfig>,
+        },
+        legalMovesForSelection: {
+            type: Array as PropType<LegalMovesForSelection>,
+            default: () => [],
         },
     },
     data(): ICanvasBoard {
@@ -61,6 +65,7 @@ export default defineComponent({
             highlight: {
                 originalPlace: null,
                 closestTarget: null,
+                legalTargets: [],
             },
             placedPieces: [],
         };
@@ -68,6 +73,12 @@ export default defineComponent({
     watch: {
         currentBoardRepresentation() {
             this.updateFEN(this.currentBoardRepresentation);
+        },
+        legalMovesForSelection: {
+            deep: true,
+            handler() {
+                this.highlightLegalMoves();
+            },
         },
     },
     mounted() {
@@ -266,7 +277,6 @@ export default defineComponent({
                             .on('pointerup', this.onDragEnd)
                             .on('pointerupoutside', this.onDragEnd)
                             .on('pointermove', this.onDragMove)
-                            .on('pointerover', this.onPointerOver)
                             .on('pointerout', this.onPointerLeave);
                     }
                     sprite.anchor.set(0.5);
@@ -278,7 +288,6 @@ export default defineComponent({
                 else {
                     const sprite = new PIXI.Sprite();
                     sprite.interactive = true;
-                    sprite.on('pointerover', this.onPointerOver);
                     sprite.anchor.set(0.5);
                     sprite.width = this.squareLength;
                     sprite.height = this.squareLength;
@@ -299,7 +308,6 @@ export default defineComponent({
                 square.endFill();
                 square.pivot.x = square.width / 2;
                 square.pivot.y = square.height / 2;
-                square.on('pointerover', this.onPointerOver);
                 squareContainer.addChild(square);
                 this.boardContainer.addChild(squareContainer);
             }
@@ -312,6 +320,10 @@ export default defineComponent({
             this.highlight.originalPlace = this.createHighlight(0xffffff);
             // @ts-ignore TS2339
             this.drag.originalParent.addChild(this.highlight.originalPlace);
+            const selected = event.currentTarget;
+            const piece = selected.name;
+            const place = selected.parent.name;
+            this.$emit('selected', { piece, place });
             this.drag.dragNode.alpha = 0.5;
             // @ts-ignore TS2345
             this.drag.dragNode.setParent(this.drag.tempContainer);
@@ -356,6 +368,7 @@ export default defineComponent({
             }
             this.clearDrag();
             this.clearHighlight();
+            this.$emit('deselected', true);
         },
         onDragMove(): void {
             if (this.drag.dragNode && this.drag.dragData) {
@@ -398,6 +411,22 @@ export default defineComponent({
         clearHighlight(): void {
             this.highlight.originalPlace = null;
             this.highlight.closestTarget = null;
+            this.clearLegalMoves();
+        },
+        highlightLegalMoves(): void {
+            for (const move of this.legalMovesForSelection) {
+                const square = this.squareMap[move];
+                const highlight = this.createHighlight(0x00ff00);
+                square.addChild(highlight);
+                this.highlight.legalTargets.push(highlight);
+            }
+        },
+        clearLegalMoves(): void {
+            for (let i = this.highlight.legalTargets.length - 1; i >= 0; i--) {
+                const node = this.highlight.legalTargets[i];
+                node.destroy();
+                this.highlight.legalTargets.pop();
+            }
         },
         calculateContainerLength(): void {
             this.containerLength = this.parentWidth() > this.parentHeight() ? this.parentHeight() : this.parentWidth();
