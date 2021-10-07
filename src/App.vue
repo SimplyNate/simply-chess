@@ -16,7 +16,7 @@
 import { defineComponent } from 'vue';
 // import Board from '@/board/Board.vue';
 import CanvasBoard from '@/board/CanvasBoard.vue';
-import { Selection } from '@/board/CBoard';
+import { Selection } from '@/board/BoardUtils';
 
 interface AppData {
     containerHeight: number,

@@ -6,7 +6,7 @@
 import { defineComponent, PropType } from 'vue';
 import * as PIXI from 'pixi.js';
 import { separateFEN, parsePlacementToMap } from '@/board/utils';
-import { ICanvasBoard, BoardConfig, LegalMovesForSelection } from '@/board/CBoard';
+import { ICanvasBoard, BoardConfig, LegalMovesForSelection } from '@/board/BoardUtils';
 
 export default defineComponent({
     name: 'CanvasBoard',
