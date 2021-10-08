@@ -14,7 +14,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-// import Board from '@/board/Board.vue';
 import CanvasBoard from '@/board/CanvasBoard.vue';
 import { Selection } from '@/board/BoardUtils';
 
@@ -29,7 +28,6 @@ interface AppData {
 export default defineComponent({
     name: 'App',
     components: {
-        // Board,
         CanvasBoard,
     },
     data(): AppData {
