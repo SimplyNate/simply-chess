@@ -65,6 +65,7 @@ export default defineComponent({
                 legalTargets: [],
             },
             placedPieces: [],
+            freeSpaces: [],
         };
     },
     watch: {
@@ -182,6 +183,17 @@ export default defineComponent({
             this.boardMap = parsePlacementToMap(this.fen.piecePlacement);
             this.clearPieces();
             this.placePieces();
+            this.findFreeSpaces();
+        },
+        findFreeSpaces(): void {
+            const boardArray = Object.keys(this.boardMap);
+            const filtered = [];
+            for (const place of boardArray) {
+                if (this.boardMap[place] === 'x') {
+                    filtered.push(this.squareMap[place]);
+                }
+            }
+            this.freeSpaces = filtered;
         },
         isPieceInteractive(piece: string): boolean {
             return (this.fen.activeColor === 'w' && piece.charCodeAt(0) < 97) ||
@@ -198,15 +210,12 @@ export default defineComponent({
             const dragX2 = dragX + this.drag.dragNode.width;
             // @ts-ignore TS2339
             const dragY2 = dragY + this.drag.dragNode.height;
-            for (const place of Object.keys(this.squareMap)) {
-                if (place === 'x') {
-                    const square = this.squareMap[place];
-                    const { x, y, width, height } = square;
-                    const x2 = x + width;
-                    const y2 = y + height;
-                    if (dragX < x2 && dragX2 > x && dragY < y2 && dragY2 > y) {
-                        collisions.push(square);
-                    }
+            for (const place of this.freeSpaces) {
+                const { x, y, width, height } = place;
+                const x2 = x + width;
+                const y2 = y + height;
+                if (dragX < x2 && dragX2 > x && dragY < y2 && dragY2 > y) {
+                    collisions.push(place);
                 }
             }
             // @ts-ignore TS2322
@@ -390,8 +399,8 @@ export default defineComponent({
                 }
                 // Check which position mouse is closest to
                 const collisions = this.isColliding();
-                console.log(collisions);
                 if (collisions.length > 0) {
+                    console.log(collisions);
                     this.sortCollisionsByNearest(collisions, newPosition.x, newPosition.y);
                     const closestCollision = collisions[0];
                     if (this.boardMap[closestCollision.parent.name] === 'x') {
