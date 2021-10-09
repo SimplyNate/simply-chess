@@ -6,11 +6,17 @@ export function isColliding(dragNode: PIXI.Sprite, freeSpaces: PIXI.Sprite[]): P
     const dragY = dragNode.y - (dragNode.height / 2);
     const dragX2 = dragX + dragNode.width;
     const dragY2 = dragY + dragNode.height;
-    for (const place of freeSpaces) {
+    const filtered = freeSpaces.filter((f) => {
+        return Math.abs(f.x - dragNode.x) <= dragNode.width + 100;
+    });
+    console.log(filtered);
+    for (const place of filtered) {
         const { x, y, width, height } = place;
-        const x2 = x + width;
-        const y2 = y + height;
-        if (dragX < x2 && dragX2 > x && dragY < y2 && dragY2 > y) {
+        const x1 = x - (width / 2);
+        const y1 = y - (height / 2);
+        const x2 = x1 + width;
+        const y2 = y1 + height;
+        if (dragX < x2 && dragX2 > x1 && dragY < y2 && dragY2 > y1) {
             collisions.push(place);
         }
     }

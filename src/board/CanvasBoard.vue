@@ -7,6 +7,7 @@ import { defineComponent, PropType } from 'vue';
 import * as PIXI from 'pixi.js';
 import { separateFEN, parsePlacementToMap, rank, file } from '@/board/utils';
 import { ICanvasBoard, BoardConfig, LegalMovesForSelection } from '@/board/BoardUtils';
+// eslint-disable-next-line no-unused-vars
 import { getNearestCollision, isColliding } from '@/board/Collision';
 
 export default defineComponent({
@@ -221,8 +222,7 @@ export default defineComponent({
                         sprite.on('pointerdown', this.onDragStart)
                             .on('pointerup', this.onDragEnd)
                             .on('pointerupoutside', this.onDragEnd)
-                            .on('pointermove', this.onDragMove)
-                            .on('pointerout', this.onPointerLeave);
+                            .on('pointermove', this.onDragMove);
                     }
                     sprite.anchor.set(0.5);
                     sprite.name = piece;
@@ -319,7 +319,8 @@ export default defineComponent({
             this.$emit('deselected', true);
         },
         onDragMove(): void {
-            if (this.drag.dragNode && this.drag.dragData) {
+            if (this.drag.dragNode) {
+                console.time('isColliding');
                 // @ts-ignore TS2345
                 const newPosition = this.drag.dragData.getLocalPosition(this.drag.dragNode.parent);
                 if (newPosition.x > this.containerWidth) {
@@ -341,7 +342,6 @@ export default defineComponent({
                     this.drag.dragNode.y = newPosition.y;
                 }
                 // Check which position mouse is closest to
-                console.time('collision');
                 // @ts-ignore TS2345
                 const collisions = isColliding(this.drag.dragNode, this.freeSpaces);
                 if (collisions.length > 0) {
@@ -354,21 +354,8 @@ export default defineComponent({
                         closestCollision.parent.addChild(this.highlight.closestTarget);
                     }
                 }
-                console.timeEnd('collision');
+                console.timeEnd('isColliding');
             }
-        },
-        onPointerOver(event: PIXI.InteractionEvent): void {
-            if (this.highlight.closestTarget) {
-                this.highlight.closestTarget.destroy();
-                this.highlight.closestTarget = null;
-            }
-            const selected = event.currentTarget;
-            const piece = selected.name;
-            const place = selected.parent.name;
-            console.log(piece, place);
-        },
-        onPointerLeave(): void {
-            console.log('left');
         },
         clearDrag(): void {
             this.drag.dragNode = null;
