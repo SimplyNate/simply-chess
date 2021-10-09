@@ -374,8 +374,24 @@ export default defineComponent({
             if (this.drag.dragNode && this.drag.dragData) {
                 // @ts-ignore TS2345
                 const newPosition = this.drag.dragData.getLocalPosition(this.drag.dragNode.parent);
-                this.drag.dragNode.x = newPosition.x;
-                this.drag.dragNode.y = newPosition.y;
+                if (newPosition.x > this.containerWidth) {
+                    this.drag.dragNode.x = this.containerWidth;
+                }
+                else if (newPosition.x < 0) {
+                    this.drag.dragNode.x = 0;
+                }
+                else {
+                    this.drag.dragNode.x = newPosition.x;
+                }
+                if (newPosition.y > this.containerHeight) {
+                    this.drag.dragNode.y = this.containerHeight;
+                }
+                else if (newPosition.y < 0) {
+                    this.drag.dragNode.y = 0;
+                }
+                else {
+                    this.drag.dragNode.y = newPosition.y;
+                }
                 // Check which position mouse is closest to
                 const collisions = this.isColliding();
                 if (collisions.length > 0) {
