@@ -47,14 +47,17 @@ export function parsePlacementToMap(piecePlacement: string): BoardMap {
     const map: BoardMap = {};
     const rows = piecePlacement.split('/');
     let rank = 8;
-    const columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
     for (const row of rows) {
         const positions = convertRowToArray(row);
         for (let i = 0; i < positions.length; i++) {
-            const column = columns[i];
-            map[`${column}-${rank}`] = positions[i];
+            const f = file[i];
+            map[`${f}-${rank}`] = positions[i];
         }
         rank -= 1;
     }
     return map;
 }
+
+export const rank = [8, 7, 6, 5, 4, 3, 2, 1];
+export const file = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+export const pieceMap = [66, 75, 78, 80, 81, 82, 98, 107, 110, 112, 113, 114];

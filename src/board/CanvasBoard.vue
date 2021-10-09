@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import * as PIXI from 'pixi.js';
-import { separateFEN, parsePlacementToMap } from '@/board/utils';
+import { separateFEN, parsePlacementToMap, rank, file } from '@/board/utils';
 import { ICanvasBoard, BoardConfig, LegalMovesForSelection } from '@/board/BoardUtils';
 
 export default defineComponent({
@@ -51,11 +51,8 @@ export default defineComponent({
                 halfMoveClock: 0,
                 fullMoveNumber: 0,
             },
-            row: [8, 7, 6, 5, 4, 3, 2, 1],
-            rank: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
             dark: 0xb58863,
             light: 0xf0d9b5,
-            pieceMap: [66, 75, 78, 80, 81, 82, 98, 107, 110, 112, 113, 114],
             drag: {
                 dragData: null,
                 dragNode: null,
@@ -122,12 +119,12 @@ export default defineComponent({
             }
         },
         drawBoard(): void {
-            for (let y = 0; y < this.row.length; y++) {
-                for (let x = 0; x < this.rank.length; x++) {
-                    const id = `${this.rank[x]}-${this.row[y]}`;
+            for (let y = 0; y < rank.length; y++) {
+                for (let x = 0; x < file.length; x++) {
+                    const id = `${file[x]}-${rank[y]}`;
                     const startX = x * this.squareLength;
                     const startY = y * this.squareLength;
-                    const color = this.getColorForSquare(this.rank[x], this.row[y]);
+                    const color = this.getColorForSquare(file[x], rank[y]);
                     this.squareMap[id] = this.drawSquare(startX, startY, color);
                     this.squareMap[id].name = id;
                 }
@@ -191,25 +188,24 @@ export default defineComponent({
                 (this.fen.activeColor === 'b' && piece.charCodeAt(0) > 97);
         },
         isColliding(): PIXI.DisplayObject[] {
+            // This function will only be called when drag.dragNode is defined
             const collisions = [];
-            if (this.drag.dragNode) {
-                const dragX = this.drag.dragNode.x;
-                const dragY = this.drag.dragNode.y;
-                // @ts-ignore TS2339
-                const dragW = this.drag.dragNode.width;
-                // @ts-ignore TS2339
-                const dragH = this.drag.dragNode.height;
-                const dragX2 = dragX + dragW;
-                const dragY2 = dragY + dragH;
-                for (const place of Object.keys(this.squareMap)) {
-                    if (place === 'x') {
-                        const square = this.squareMap[place];
-                        const { x, y, width, height } = square;
-                        const x2 = x + width;
-                        const y2 = y + height;
-                        if (dragX < x2 && dragX2 > x && dragY < y2 && dragY2 > y) {
-                            collisions.push(square);
-                        }
+            // @ts-ignore TS2339
+            const dragX = this.drag.dragNode.x - (this.drag.dragNode.width / 2);
+            // @ts-ignore TS2339
+            const dragY = this.drag.dragNode.y - (this.drag.dragNode.height / 2);
+            // @ts-ignore TS2339
+            const dragX2 = dragX + this.drag.dragNode.width;
+            // @ts-ignore TS2339
+            const dragY2 = dragY + this.drag.dragNode.height;
+            for (const place of Object.keys(this.squareMap)) {
+                if (place === 'x') {
+                    const square = this.squareMap[place];
+                    const { x, y, width, height } = square;
+                    const x2 = x + width;
+                    const y2 = y + height;
+                    if (dragX < x2 && dragX2 > x && dragY < y2 && dragY2 > y) {
+                        collisions.push(square);
                     }
                 }
             }
@@ -394,6 +390,7 @@ export default defineComponent({
                 }
                 // Check which position mouse is closest to
                 const collisions = this.isColliding();
+                console.log(collisions);
                 if (collisions.length > 0) {
                     this.sortCollisionsByNearest(collisions, newPosition.x, newPosition.y);
                     const closestCollision = collisions[0];
@@ -454,7 +451,7 @@ export default defineComponent({
             return this.app ? this.app.view.height : 0;
         },
         calculateSquareLength(): void {
-            this.squareLength = this.containerLength / this.row.length;
+            this.squareLength = this.containerLength / rank.length;
         },
     },
 });
