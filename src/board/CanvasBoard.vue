@@ -7,6 +7,7 @@ import { defineComponent, PropType } from 'vue';
 import * as PIXI from 'pixi.js';
 import { separateFEN, parsePlacementToMap, rank, file } from '@/board/utils';
 import { ICanvasBoard, BoardConfig, LegalMovesForSelection } from '@/board/BoardUtils';
+import { getNearestCollision, isColliding } from '@/board/Collision';
 
 export default defineComponent({
     name: 'CanvasBoard',
@@ -199,67 +200,6 @@ export default defineComponent({
             return (this.fen.activeColor === 'w' && piece.charCodeAt(0) < 97) ||
                 (this.fen.activeColor === 'b' && piece.charCodeAt(0) > 97);
         },
-        isColliding(): PIXI.DisplayObject[] {
-            // This function will only be called when drag.dragNode is defined
-            const collisions = [];
-            // @ts-ignore TS2339
-            const dragX = this.drag.dragNode.x - (this.drag.dragNode.width / 2);
-            // @ts-ignore TS2339
-            const dragY = this.drag.dragNode.y - (this.drag.dragNode.height / 2);
-            // @ts-ignore TS2339
-            const dragX2 = dragX + this.drag.dragNode.width;
-            // @ts-ignore TS2339
-            const dragY2 = dragY + this.drag.dragNode.height;
-            for (const place of this.freeSpaces) {
-                const { x, y, width, height } = place;
-                const x2 = x + width;
-                const y2 = y + height;
-                if (dragX < x2 && dragX2 > x && dragY < y2 && dragY2 > y) {
-                    collisions.push(place);
-                }
-            }
-            // @ts-ignore TS2322
-            return collisions;
-        },
-        sortCollisionsByNearest(collisions: PIXI.DisplayObject[], currentX: number, currentY: number): void {
-            collisions.sort((a, b) => {
-                const aParams = {
-                    x1: a.x,
-                    // @ts-ignore TS2339
-                    x2: a.x + a.width,
-                    y1: a.y,
-                    // @ts-ignore TS2339
-                    y2: a.y + a.height,
-                };
-                const bParams = {
-                    x1: b.x,
-                    // @ts-ignore TS2339
-                    x2: b.x + b.width,
-                    y1: b.y,
-                    // @ts-ignore TS2339
-                    y2: b.y + b.height,
-                };
-                const aCenter = {
-                    x: aParams.x2 - aParams.x1,
-                    y: aParams.y2 - aParams.y1,
-                };
-                const bCenter = {
-                    x: bParams.x2 - bParams.x1,
-                    y: bParams.y2 - bParams.y1,
-                };
-                const aDelta = {
-                    x: Math.abs(currentX - aCenter.x),
-                    y: Math.abs(currentY - aCenter.y),
-                };
-                const aHypotenuse = Math.hypot(aDelta.x, aDelta.y);
-                const bDelta = {
-                    x: Math.abs(currentX - bCenter.x),
-                    y: Math.abs(currentY - bCenter.y),
-                };
-                const bHypotenuse = Math.hypot(bDelta.x, bDelta.y);
-                return aHypotenuse - bHypotenuse;
-            });
-        },
         clearPieces(): void {
             for (let i = this.placedPieces.length - 1; i >= 0; i--) {
                 const piece = this.placedPieces.pop();
@@ -320,8 +260,10 @@ export default defineComponent({
         },
         onDragStart(event: PIXI.InteractionEvent): void {
             this.drag.dragData = event.data;
+            // @ts-ignore TS2740
             this.drag.dragNode = event.currentTarget;
-            this.drag.originalParent = this.drag.dragNode.parent;
+            // @ts-ignore TS2322
+            this.drag.originalParent = this.drag.dragNode?.parent;
             this.highlight.originalPlace = this.createHighlight(0xffffff);
             // @ts-ignore TS2339
             this.drag.originalParent.addChild(this.highlight.originalPlace);
@@ -329,6 +271,7 @@ export default defineComponent({
             const piece = selected.name;
             const place = selected.parent.name;
             this.$emit('selected', { piece, place });
+            // @ts-ignore TS2531
             this.drag.dragNode.alpha = 0.5;
             // @ts-ignore TS2345
             this.drag.dragNode.setParent(this.drag.tempContainer);
@@ -398,11 +341,12 @@ export default defineComponent({
                     this.drag.dragNode.y = newPosition.y;
                 }
                 // Check which position mouse is closest to
-                const collisions = this.isColliding();
+                console.time('collision');
+                // @ts-ignore TS2345
+                const collisions = isColliding(this.drag.dragNode, this.freeSpaces);
                 if (collisions.length > 0) {
                     console.log(collisions);
-                    this.sortCollisionsByNearest(collisions, newPosition.x, newPosition.y);
-                    const closestCollision = collisions[0];
+                    const closestCollision = getNearestCollision(collisions, newPosition.x, newPosition.y);
                     if (this.boardMap[closestCollision.parent.name] === 'x') {
                         // TODO: Fix this interaction
                         this.highlight.closestTarget = this.createHighlight(0x0000ff);
@@ -410,6 +354,7 @@ export default defineComponent({
                         closestCollision.parent.addChild(this.highlight.closestTarget);
                     }
                 }
+                console.timeEnd('collision');
             }
         },
         onPointerOver(event: PIXI.InteractionEvent): void {

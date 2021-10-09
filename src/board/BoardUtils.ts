@@ -19,8 +19,8 @@ export interface SquareMap {
 
 export interface IDrag {
     dragData: null | PIXI.InteractionData,
-    dragNode: null | PIXI.DisplayObject,
-    originalParent: null | PIXI.DisplayObject,
+    dragNode: null | PIXI.Sprite,
+    originalParent: null | PIXI.Sprite,
     tempContainer: PIXI.Container,
 }
 
@@ -45,7 +45,7 @@ export interface ICanvasBoard {
     light: number,
     drag: IDrag,
     highlight: IHighlight,
-    placedPieces: PIXI.Container[],
+    placedPieces: PIXI.Sprite[],
     freeSpaces: PIXI.Container[],
 }
 
