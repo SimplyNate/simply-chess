@@ -320,7 +320,6 @@ export default defineComponent({
         },
         onDragMove(): void {
             if (this.drag.dragNode) {
-                console.time('isColliding');
                 // @ts-ignore TS2345
                 const newPosition = this.drag.dragData.getLocalPosition(this.drag.dragNode.parent);
                 if (newPosition.x > this.containerWidth) {
@@ -345,7 +344,6 @@ export default defineComponent({
                 // @ts-ignore TS2345
                 const collisions = isColliding(this.drag.dragNode, this.freeSpaces);
                 if (collisions.length > 0) {
-                    console.log(collisions);
                     const closestCollision = getNearestCollision(collisions, newPosition.x, newPosition.y);
                     if (this.boardMap[closestCollision.parent.name] === 'x') {
                         // TODO: Fix this interaction
@@ -354,7 +352,6 @@ export default defineComponent({
                         closestCollision.parent.addChild(this.highlight.closestTarget);
                     }
                 }
-                console.timeEnd('isColliding');
             }
         },
         clearDrag(): void {
