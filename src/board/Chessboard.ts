@@ -9,6 +9,13 @@ interface SquareMap {
     [index: string]: PIXI.Container,
 }
 
+interface EventListeners {
+    pointerDown(event: PIXI.InteractionEvent): void,
+    pointerUp(event: PIXI.InteractionEvent): void,
+    pointerUpOutside(event: PIXI.InteractionEvent): void,
+    pointerMove(event: PIXI.InteractionEvent): void,
+}
+
 export class Chessboard {
     private containerLength: number = 0;
     private squareLength: number = 0;
@@ -45,7 +52,7 @@ export class Chessboard {
         r: 114,
     };
 
-    constructor(target: HTMLElement, pixelRatio: number = 1, fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1') {
+    constructor(target: HTMLElement, fen: string, eventListeners: EventListeners, pixelRatio: number = 1) {
         this.app = new PIXI.Application({
             antialias: true,
             resolution: pixelRatio,

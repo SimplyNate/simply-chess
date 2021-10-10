@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js';
 
-export function isColliding(dragNode: PIXI.Sprite, freeSpaces: PIXI.Sprite[]): PIXI.Sprite[] {
+export function isColliding(dragNode: PIXI.Sprite, legalSpaces: PIXI.Sprite[]): PIXI.Sprite[] {
     const collisions = [];
     const dragX = dragNode.x - (dragNode.width / 2);
     const dragY = dragNode.y - (dragNode.height / 2);
     const dragX2 = dragX + dragNode.width;
     const dragY2 = dragY + dragNode.height;
-    const filtered = freeSpaces.filter((f) => {
+    const filtered = legalSpaces.filter((f) => {
         return Math.abs(f.x - dragNode.x) <= dragNode.width * 2 && Math.abs(f.y - dragNode.y) <= dragNode.height * 2;
     });
     for (const place of filtered) {

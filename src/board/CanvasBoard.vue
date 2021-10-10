@@ -342,7 +342,7 @@ export default defineComponent({
                 }
                 // Check which position mouse is closest to
                 // @ts-ignore TS2345
-                const collisions = isColliding(this.drag.dragNode, this.freeSpaces);
+                const collisions = isColliding(this.drag.dragNode, this.highlight.legalTargets);
                 if (collisions.length > 0) {
                     const closestCollision = getNearestCollision(collisions, newPosition.x, newPosition.y);
                     if (this.boardMap[closestCollision.parent.name] === 'x') {
