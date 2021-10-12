@@ -185,7 +185,6 @@ export default defineComponent({
             this.boardMap = parsePlacementToMap(this.fen.piecePlacement);
             this.clearPieces();
             this.placePieces();
-            this.findFreeSpaces();
         },
         findFreeSpaces(): void {
             const boardArray = Object.keys(this.boardMap);
