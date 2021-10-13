@@ -98,6 +98,8 @@ export default defineComponent({
         this.loadSVGs();
         this.loadTextures();
         const container = new PIXI.Container();
+        container.interactive = true;
+        container.on('pointermove', this.onDragMove);
         this.app.stage.addChild(container);
         this.boardContainer = container;
         element.appendChild(this.app.view);
@@ -220,8 +222,7 @@ export default defineComponent({
                         sprite.buttonMode = true;
                         sprite.on('pointerdown', this.onDragStart)
                             .on('pointerup', this.onDragEnd)
-                            .on('pointerupoutside', this.onDragEnd)
-                            .on('pointermove', this.onDragMove);
+                            .on('pointerupoutside', this.onDragEnd);
                     }
                     sprite.anchor.set(0.5);
                     sprite.name = piece;
@@ -318,6 +319,7 @@ export default defineComponent({
             this.$emit('deselected', true);
         },
         onDragMove(): void {
+            console.log('dragMove');
             if (this.drag.dragNode) {
                 // @ts-ignore TS2345
                 const newPosition = this.drag.dragData.getLocalPosition(this.drag.dragNode.parent);
@@ -343,6 +345,7 @@ export default defineComponent({
                 // @ts-ignore TS2345
                 const collisions = isColliding(this.drag.dragNode, this.highlight.legalTargets);
                 if (collisions.length > 0) {
+                    console.log(collisions);
                     const closestCollision = getNearestCollision(collisions, newPosition.x, newPosition.y);
                     if (this.boardMap[closestCollision.parent.name] === 'x') {
                         // TODO: Fix this interaction
