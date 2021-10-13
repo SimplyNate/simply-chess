@@ -319,7 +319,6 @@ export default defineComponent({
             this.$emit('deselected', true);
         },
         onDragMove(): void {
-            console.log('dragMove');
             if (this.drag.dragNode) {
                 // @ts-ignore TS2345
                 const newPosition = this.drag.dragData.getLocalPosition(this.drag.dragNode.parent);
@@ -344,15 +343,12 @@ export default defineComponent({
                 // Check which position mouse is closest to
                 // @ts-ignore TS2345
                 const collisions = isColliding(this.drag.dragNode, this.highlight.legalTargets);
-                if (collisions.length > 0) {
-                    console.log(collisions);
-                    const closestCollision = getNearestCollision(collisions, newPosition.x, newPosition.y);
-                    if (this.boardMap[closestCollision.parent.name] === 'x') {
-                        // TODO: Fix this interaction
-                        this.highlight.closestTarget = this.createHighlight(0x0000ff);
-                        // @ts-ignore TS2345
-                        closestCollision.parent.addChild(this.highlight.closestTarget);
-                    }
+                // const closestCollision = getNearestCollision(collisions, newPosition.x, newPosition.y);
+                for (const collision of collisions) {
+                    // TODO: Fix this interaction
+                    this.highlight.closestTarget = this.createHighlight(0x0000ff);
+                    // @ts-ignore TS2345
+                    collision.parent.addChild(this.highlight.closestTarget);
                 }
             }
         },

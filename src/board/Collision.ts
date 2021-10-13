@@ -6,9 +6,11 @@ export function isColliding(dragNode: PIXI.Sprite, legalSpaces: PIXI.Sprite[]): 
     const dragY = dragNode.y - (dragNode.height / 2);
     const dragX2 = dragX + dragNode.width;
     const dragY2 = dragY + dragNode.height;
+    console.log(dragX, dragY, dragX2, dragY2);
     const filtered = legalSpaces.filter((f) => {
         return Math.abs(f.x - dragNode.x) <= dragNode.width * 2 && Math.abs(f.y - dragNode.y) <= dragNode.height * 2;
     });
+    console.log(filtered);
     for (const place of filtered) {
         const { x, y, width, height } = place;
         const x1 = x - (width / 2);
