@@ -68,6 +68,10 @@ export default defineComponent({
             },
             placedPieces: [],
             freeSpaces: [],
+            globalOffset: {
+                x: 0,
+                y: 0,
+            },
         };
     },
     watch: {
@@ -111,9 +115,14 @@ export default defineComponent({
         container.y = this.app.screen.height / 2;
         container.pivot.x = container.width / 2.28;
         container.pivot.y = container.height / 2.28;
+        this.calculateGlobalOffset();
     },
     methods: {
-        applyConfig() {
+        calculateGlobalOffset(): void {
+            this.globalOffset.x = this.boardContainer.x - (this.boardContainer.width / 2);
+            this.globalOffset.y = this.boardContainer.y - (this.boardContainer.height / 2);
+        },
+        applyConfig(): void {
             if (this.boardConfig) {
                 if (this.boardConfig.light) {
                     this.light = this.boardConfig.light;
@@ -342,7 +351,7 @@ export default defineComponent({
                 }
                 // Check which position mouse is closest to
                 // @ts-ignore TS2345
-                const collisions = isColliding(this.drag.dragNode, this.highlight.legalTargets);
+                const collisions = isColliding(this.drag.dragNode, this.highlight.legalTargets, this.globalOffset);
                 // const closestCollision = getNearestCollision(collisions, newPosition.x, newPosition.y);
                 for (const collision of collisions) {
                     // TODO: Fix this interaction

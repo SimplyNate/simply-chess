@@ -52,7 +52,24 @@ export default defineComponent({
         calculateLegalMoves(selection: Selection) {
             console.log(`Received: ${selection.piece}, ${selection.place}`);
             this.legalMoves.length = 0;
+            this.legalMoves.push('b-6');
+            this.legalMoves.push('c-6');
             this.legalMoves.push('d-6');
+            this.legalMoves.push('e-6');
+            this.legalMoves.push('f-6');
+            this.legalMoves.push('g-6');
+            this.legalMoves.push('b-5');
+            this.legalMoves.push('c-5');
+            this.legalMoves.push('d-5');
+            this.legalMoves.push('e-5');
+            this.legalMoves.push('f-5');
+            this.legalMoves.push('g-5');
+            this.legalMoves.push('b-4');
+            this.legalMoves.push('c-4');
+            this.legalMoves.push('d-4');
+            this.legalMoves.push('e-4');
+            this.legalMoves.push('f-4');
+            this.legalMoves.push('g-4');
         },
         clearLegalMoves() {
             this.legalMoves.length = 0;

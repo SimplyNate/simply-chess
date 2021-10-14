@@ -1,23 +1,23 @@
 import * as PIXI from 'pixi.js';
 
-export function isColliding(dragNode: PIXI.Sprite, legalSpaces: PIXI.Sprite[]): PIXI.Sprite[] {
+export function isColliding(dragNode: PIXI.Sprite, legalSpaces: PIXI.Sprite[], globalOffset: { x: number, y: number }): PIXI.Sprite[] {
     const collisions = [];
-    const dragX = dragNode.x - (dragNode.width / 2);
-    const dragY = dragNode.y - (dragNode.height / 2);
-    const dragX2 = dragX + dragNode.width;
-    const dragY2 = dragY + dragNode.height;
-    console.log(dragX, dragY, dragX2, dragY2);
-    const filtered = legalSpaces.filter((f) => {
-        return Math.abs(f.x - dragNode.x) <= dragNode.width * 2 && Math.abs(f.y - dragNode.y) <= dragNode.height * 2;
-    });
-    console.log(filtered);
-    for (const place of filtered) {
-        const { x, y, width, height } = place;
-        const x1 = x - (width / 2);
-        const y1 = y - (height / 2);
-        const x2 = x1 + width;
-        const y2 = y1 + height;
-        if (dragX < x2 && dragX2 > x1 && dragY < y2 && dragY2 > y1) {
+    const aX = dragNode.x - (dragNode.width / 2);
+    const aY = dragNode.y - (dragNode.height / 2);
+    const aX2 = aX + dragNode.width;
+    const aY2 = aY + dragNode.height;
+    // const filtered = legalSpaces.filter((f) => {
+    //     return Math.abs(f.x - dragNode.x) <= dragNode.width * 2 && Math.abs(f.y - dragNode.y) <= dragNode.height * 2;
+    // });
+    for (const place of legalSpaces) {
+        // Use parent node because "place" inherits position from parent
+        const parent = place.parent;
+        const bX1 = parent.x - (parent.width / 2) + globalOffset.x;
+        const bY1 = parent.y - (parent.height / 2) + globalOffset.y;
+        const bX2 = bX1 + parent.width;
+        const bY2 = bY1 + parent.height;
+        if (aX <= bX2 && aX2 >= bX1 && aY <= bY2 && aY2 >= bY1) {
+            console.log(`${aX} < ${bX2} && ${aX2} > ${bX1} && ${aY} < ${bY2} && ${aY2} > ${bY1}`);
             collisions.push(place);
         }
     }
