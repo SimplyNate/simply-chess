@@ -65,6 +65,7 @@ export default defineComponent({
                 originalPlace: null,
                 closestTarget: null,
                 legalTargets: [],
+                collisions: [],
             },
             placedPieces: [],
             freeSpaces: [],
@@ -349,15 +350,16 @@ export default defineComponent({
                 else {
                     this.drag.dragNode.y = newPosition.y;
                 }
+                this.clearCollisions();
                 // Check which position mouse is closest to
                 // @ts-ignore TS2345
                 const collisions = isColliding(this.drag.dragNode, this.highlight.legalTargets, this.globalOffset);
-                // const closestCollision = getNearestCollision(collisions, newPosition.x, newPosition.y);
-                for (const collision of collisions) {
-                    // TODO: Fix this interaction
-                    this.highlight.closestTarget = this.createHighlight(0x0000ff);
+                if (collisions.length > 0) {
+                    const closestCollision = getNearestCollision(collisions, newPosition.x, newPosition.y, this.globalOffset);
+                    const highlight = this.createHighlight(0x0000ff);
                     // @ts-ignore TS2345
-                    collision.parent.addChild(this.highlight.closestTarget);
+                    closestCollision.parent.addChild(highlight);
+                    this.highlight.collisions.push(highlight);
                 }
             }
         },
@@ -370,6 +372,7 @@ export default defineComponent({
             this.highlight.originalPlace = null;
             this.highlight.closestTarget = null;
             this.clearLegalMoves();
+            this.clearCollisions();
         },
         highlightLegalMoves(): void {
             for (const move of this.legalMovesForSelection) {
@@ -384,6 +387,13 @@ export default defineComponent({
                 const node = this.highlight.legalTargets[i];
                 node.destroy();
                 this.highlight.legalTargets.pop();
+            }
+        },
+        clearCollisions(): void {
+            for (let i = this.highlight.collisions.length - 1; i >= 0; i--) {
+                const node = this.highlight.collisions[i];
+                node.destroy();
+                this.highlight.collisions.pop();
             }
         },
         calculateContainerLength(): void {
