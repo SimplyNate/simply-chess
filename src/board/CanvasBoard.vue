@@ -73,6 +73,7 @@ export default defineComponent({
                 x: 0,
                 y: 0,
             },
+            cachedCollision: null,
         };
     },
     watch: {
@@ -354,6 +355,7 @@ export default defineComponent({
                 // Check which position mouse is closest to
                 // @ts-ignore TS2345
                 const collision = getPointerCollision(newPosition.x, newPosition.y, this.highlight.legalTargets, this.globalOffset);
+                this.cachedCollision = collision;
                 if (collision) {
                     const highlight = this.createHighlight(0x0000ff);
                     // @ts-ignore TS2345

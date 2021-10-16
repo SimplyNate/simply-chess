@@ -51,7 +51,8 @@ export interface ICanvasBoard {
     globalOffset: {
         x: number,
         y: number,
-    }
+    },
+    cachedCollision: null | PIXI.Sprite,
 }
 
 export type LegalMovesForSelection = string[];
