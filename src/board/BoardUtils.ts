@@ -28,7 +28,6 @@ export interface IHighlight {
     originalPlace: null | PIXI.Graphics,
     closestTarget: null | PIXI.Graphics,
     legalTargets: PIXI.Graphics[],
-    collisions: PIXI.Graphics[],
 }
 
 export interface ICanvasBoard {

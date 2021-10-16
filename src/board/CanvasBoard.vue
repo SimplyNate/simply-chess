@@ -7,7 +7,6 @@ import { defineComponent, PropType } from 'vue';
 import * as PIXI from 'pixi.js';
 import { separateFEN, parsePlacementToMap, rank, file } from '@/board/utils';
 import { ICanvasBoard, BoardConfig, LegalMovesForSelection } from '@/board/BoardUtils';
-// eslint-disable-next-line no-unused-vars
 import { getPointerCollision } from '@/board/Collision';
 
 export default defineComponent({
@@ -65,7 +64,6 @@ export default defineComponent({
                 originalPlace: null,
                 closestTarget: null,
                 legalTargets: [],
-                collisions: [],
             },
             placedPieces: [],
             freeSpaces: [],
@@ -303,19 +301,17 @@ export default defineComponent({
         onDragEnd(): void {
             if (this.drag.dragNode) {
                 this.drag.dragNode.alpha = 1;
-                if (this.highlight.closestTarget?.name) {
+                if (this.highlight.closestTarget) {
                     const movePayload = {
-                        to: this.highlight.closestTarget.name,
+                        to: this.highlight.closestTarget.parent.name,
                         from: this.highlight.originalPlace?.parent.name,
                         piece: this.drag.dragNode.name,
                     };
                     this.$emit('move', movePayload);
                     console.log(movePayload);
                 }
-                else {
-                    // @ts-ignore TS2345
-                    this.drag.dragNode.setParent(this.drag.originalParent);
-                }
+                // @ts-ignore TS2345
+                this.drag.dragNode.setParent(this.drag.originalParent);
                 this.drag.dragNode.x = 0;
                 this.drag.dragNode.y = 0;
             }
@@ -351,7 +347,7 @@ export default defineComponent({
                 else {
                     this.drag.dragNode.y = newPosition.y;
                 }
-                this.clearCollisions();
+                this.clearCollision();
                 // Check which position mouse is closest to
                 // @ts-ignore TS2345
                 const collision = getPointerCollision(newPosition.x, newPosition.y, this.highlight.legalTargets, this.globalOffset);
@@ -360,7 +356,8 @@ export default defineComponent({
                     const highlight = this.createHighlight(0x0000ff);
                     // @ts-ignore TS2345
                     collision.parent.addChild(highlight);
-                    this.highlight.collisions.push(highlight);
+                    // @ts-ignore TS2740
+                    this.highlight.closestTarget = highlight;
                 }
             }
         },
@@ -373,7 +370,7 @@ export default defineComponent({
             this.highlight.originalPlace = null;
             this.highlight.closestTarget = null;
             this.clearLegalMoves();
-            this.clearCollisions();
+            this.clearCollision();
         },
         highlightLegalMoves(): void {
             for (const move of this.legalMovesForSelection) {
@@ -390,11 +387,10 @@ export default defineComponent({
                 this.highlight.legalTargets.pop();
             }
         },
-        clearCollisions(): void {
-            for (let i = this.highlight.collisions.length - 1; i >= 0; i--) {
-                const node = this.highlight.collisions[i];
-                node.destroy();
-                this.highlight.collisions.pop();
+        clearCollision(): void {
+            if (this.highlight.closestTarget) {
+                this.highlight.closestTarget.destroy();
+                this.highlight.closestTarget = null;
             }
         },
         calculateContainerLength(): void {
