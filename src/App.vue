@@ -1,5 +1,5 @@
 <template>
-    <div id="#app" :style="`width: ${containerWidth}px; height: ${containerHeight}px`">
+    <div id="app" :style="`width: ${containerWidth}px; height: ${containerHeight}px`">
         <canvas-board
             v-if="isMounted"
             :container-height="containerHeight"
@@ -79,11 +79,6 @@ export default defineComponent({
 </script>
 
 <style>
-body {
-    margin: 0;
-    padding: 0;
-    border: 0;
-}
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
