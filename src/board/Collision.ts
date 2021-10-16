@@ -7,15 +7,23 @@ interface GlobalOffset {
 
 type PointerCollision = PIXI.Sprite | null;
 
-export function getPointerCollision(px: number, py: number, legalSpaces: PIXI.Sprite[], globalOffset: GlobalOffset): PointerCollision {
+function calculateCollision(x: number, y: number, node: PIXI.Container, globalOffset: GlobalOffset): boolean {
+    const bX1 = node.x + globalOffset.x;
+    const bY1 = node.y + globalOffset.y;
+    const bX2 = bX1 + node.width;
+    const bY2 = bY1 + node.height;
+    return x < bX2 && x > bX1 && y < bY2 && y > bY1;
+}
+
+export function getPointerCollision(px: number, py: number, legalSpaces: PIXI.Sprite[], globalOffset: GlobalOffset, lastCollision: null | PIXI.Sprite = null): PointerCollision {
+    if (lastCollision) {
+        if (calculateCollision(px, py, lastCollision.parent, globalOffset)) {
+            return lastCollision;
+        }
+    }
     const filtered = legalSpaces.filter(l => Math.abs(l.parent.x + globalOffset.x - px) < l.parent.width);
     for (const place of filtered) {
-        const parent = place.parent;
-        const bX1 = parent.x + globalOffset.x;
-        const bY1 = parent.y + globalOffset.y;
-        const bX2 = bX1 + parent.width;
-        const bY2 = bY1 + parent.height;
-        if (px < bX2 && px > bX1 && py < bY2 && py > bY1) {
+        if (calculateCollision(px, py, place.parent, globalOffset)) {
             return place;
         }
     }
