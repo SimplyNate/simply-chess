@@ -8,7 +8,8 @@ interface GlobalOffset {
 type PointerCollision = PIXI.Sprite | null;
 
 export function getPointerCollision(px: number, py: number, legalSpaces: PIXI.Sprite[], globalOffset: GlobalOffset): PointerCollision {
-    for (const place of legalSpaces) {
+    const filtered = legalSpaces.filter(l => Math.abs(l.parent.x + globalOffset.x - px) < l.parent.width);
+    for (const place of filtered) {
         const parent = place.parent;
         const bX1 = parent.x + globalOffset.x;
         const bY1 = parent.y + globalOffset.y;
