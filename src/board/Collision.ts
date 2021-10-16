@@ -1,14 +1,32 @@
 import * as PIXI from 'pixi.js';
 
+interface GlobalOffset {
+    x: number,
+    y: number,
+}
+
+type PointerCollision = PIXI.Sprite | null;
+
+export function getPointerCollision(px: number, py: number, legalSpaces: PIXI.Sprite[], globalOffset: GlobalOffset): PointerCollision {
+    for (const place of legalSpaces) {
+        const parent = place.parent;
+        const bX1 = parent.x + globalOffset.x;
+        const bY1 = parent.y + globalOffset.y;
+        const bX2 = bX1 + parent.width;
+        const bY2 = bY1 + parent.height;
+        if (px < bX2 && px > bX1 && py < bY2 && py > bY1) {
+            return place;
+        }
+    }
+    return null;
+}
+
 export function isColliding(dragNode: PIXI.Sprite, legalSpaces: PIXI.Sprite[], globalOffset: { x: number, y: number }): PIXI.Sprite[] {
     const collisions = [];
     const aX = dragNode.x - (dragNode.width);
     const aY = dragNode.y - (dragNode.height);
     const aX2 = aX + dragNode.width;
     const aY2 = aY + dragNode.height;
-    // const filtered = legalSpaces.filter((f) => {
-    //     return Math.abs(f.x - dragNode.x) <= dragNode.width * 2 && Math.abs(f.y - dragNode.y) <= dragNode.height * 2;
-    // });
     for (const place of legalSpaces) {
         // Use parent node because "place" inherits position from parent
         const parent = place.parent;

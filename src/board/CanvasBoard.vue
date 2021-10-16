@@ -8,7 +8,7 @@ import * as PIXI from 'pixi.js';
 import { separateFEN, parsePlacementToMap, rank, file } from '@/board/utils';
 import { ICanvasBoard, BoardConfig, LegalMovesForSelection } from '@/board/BoardUtils';
 // eslint-disable-next-line no-unused-vars
-import { getNearestCollision, isColliding } from '@/board/Collision';
+import { getPointerCollision } from '@/board/Collision';
 
 export default defineComponent({
     name: 'CanvasBoard',
@@ -353,12 +353,11 @@ export default defineComponent({
                 this.clearCollisions();
                 // Check which position mouse is closest to
                 // @ts-ignore TS2345
-                const collisions = isColliding(this.drag.dragNode, this.highlight.legalTargets, this.globalOffset);
-                if (collisions.length > 0) {
-                    const closestCollision = getNearestCollision(collisions, newPosition.x, newPosition.y, this.globalOffset);
+                const collision = getPointerCollision(newPosition.x, newPosition.y, this.highlight.legalTargets, this.globalOffset);
+                if (collision) {
                     const highlight = this.createHighlight(0x0000ff);
                     // @ts-ignore TS2345
-                    closestCollision.parent.addChild(highlight);
+                    collision.parent.addChild(highlight);
                     this.highlight.collisions.push(highlight);
                 }
             }
