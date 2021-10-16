@@ -43,7 +43,6 @@ export function getNearestCollision(collisions: PIXI.Sprite[], cX: number, cY: n
             y: Math.abs(cY - bCenter.y),
         };
         const bHypotenuse = Math.hypot(bDelta.x, bDelta.y);
-        console.log(aHypotenuse, bHypotenuse);
         return aHypotenuse - bHypotenuse;
     });
     return collisions[0];
