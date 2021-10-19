@@ -3,6 +3,8 @@ abstract class Piece {
     abstract charCode: string;
     abstract color: 'light' | 'dark';
     abstract position: string | null;
+    abstract getLegalMoves(): string[];
+    abstract move(): void;
 }
 
 export class Pawn extends Piece {}
