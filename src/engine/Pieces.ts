@@ -3,7 +3,6 @@ import { FEN, BoardMap, separateFEN } from '@/board/utils';
 type Color = 'light' | 'dark';
 
 interface Piece {
-    encoding: number;
     name: string;
     color: Color;
     position: string | null;
@@ -31,15 +30,19 @@ export class Pawn implements Piece {
 
     move(position: string): void {
         this.position = position;
+        const [file, rank] = position.split('-');
+        this.rank = Number(rank);
+        this.file = file;
     }
 
     getLegalMoves(currentBoard: BoardMap): string[] {
         const moves = [];
         const direction = this.color === 'dark' ? -1 : 1;
         if (this.inStartingPosition) {
-            moves.push();
+            moves.push(`${this.file}-${this.rank += (2 * direction)}`);
         }
-        return [];
+        moves.push(`${this.file}-${this.rank += (1 * direction)}`);
+        return moves;
     }
 
     get code(): string {
