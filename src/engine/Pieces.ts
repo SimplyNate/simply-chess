@@ -1,31 +1,25 @@
-import { FEN, BoardMap, separateFEN } from '@/board/utils';
+import { BoardMap } from '@/board/utils';
 
 type Color = 'light' | 'dark';
 
-interface Piece {
+interface IPiece {
     name: string;
-    color: Color;
-    position: string | null;
     getLegalMoves(currentBoard: BoardMap): string[];
     get code(): string;
-    move(position: string): void;
 }
 
-export class Pawn implements Piece {
-    name = 'pawn';
+abstract class Piece {
     color: Color;
     position: string | null;
     rank: number;
     file: string;
-    inStartingPosition: boolean;
 
-    constructor(color: Color, position: string) {
+    protected constructor(color: Color, position: string) {
         this.color = color;
         this.position = position;
         const [file, rank] = position.split('-');
         this.rank = Number(rank);
         this.file = file;
-        this.inStartingPosition = (this.rank === 7 && this.color === 'dark') || (this.rank === 2 && this.color === 'light');
     }
 
     move(position: string): void {
@@ -33,6 +27,16 @@ export class Pawn implements Piece {
         const [file, rank] = position.split('-');
         this.rank = Number(rank);
         this.file = file;
+    }
+}
+
+export class Pawn extends Piece implements IPiece {
+    name = 'Pawn';
+    inStartingPosition: boolean;
+
+    constructor(color: Color, position: string) {
+        super(color, position);
+        this.inStartingPosition = (this.rank === 7 && this.color === 'dark') || (this.rank === 2 && this.color === 'light');
     }
 
     getLegalMoves(currentBoard: BoardMap): string[] {
@@ -49,8 +53,37 @@ export class Pawn implements Piece {
         return this.color === 'dark' ? 'p' : 'P';
     }
 }
-export class Bishop implements Piece {}
-export class Rook implements Piece {}
-export class King implements Piece {}
-export class Queen implements Piece {}
-export class Knight implements Piece {}
+export class Bishop implements IPiece {
+    name = 'Bishop';
+    color: Color;
+    position: string | null;
+    rank: number;
+    file: string;
+
+    constructor(color: Color, position: string) {
+        this.color = color;
+        this.position = position;
+        const [file, rank] = position.split('-');
+        this.rank = Number(rank);
+        this.file = file;
+    }
+
+    move(position: string): void {
+        this.position = position;
+        const [file, rank] = position.split('-');
+        this.rank = Number(rank);
+        this.file = file;
+    }
+
+    getLegalMoves(currentBoard: BoardMap): string[] {
+        return [];
+    }
+
+    get code(): string {
+        return this.color === 'dark' ? 'b' : 'B';
+    }
+}
+export class Rook implements IPiece {}
+export class King implements IPiece {}
+export class Queen implements IPiece {}
+export class Knight implements IPiece {}
