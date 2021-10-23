@@ -53,30 +53,21 @@ export class Pawn extends Piece implements IPiece {
         return this.color === 'dark' ? 'p' : 'P';
     }
 }
-export class Bishop implements IPiece {
+export class Bishop extends Piece implements IPiece {
     name = 'Bishop';
-    color: Color;
-    position: string | null;
-    rank: number;
-    file: string;
-
-    constructor(color: Color, position: string) {
-        this.color = color;
-        this.position = position;
-        const [file, rank] = position.split('-');
-        this.rank = Number(rank);
-        this.file = file;
-    }
-
-    move(position: string): void {
-        this.position = position;
-        const [file, rank] = position.split('-');
-        this.rank = Number(rank);
-        this.file = file;
-    }
 
     getLegalMoves(currentBoard: BoardMap): string[] {
-        return [];
+        const moves = [];
+        const fileCode = this.file.charCodeAt(0);
+        let fileCodeUp = fileCode + 1;
+        let fileCodeDown = fileCode - 1;
+        for (let i = this.rank; i <= 8; i++) {
+            moves.push(`${}-${}`);
+        }
+        for (let i = this.rank; i >= 1; i--) {
+
+        }
+        return moves;
     }
 
     get code(): string {
