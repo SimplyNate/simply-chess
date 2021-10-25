@@ -39,6 +39,7 @@ export class Pawn extends Piece implements IPiece {
         this.inStartingPosition = (this.rank === 7 && this.color === 'dark') || (this.rank === 2 && this.color === 'light');
     }
 
+    // Check if in check, as well as en passant
     getLegalMoves(currentBoard: BoardMap): string[] {
         const moves = [];
         const direction = this.color === 'dark' ? -1 : 1;
@@ -74,29 +75,29 @@ export class Bishop extends Piece implements IPiece {
         return this.color === 'dark' ? 'b' : 'B';
     }
 }
-export class Rook implements IPiece {
-    name = 'Bishop';
-    inStartingPosition: boolean;
-    constructor(color: Color, position: string) {
+export class Rook extends Piece implements IPiece {
+    name = 'Rook';
+    canCastle: boolean;
+    constructor(color: Color, position: string, castlingAvailability: string) {
         super(color, position);
+        if (this.position === 'a-1' && castlingAvailability.includes('Q')) {
+            this.canCastle = true;
+        }
+        else if (this.position === 'h-1' && castlingAvailability.includes('K')) {
+            this.canCastle = true;
+        }
+        else if (this.position === 'a-8' && castlingAvailability.includes('q')) {
+            this.canCastle = true;
+        }
+        else this.canCastle = this.position === 'h-8' && castlingAvailability.includes('k');
     }
 
     getLegalMoves(currentBoard: BoardMap): string[] {
-        const moves = [];
-        const fileCode = this.file.charCodeAt(0);
-        let fileCodeUp = fileCode + 1;
-        let fileCodeDown = fileCode - 1;
-        for (let i = this.rank; i <= 8; i++) {
-            moves.push(`${}-${}`);
-        }
-        for (let i = this.rank; i >= 1; i--) {
-
-        }
-        return moves;
+        return [];
     }
 
     get code(): string {
-        return this.color === 'dark' ? 'b' : 'B';
+        return this.color === 'dark' ? 'r' : 'R';
     }
 }
 export class King implements IPiece {}
