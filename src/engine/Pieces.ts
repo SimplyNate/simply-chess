@@ -78,8 +78,10 @@ export class Bishop extends Piece implements IPiece {
 export class Rook extends Piece implements IPiece {
     name = 'Rook';
     canCastle: boolean;
+
     constructor(color: Color, position: string, castlingAvailability: string) {
         super(color, position);
+        // TODO: Simplify check to only check castlingAvailability
         if (this.position === 'a-1' && castlingAvailability.includes('Q')) {
             this.canCastle = true;
         }
@@ -100,6 +102,26 @@ export class Rook extends Piece implements IPiece {
         return this.color === 'dark' ? 'r' : 'R';
     }
 }
-export class King implements IPiece {}
+export class King extends Piece implements IPiece {
+    name = 'King';
+    canCastle: boolean;
+
+    constructor(color: Color, position: string, castlingAvailability: string) {
+        super(color, position);
+        // TODO: Simplify check to only check castlingAvailability
+        if (this.position === 'e-1' && castlingAvailability.includes('K')) {
+            this.canCastle = true;
+        }
+        else this.canCastle = this.position === 'e-8' && castlingAvailability.includes('k');
+    }
+
+    getLegalMoves(currentBoard: BoardMap): string[] {
+        return [];
+    }
+
+    get code(): string {
+        return this.color === 'dark' ? 'k' : 'K';
+    }
+}
 export class Queen implements IPiece {}
 export class Knight implements IPiece {}
