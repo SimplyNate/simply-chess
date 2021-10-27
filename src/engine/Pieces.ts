@@ -81,17 +81,8 @@ export class Rook extends Piece implements IPiece {
 
     constructor(color: Color, position: string, castlingAvailability: string) {
         super(color, position);
-        // TODO: Simplify check to only check castlingAvailability
-        if (this.position === 'a-1' && castlingAvailability.includes('Q')) {
-            this.canCastle = true;
-        }
-        else if (this.position === 'h-1' && castlingAvailability.includes('K')) {
-            this.canCastle = true;
-        }
-        else if (this.position === 'a-8' && castlingAvailability.includes('q')) {
-            this.canCastle = true;
-        }
-        else this.canCastle = this.position === 'h-8' && castlingAvailability.includes('k');
+        this.canCastle = ((castlingAvailability.includes('Q') || castlingAvailability.includes('K')) && this.color === 'light') ||
+            ((castlingAvailability.includes('q') || castlingAvailability.includes('k')) && this.color === 'dark');
     }
 
     getLegalMoves(currentBoard: BoardMap): string[] {
@@ -108,11 +99,9 @@ export class King extends Piece implements IPiece {
 
     constructor(color: Color, position: string, castlingAvailability: string) {
         super(color, position);
-        // TODO: Simplify check to only check castlingAvailability
-        if (this.position === 'e-1' && castlingAvailability.includes('K')) {
-            this.canCastle = true;
-        }
-        else this.canCastle = this.position === 'e-8' && castlingAvailability.includes('k');
+        this.canCastle = (castlingAvailability.includes('K') && color === 'light') ||
+            (castlingAvailability.includes('k') && color === 'dark');
+
     }
 
     getLegalMoves(currentBoard: BoardMap): string[] {
