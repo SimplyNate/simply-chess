@@ -96,6 +96,7 @@ export class Rook extends Piece implements IPiece {
 export class King extends Piece implements IPiece {
     name = 'King';
     canCastle: boolean;
+    isInCheck = false;
 
     constructor(color: Color, position: string, castlingAvailability: string) {
         super(color, position);
@@ -108,9 +109,33 @@ export class King extends Piece implements IPiece {
         return [];
     }
 
+    getCheckStatus(): boolean {
+        return false;
+    }
+
     get code(): string {
         return this.color === 'dark' ? 'k' : 'K';
     }
 }
-export class Queen implements IPiece {}
-export class Knight implements IPiece {}
+export class Queen extends Piece implements IPiece {
+    name = 'Queen';
+
+    getLegalMoves(currentBoard: BoardMap): string[] {
+        return [];
+    }
+
+    get code(): string {
+        return this.color === 'dark' ? 'q' : 'Q';
+    }
+}
+export class Knight extends Piece implements IPiece {
+    name = 'Knight'
+
+    getLegalMoves(currentBoard: BoardMap): string[] {
+        return [];
+    }
+
+    get code(): string {
+        return this.color === 'dark' ? 'n' : 'N';
+    }
+}
