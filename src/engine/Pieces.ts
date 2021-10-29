@@ -3,20 +3,20 @@ import { BoardMap } from '@/board/utils';
 type Color = 'light' | 'dark';
 
 interface IPiece {
-    name: string;
     getLegalMoves(currentBoard: BoardMap): string[];
-    get code(): string;
 }
 
 abstract class Piece {
+    name: string;
     color: Color;
     position: string | null;
     rank: number;
     file: string;
 
-    protected constructor(color: Color, position: string) {
+    protected constructor(color: Color, position: string, name: string) {
         this.color = color;
         this.position = position;
+        this.name = name;
         const [file, rank] = position.split('-');
         this.rank = Number(rank);
         this.file = file;
@@ -28,14 +28,20 @@ abstract class Piece {
         this.rank = Number(rank);
         this.file = file;
     }
+
+    get code(): string {
+        if (this.name === 'Knight') {
+            return this.color === 'dark' ? this.name[1].toLowerCase() : this.name[1].toUpperCase();
+        }
+        return this.color === 'dark' ? this.name[0].toLowerCase() : this.name[0].toUpperCase();
+    }
 }
 
 export class Pawn extends Piece implements IPiece {
-    name = 'Pawn';
     inStartingPosition: boolean;
 
     constructor(color: Color, position: string) {
-        super(color, position);
+        super(color, position, 'Pawn');
         this.inStartingPosition = (this.rank === 7 && this.color === 'dark') || (this.rank === 2 && this.color === 'light');
     }
 
@@ -49,13 +55,12 @@ export class Pawn extends Piece implements IPiece {
         moves.push(`${this.file}-${this.rank += (1 * direction)}`);
         return moves;
     }
-
-    get code(): string {
-        return this.color === 'dark' ? 'p' : 'P';
-    }
 }
 export class Bishop extends Piece implements IPiece {
-    name = 'Bishop';
+
+    constructor(color: Color, position: string) {
+        super(color, position, 'Bishop');
+    }
 
     getLegalMoves(currentBoard: BoardMap): string[] {
         const moves = [];
@@ -70,17 +75,13 @@ export class Bishop extends Piece implements IPiece {
         }
         return moves;
     }
-
-    get code(): string {
-        return this.color === 'dark' ? 'b' : 'B';
-    }
 }
+
 export class Rook extends Piece implements IPiece {
-    name = 'Rook';
     canCastle: boolean;
 
     constructor(color: Color, position: string, castlingAvailability: string) {
-        super(color, position);
+        super(color, position, 'Rook');
         this.canCastle = ((castlingAvailability.includes('Q') || castlingAvailability.includes('K')) && this.color === 'light') ||
             ((castlingAvailability.includes('q') || castlingAvailability.includes('k')) && this.color === 'dark');
     }
@@ -88,18 +89,13 @@ export class Rook extends Piece implements IPiece {
     getLegalMoves(currentBoard: BoardMap): string[] {
         return [];
     }
-
-    get code(): string {
-        return this.color === 'dark' ? 'r' : 'R';
-    }
 }
 export class King extends Piece implements IPiece {
-    name = 'King';
     canCastle: boolean;
     isInCheck = false;
 
     constructor(color: Color, position: string, castlingAvailability: string) {
-        super(color, position);
+        super(color, position, 'King');
         this.canCastle = (castlingAvailability.includes('K') && color === 'light') ||
             (castlingAvailability.includes('k') && color === 'dark');
 
@@ -112,30 +108,27 @@ export class King extends Piece implements IPiece {
     getCheckStatus(): boolean {
         return false;
     }
-
-    get code(): string {
-        return this.color === 'dark' ? 'k' : 'K';
-    }
 }
+
 export class Queen extends Piece implements IPiece {
     name = 'Queen';
 
-    getLegalMoves(currentBoard: BoardMap): string[] {
-        return [];
+    constructor(color: Color, position: string) {
+        super(color, position, 'Queen');
     }
 
-    get code(): string {
-        return this.color === 'dark' ? 'q' : 'Q';
+    getLegalMoves(currentBoard: BoardMap): string[] {
+        return [];
     }
 }
 export class Knight extends Piece implements IPiece {
     name = 'Knight'
 
-    getLegalMoves(currentBoard: BoardMap): string[] {
-        return [];
+    constructor(color: Color, position: string) {
+        super(color, position, 'Knight');
     }
 
-    get code(): string {
-        return this.color === 'dark' ? 'n' : 'N';
+    getLegalMoves(currentBoard: BoardMap): string[] {
+        return [];
     }
 }
