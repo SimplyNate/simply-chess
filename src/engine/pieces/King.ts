@@ -9,7 +9,6 @@ export class King extends Piece implements IPiece {
         super(color, position, 'King');
         this.canCastle = (castlingAvailability.includes('K') && color === 'light') ||
             (castlingAvailability.includes('k') && color === 'dark');
-
     }
 
     getLegalMoves(currentBoard: BoardMap): string[] {

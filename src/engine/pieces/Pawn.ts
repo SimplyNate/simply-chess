@@ -11,12 +11,15 @@ export class Pawn extends Piece implements IPiece {
 
     // Check if in check, as well as en passant
     getLegalMoves(currentBoard: BoardMap): string[] {
-        const moves = [];
-        const direction = this.color === 'dark' ? -1 : 1;
-        if (this.inStartingPosition) {
-            moves.push(`${this.file}-${this.rank += (2 * direction)}`);
+        if (this.legalMoves.length === 0) {
+            const moves = [];
+            const direction = this.color === 'dark' ? -1 : 1;
+            if (this.inStartingPosition) {
+                moves.push(`${this.file}-${this.rank += (2 * direction)}`);
+            }
+            moves.push(`${this.file}-${this.rank += (1 * direction)}`);
+            this.legalMoves = moves;
         }
-        moves.push(`${this.file}-${this.rank += (1 * direction)}`);
-        return moves;
+        return this.legalMoves;
     }
 }

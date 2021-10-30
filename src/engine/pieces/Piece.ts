@@ -12,6 +12,7 @@ export abstract class Piece {
     position: string | null;
     rank: number;
     file: string;
+    legalMoves: string[] = [];
 
     protected constructor(color: Color, position: string, name: string) {
         this.color = color;
