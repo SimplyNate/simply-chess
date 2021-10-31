@@ -1,7 +1,7 @@
 import { BoardMap } from '@/board/utils';
 import { Color, IPiece, Piece } from '@/engine/pieces/Piece';
 
-export class Rook extends Piece implements IPiece {
+export default class Rook extends Piece implements IPiece {
     canCastle: boolean;
 
     constructor(color: Color, position: string, castlingAvailability: string) {
