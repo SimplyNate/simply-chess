@@ -1,7 +1,7 @@
 import { BoardMap } from '@/board/utils';
-import { Color, IPiece, Piece } from '@/engine/pieces/Piece';
+import { Color, Piece } from '@/engine/pieces/Piece';
 
-export default class King extends Piece implements IPiece {
+export default class King extends Piece {
     canCastle: boolean;
     isInCheck = false;
 

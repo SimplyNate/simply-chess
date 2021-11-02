@@ -2,11 +2,7 @@ import { BoardMap } from '@/board/utils';
 
 export type Color = 'light' | 'dark';
 
-export interface IPiece {
-    getLegalMoves(currentBoard: BoardMap): string[];
-}
-
-export abstract class Piece {
+export abstract class Piece{
     name: string;
     color: Color;
     position: string | null;
@@ -28,6 +24,10 @@ export abstract class Piece {
         const [file, rank] = position.split('-');
         this.rank = Number(rank);
         this.file = file;
+    }
+
+    getLegalMoves(currentBoard: BoardMap): string[] {
+        return [];
     }
 
     get code(): string {

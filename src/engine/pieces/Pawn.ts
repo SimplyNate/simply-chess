@@ -1,7 +1,7 @@
 import { BoardMap } from '@/board/utils';
-import { Color, IPiece, Piece } from '@/engine/pieces/Piece';
+import { Color, Piece } from '@/engine/pieces/Piece';
 
-export default class Pawn extends Piece implements IPiece {
+export default class Pawn extends Piece {
     inStartingPosition: boolean;
 
     constructor(color: Color, position: string) {

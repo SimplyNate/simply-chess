@@ -51,4 +51,12 @@ export class Chess {
         }
         return pieceMap;
     }
+
+    public getLegalMoves(position: string): string[] {
+        const piece = this.pieces[position];
+        if (piece) {
+            return piece.getLegalMoves(this.boardMap);
+        }
+        return [];
+    }
 }
