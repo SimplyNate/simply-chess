@@ -59,4 +59,8 @@ export class Chess {
         }
         return [];
     }
+
+    public print(): void {
+        console.log('');
+    }
 }

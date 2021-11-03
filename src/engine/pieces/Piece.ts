@@ -2,7 +2,7 @@ import { BoardMap } from '@/board/utils';
 
 export type Color = 'light' | 'dark';
 
-export abstract class Piece{
+export abstract class Piece {
     name: string;
     color: Color;
     position: string | null;
