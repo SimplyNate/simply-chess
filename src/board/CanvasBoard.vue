@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import * as PIXI from 'pixi.js';
-import { separateFEN, parsePlacementToMap, rank, file } from '@/board/utils';
+import { separateFEN, parsePlacementToMap, rank, file } from '@/utils/utils';
 import { ICanvasBoard, BoardConfig, LegalMovesForSelection } from '@/board/BoardUtils';
 import { getPointerCollision } from '@/board/Collision';
 

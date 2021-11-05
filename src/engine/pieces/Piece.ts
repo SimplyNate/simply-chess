@@ -1,4 +1,4 @@
-import { BoardMap } from '@/board/utils';
+import { BoardMap } from '@/utils/utils';
 
 export type Color = 'light' | 'dark';
 

@@ -1,4 +1,4 @@
-import { BoardMap } from '@/board/utils';
+import { BoardMap } from '@/utils/utils';
 import { Color, Piece } from '@/engine/pieces/Piece';
 
 export default class Knight extends Piece {

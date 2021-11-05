@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { BoardMap, parsePlacementToMap, separateFEN } from '@/board/utils';
+import { BoardMap, parsePlacementToMap, separateFEN } from '@/utils/utils';
 
 export default defineComponent({
     name: 'Board',

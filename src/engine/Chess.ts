@@ -5,7 +5,7 @@ import Queen from '@/engine/pieces/Queen';
 import Bishop from '@/engine/pieces/Bishop';
 import Rook from '@/engine/pieces/Rook';
 import { Piece } from '@/engine/pieces/Piece';
-import { BoardMap, FEN, parsePlacementToMap, separateFEN } from '@/board/utils';
+import { BoardMap, FEN, parsePlacementToMap, separateFEN } from '@/utils/utils';
 
 interface PieceMap {
     [index: string]: Piece,

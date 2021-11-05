@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { BoardMap, separateFEN, parsePlacementToMap, FEN } from '@/board/utils';
+import { BoardMap, separateFEN, parsePlacementToMap, FEN } from '@/utils/utils';
 
 interface Pieces {
     [index: string]: PIXI.Sprite,
