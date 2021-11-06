@@ -4,7 +4,7 @@ import Play from '@/menus/Play.vue';
 
 const routes = [
     { path: '/', component: MainMenu },
-    { path: '/play', component: Play },
+    { path: '/play/:fen', component: Play },
 ];
 
 export default createRouter({

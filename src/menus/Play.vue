@@ -35,8 +35,12 @@ export default defineComponent({
             containerWidth: 300,
             isMounted: false,
             legalMoves: [],
-            fenString: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+            fenString: String(this.$route.params.fen),
         };
+    },
+    async beforeRouteUpdate(to) {
+        // react to route changes...
+        this.fenString = String(to.params.fen);
     },
     mounted() {
         this.onResize();
