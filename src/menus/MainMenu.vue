@@ -7,7 +7,9 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     name: 'MainMenu',
     data() {
         return {
@@ -20,7 +22,7 @@ export default {
             this.$emit('start', game);
         },
     },
-};
+});
 </script>
 
 <style scoped>
