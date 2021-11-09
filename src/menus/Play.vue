@@ -83,15 +83,6 @@ export default defineComponent({
 
 <style>
 #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    background-color: #222222;
-    color: ghostwhite;
-    border: 0;
-    padding: 0;
-    margin: 0;
     overflow: hidden;
 }
 </style>
