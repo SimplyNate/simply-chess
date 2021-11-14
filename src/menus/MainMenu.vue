@@ -1,8 +1,21 @@
 <template>
-    <div>
-        <button class="btn btn-success" @click="startGame">New Game</button>
-        <button class="btn btn-success" @click="startGame">Load Game</button>
-        <input class="form-control" type="text" v-model="load" />
+    <div class="fullscreen">
+        <div class="container">
+            <h1 class="pb-3 pt-3">Simply Chess</h1>
+            <div class="row">
+                <div class="col border border-light rounded-1">
+                    <h3 class="pt-3">Start a New Game</h3>
+                    <p class="pt-3">Start a new game as white.</p>
+                    <button class="btn btn-success mb-3" @click="startGame">New Game</button>
+                </div>
+                <div class="col border border-light rounded-1">
+                    <h3 class="pt-3">Load a Game</h3>
+                    <p class="pt-3">Load an existing game using a FEN string.</p>
+                    <input class="form-control" type="text" v-model="load" placeholder="Input FEN string here." />
+                    <button class="btn btn-success mb-3" @click="startGame">Load Game</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -26,5 +39,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+.fullscreen {
+    width: 100vw;
+    height: 100vh;
+}
 </style>
