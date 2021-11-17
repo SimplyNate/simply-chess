@@ -39,10 +39,10 @@ export default defineComponent({
         };
     },
     async beforeRouteUpdate(to) {
-        this.fenString = String(to.params.fen);
+        this.fenString = String(to.query.fen);
     },
     mounted() {
-        this.fenString = String(this.$route.params.fen);
+        this.fenString = String(this.$route.query.fen);
         this.onResize();
         window.addEventListener('resize', this.onResize);
         this.isMounted = true;

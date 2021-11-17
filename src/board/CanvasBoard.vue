@@ -117,6 +117,9 @@ export default defineComponent({
         container.pivot.y = container.height / 2.28;
         this.calculateGlobalOffset();
     },
+    beforeUnmount() {
+        this.app.destroy();
+    },
     methods: {
         calculateGlobalOffset(): void {
             this.globalOffset.x = this.boardContainer.x - (this.boardContainer.width / 2);
