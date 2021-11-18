@@ -1,5 +1,9 @@
 <template>
     <div id="app" :style="`width: ${containerWidth}px; height: ${containerHeight}px`">
+        <div class="side-menu">
+            <h1>Simply Chess</h1>
+            <p>Active Move: {{fen.activeColor}}</p>
+        </div>
         <canvas-board
             v-if="isMounted"
             :container-height="containerHeight"
@@ -16,6 +20,7 @@
 import { defineComponent } from 'vue';
 import CanvasBoard from '@/board/CanvasBoard.vue';
 import { Selection } from '@/board/BoardUtils';
+import { FEN } from '@/utils/utils';
 
 interface AppData {
     containerHeight: number,
@@ -23,7 +28,9 @@ interface AppData {
     isMounted: boolean,
     legalMoves: string[],
     fenString: string,
+    fen: FEN,
 }
+
 export default defineComponent({
     name: 'Play',
     components: {
@@ -36,6 +43,14 @@ export default defineComponent({
             isMounted: false,
             legalMoves: [],
             fenString: '',
+            fen: {
+                piecePlacement: '',
+                activeColor: '',
+                castlingAvailability: '',
+                enPassantTargetSquare: '',
+                halfMoveClock: 0,
+                fullMoveNumber: 0,
+            },
         };
     },
     async beforeRouteUpdate(to) {
