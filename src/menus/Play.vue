@@ -1,8 +1,12 @@
 <template>
     <div id="app" class="d-flex flex-row">
         <div class="side-menu mt-1 align-self-center">
-            <h1>Simply Chess</h1>
-            <p>Active Color: {{fen.activeColor}}</p>
+            <div class="w-100">Top Stuff</div>
+            <div class="w-100">
+                <h1>Simply Chess</h1>
+                <p>Active Color: {{engine.fen.activeColor}}</p>
+            </div>
+            <div class="w-100">Bottom Stuff</div>
         </div>
         <div class="float-end" :style="`width: ${containerWidth}px; height: ${containerHeight}px`">
             <canvas-board
@@ -23,6 +27,7 @@ import { defineComponent } from 'vue';
 import CanvasBoard from '@/board/CanvasBoard.vue';
 import { Selection } from '@/board/BoardUtils';
 import { FEN, separateFEN } from '@/utils/utils';
+import { Chess } from '@/engine/Chess';
 
 interface AppData {
     containerHeight: number,
@@ -31,6 +36,7 @@ interface AppData {
     legalMoves: string[],
     fenString: string,
     fen: FEN,
+    engine: Chess,
 }
 
 export default defineComponent({
@@ -53,6 +59,7 @@ export default defineComponent({
                 halfMoveClock: 0,
                 fullMoveNumber: 0,
             },
+            engine: new Chess(),
         };
     },
     async beforeRouteUpdate(to) {
@@ -61,7 +68,7 @@ export default defineComponent({
     },
     mounted() {
         this.fenString = String(this.$route.query.fen);
-        this.fen = separateFEN(this.fenString);
+        this.engine = new Chess(this.fenString);
         this.onResize();
         window.addEventListener('resize', this.onResize);
         this.isMounted = true;
