@@ -26,6 +26,10 @@ export function separateFEN(fen: string): FEN {
     };
 }
 
+export function stringifyFEN(fen: FEN): string {
+    return '';
+}
+
 function convertRowToArray(row: string): string[] {
     const positions = row.split('');
     for (let i = 0; i < positions.length; i++) {

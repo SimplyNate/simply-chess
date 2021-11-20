@@ -17,6 +17,7 @@
                 :legal-moves-for-selection="legalMoves"
                 @selected="calculateLegalMoves"
                 @deselected="clearLegalMoves"
+                @move="makeMove"
             />
         </div>
     </div>
@@ -80,10 +81,13 @@ export default defineComponent({
         },
         calculateLegalMoves(selection: Selection) {
             console.log(`Received: ${selection.piece}, ${selection.place}`);
-            this.legalMoves.length = 0;
+            this.legalMoves = this.engine.getLegalMoves(selection.place);
         },
         clearLegalMoves() {
             this.legalMoves.length = 0;
+        },
+        makeMove() {
+
         },
     },
 });

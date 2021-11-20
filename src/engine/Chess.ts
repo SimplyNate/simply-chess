@@ -5,7 +5,7 @@ import Queen from '@/engine/pieces/Queen';
 import Bishop from '@/engine/pieces/Bishop';
 import Rook from '@/engine/pieces/Rook';
 import { Piece } from '@/engine/pieces/Piece';
-import { BoardMap, FEN, parsePlacementToMap, separateFEN } from '@/utils/utils';
+import { BoardMap, FEN, parsePlacementToMap, separateFEN, stringifyFEN } from '@/utils/utils';
 
 interface PieceMap {
     [index: string]: Piece,
@@ -58,6 +58,10 @@ export class Chess {
             return piece.getLegalMoves(this.boardMap);
         }
         return [];
+    }
+
+    public move(from: string, to: string): string {
+        return stringifyFEN(this.fen);
     }
 
     public print(): void {
