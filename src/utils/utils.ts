@@ -27,7 +27,7 @@ export function separateFEN(fen: string): FEN {
 }
 
 export function stringifyFEN(fen: FEN): string {
-    return '';
+    return `${fen.piecePlacement} ${fen.activeColor} ${fen.castlingAvailability} ${fen.enPassantTargetSquare} ${fen.halfMoveClock} ${fen.fullMoveNumber}`;
 }
 
 function convertRowToArray(row: string): string[] {

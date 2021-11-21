@@ -76,4 +76,8 @@ export class Chess {
 1|${this.boardMap['a-1']}|${this.boardMap['b-1']}|${this.boardMap['c-1']}|${this.boardMap['d-1']}|${this.boardMap['e-1']}|${this.boardMap['f-1']}|${this.boardMap['g-1']}|${this.boardMap['h-1']}|
   a b c d e g h h`);
     }
+
+    public get fenString(): string {
+        return stringifyFEN(this.fen);
+    }
 }
