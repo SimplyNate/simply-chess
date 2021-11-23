@@ -5,7 +5,7 @@ import Queen from '@/engine/pieces/Queen';
 import Bishop from '@/engine/pieces/Bishop';
 import Rook from '@/engine/pieces/Rook';
 import { Piece } from '@/engine/pieces/Piece';
-import { BoardMap, FEN, parsePlacementToMap, separateFEN, stringifyFEN } from '@/utils/utils';
+import { BoardMap, FEN, parsePlacementToMap, rebuildPlacementFromMap, separateFEN, stringifyFEN } from '@/utils/utils';
 
 interface PieceMap {
     [index: string]: Piece,
@@ -61,7 +61,17 @@ export class Chess {
     }
 
     public move(from: string, to: string): string {
-        return stringifyFEN(this.fen);
+        const moveString = this.boardMap[from];
+        if (moveString !== 'x') {
+            const movePiece = this.pieces[from];
+            if (movePiece.getLegalMoves(this.boardMap).includes(to)) {
+                movePiece.move(to);
+                this.boardMap[to] = moveString;
+                this.pieces[to] = movePiece;
+                rebuildPlacementFromMap(this.boardMap);
+            }
+        }
+        return this.fenString;
     }
 
     public print(): void {
