@@ -65,10 +65,22 @@ export class Chess {
         if (moveString !== 'x') {
             const movePiece = this.pieces[from];
             if (movePiece.getLegalMoves(this.boardMap).includes(to)) {
+                const isCapture = !!this.pieces[to];
+                const capturedPiece = this.pieces[to];
                 movePiece.move(to);
                 this.boardMap[to] = moveString;
                 this.pieces[to] = movePiece;
-                rebuildPlacementFromMap(this.boardMap);
+                this.fen.piecePlacement = rebuildPlacementFromMap(this.boardMap);
+                if (movePiece.color === 'dark') {
+                    this.fen.fullMoveNumber += 1;
+                }
+                if (movePiece.name === 'Pawn' || capturedPiece) {
+                    this.fen.halfMoveClock = 0;
+                }
+                else {
+                    this.fen.halfMoveClock += 1;
+                }
+                this.fen.activeColor = this.fen.activeColor === 'w' ? 'b' : 'w';
             }
         }
         return this.fenString;
