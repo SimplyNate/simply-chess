@@ -65,7 +65,6 @@ export class Chess {
         if (moveString !== 'x') {
             const movePiece = this.pieces[from];
             if (movePiece.getLegalMoves(this.boardMap).includes(to)) {
-                const isCapture = !!this.pieces[to];
                 const capturedPiece = this.pieces[to];
                 movePiece.move(to);
                 this.boardMap[to] = moveString;
@@ -80,10 +79,28 @@ export class Chess {
                 else {
                     this.fen.halfMoveClock += 1;
                 }
+                this.updateEnPassant();
+                this.updateCastling(movePiece);
                 this.fen.activeColor = this.fen.activeColor === 'w' ? 'b' : 'w';
             }
         }
         return this.fenString;
+    }
+
+    private updateCastling(movePiece: Piece): void {
+        // Check if castling needs updating
+        if (this.fen.castlingAvailability !== '-' && ['Queen', 'King', 'Rook'].includes(movePiece.name)) {
+
+        }
+    }
+
+    private updateEnPassant(movePiece: Piece) {
+        if (movePiece.name === 'Pawn') {
+
+        }
+        else {
+            this.fen.enPassantTargetSquare = '-';
+        }
     }
 
     public print(): void {
