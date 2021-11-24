@@ -79,7 +79,7 @@ export class Chess {
                 else {
                     this.fen.halfMoveClock += 1;
                 }
-                this.updateEnPassant();
+                this.updateEnPassant(movePiece);
                 this.updateCastling(movePiece);
                 this.fen.activeColor = this.fen.activeColor === 'w' ? 'b' : 'w';
             }
@@ -89,7 +89,26 @@ export class Chess {
 
     private updateCastling(movePiece: Piece): void {
         // Check if castling needs updating
-        if (this.fen.castlingAvailability !== '-' && ['Queen', 'King', 'Rook'].includes(movePiece.name)) {
+        if (this.fen.castlingAvailability !== '-' && movePiece.name === 'King') {
+            // check if it has gone to the castling long or short position
+            if (movePiece.color === 'light') {
+                if (movePiece.position === 'g-1' && this.fen.castlingAvailability.includes('K')) {
+
+                }
+                else if (movePiece.position === 'c-1' && this.fen.castlingAvailability.includes('Q')) {
+
+                }
+            }
+            else {
+                if (movePiece.position === 'g-8' && this.fen.castlingAvailability.includes('k')) {
+
+                }
+                else if (movePiece.position === 'c-8' && this.fen.castlingAvailability.includes('q')) {
+
+                }
+            }
+        }
+        else {
 
         }
     }
