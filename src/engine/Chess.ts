@@ -92,23 +92,35 @@ export class Chess {
     }
 
     private updateCastling(movePiece: Piece): void {
-        // Check if castling needs updating
+        // If Piece is king, check if move is castling
         if (this.fen.castlingAvailability !== '-' && movePiece.name === 'King') {
             // check if it has gone to the castling long or short position
             if (movePiece.color === 'light') {
                 if (movePiece.position === 'g-1' && this.fen.castlingAvailability.includes('K')) {
-
+                    this.fen.castlingAvailability.replace('K', '');
+                    this.fen.castlingAvailability.replace('Q', '');
+                    const rook = this.pieces['h-1'];
+                    rook.move('f-1');
                 }
                 else if (movePiece.position === 'c-1' && this.fen.castlingAvailability.includes('Q')) {
-
+                    this.fen.castlingAvailability.replace('Q', '');
+                    this.fen.castlingAvailability.replace('K', '');
+                    const rook = this.pieces['a-1'];
+                    rook.move('d-1');
                 }
             }
             else {
                 if (movePiece.position === 'g-8' && this.fen.castlingAvailability.includes('k')) {
-
+                    this.fen.castlingAvailability.replace('k', '');
+                    this.fen.castlingAvailability.replace('q', '');
+                    const rook = this.pieces['h-8'];
+                    rook.move('f-8');
                 }
                 else if (movePiece.position === 'c-8' && this.fen.castlingAvailability.includes('q')) {
-
+                    this.fen.castlingAvailability.replace('q', '');
+                    this.fen.castlingAvailability.replace('k', '');
+                    const rook = this.pieces['a-8'];
+                    rook.move('d-8');
                 }
             }
         }
