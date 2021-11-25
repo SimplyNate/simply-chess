@@ -114,11 +114,24 @@ export class Chess {
         }
         else if (movePiece.name === 'Rook' && this.fen.castlingAvailability !== '-') {
             if (movePiece.color === 'light') {
-                if (this.fen.castlingAvailability.includes(''))
+                if (this.fen.castlingAvailability.includes('K') && movePiece.lastPosition === 'h-1') {
+                    this.fen.castlingAvailability.replace('K', '');
+                }
+                else if (this.fen.castlingAvailability.includes('Q') && movePiece.lastPosition === 'a-1') {
+                    this.fen.castlingAvailability.replace('Q', '');
+                }
             }
             else { // movePiece.color === 'dark'
-
+                if (this.fen.castlingAvailability.includes('k') && movePiece.lastPosition === 'h-8') {
+                    this.fen.castlingAvailability.replace('k', '');
+                }
+                else if (this.fen.castlingAvailability.includes('q') && movePiece.lastPosition === 'a-8') {
+                    this.fen.castlingAvailability.replace('q', '');
+                }
             }
+        }
+        if (this.fen.castlingAvailability.length === 0) {
+            this.fen.castlingAvailability = '-';
         }
     }
 

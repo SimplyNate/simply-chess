@@ -6,6 +6,7 @@ export abstract class Piece {
     name: string;
     color: Color;
     position: string | null;
+    lastPosition: string | null;
     rank: number;
     file: string;
     legalMoves: string[] = [];
@@ -13,6 +14,7 @@ export abstract class Piece {
     protected constructor(color: Color, position: string, name: string) {
         this.color = color;
         this.position = position;
+        this.lastPosition = null;
         this.name = name;
         const [file, rank] = position.split('-');
         this.rank = Number(rank);
@@ -20,6 +22,7 @@ export abstract class Piece {
     }
 
     move(position: string): void {
+        this.lastPosition = this.position;
         this.position = position;
         const [file, rank] = position.split('-');
         this.rank = Number(rank);
