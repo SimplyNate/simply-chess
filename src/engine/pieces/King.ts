@@ -18,7 +18,7 @@ export default class King extends Piece {
         return [];
     }
 
-    getCheckStatus(): boolean {
+    getCheckStatus(currentBoard: BoardMap): boolean {
         return false;
     }
 }

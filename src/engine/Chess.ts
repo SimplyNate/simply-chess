@@ -69,22 +69,26 @@ export class Chess {
                 movePiece.move(to);
                 this.boardMap[to] = moveString;
                 this.pieces[to] = movePiece;
-                this.fen.piecePlacement = rebuildPlacementFromMap(this.boardMap);
-                if (movePiece.color === 'dark') {
-                    this.fen.fullMoveNumber += 1;
-                }
-                if (movePiece.name === 'Pawn' || capturedPiece) {
-                    this.fen.halfMoveClock = 0;
-                }
-                else {
-                    this.fen.halfMoveClock += 1;
-                }
-                this.updateEnPassant(movePiece);
-                this.updateCastling(movePiece);
-                this.fen.activeColor = this.fen.activeColor === 'w' ? 'b' : 'w';
+                this.updateFEN(movePiece, capturedPiece);
             }
         }
         return this.fenString;
+    }
+
+    private updateFEN(movePiece: Piece, capturedPiece: Piece) {
+        this.fen.piecePlacement = rebuildPlacementFromMap(this.boardMap);
+        if (movePiece.color === 'dark') {
+            this.fen.fullMoveNumber += 1;
+        }
+        if (movePiece.name === 'Pawn' || capturedPiece) {
+            this.fen.halfMoveClock = 0;
+        }
+        else {
+            this.fen.halfMoveClock += 1;
+        }
+        this.updateEnPassant(movePiece);
+        this.updateCastling(movePiece);
+        this.fen.activeColor = this.fen.activeColor === 'w' ? 'b' : 'w';
     }
 
     private updateCastling(movePiece: Piece): void {
