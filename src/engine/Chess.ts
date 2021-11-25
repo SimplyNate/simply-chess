@@ -75,7 +75,7 @@ export class Chess {
         return this.fenString;
     }
 
-    private updateFEN(movePiece: Piece, capturedPiece: Piece) {
+    private updateFEN(movePiece: Piece, capturedPiece: Piece): void {
         this.fen.piecePlacement = rebuildPlacementFromMap(this.boardMap);
         if (movePiece.color === 'dark') {
             this.fen.fullMoveNumber += 1;
@@ -112,8 +112,13 @@ export class Chess {
                 }
             }
         }
-        else {
+        else if (movePiece.name === 'Rook' && this.fen.castlingAvailability !== '-') {
+            if (movePiece.color === 'light') {
+                if (this.fen.castlingAvailability.includes(''))
+            }
+            else { // movePiece.color === 'dark'
 
+            }
         }
     }
 
