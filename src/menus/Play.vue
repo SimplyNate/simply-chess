@@ -40,6 +40,12 @@ interface AppData {
     engine: Chess,
 }
 
+interface MovePayload {
+    from: string,
+    to: string,
+    piece: string,
+}
+
 export default defineComponent({
     name: 'Play',
     components: {
@@ -86,8 +92,11 @@ export default defineComponent({
         clearLegalMoves() {
             this.legalMoves.length = 0;
         },
-        makeMove() {
-
+        makeMove(payload: MovePayload) {
+            const fen = this.engine.move(payload.from, payload.to);
+            if (fen !== this.fenString) {
+                this.$router.push(`/play?fen=${fen}`);
+            }
         },
     },
 });
