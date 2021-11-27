@@ -148,8 +148,19 @@ export class Chess {
     }
 
     private updateEnPassant(movePiece: Piece) {
-        if (movePiece.name === 'Pawn') {
-
+        if (movePiece instanceof Pawn) {
+            if (movePiece.inStartingPosition) {
+                movePiece.inStartingPosition = false;
+                // If the pawn just moved two spaces
+                if (movePiece.lastPosition && movePiece.position && Math.abs(Number(movePiece.lastPosition[2]) - Number(movePiece.position[2])) === 2) {
+                    if (Number(movePiece.lastPosition[2]) > movePiece.rank) {
+                        this.fen.enPassantTargetSquare = `${movePiece.file}${movePiece.rank + 1}`;
+                    }
+                    else {
+                        this.fen.enPassantTargetSquare = `${movePiece.file}${movePiece.rank - 1}`;
+                    }
+                }
+            }
         }
         else {
             this.fen.enPassantTargetSquare = '-';
