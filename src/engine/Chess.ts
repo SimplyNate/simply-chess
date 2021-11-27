@@ -65,17 +65,22 @@ export class Chess {
         if (moveString !== 'x') {
             const movePiece = this.pieces[from];
             if (movePiece.getLegalMoves(this.boardMap).includes(to)) {
-                const capturedPiece = this.pieces[to];
+                let capturedPiece = false;
+                if (this.pieces[to]) {
+                    capturedPiece = true;
+                    delete this.pieces[to];
+                }
                 movePiece.move(to);
                 this.boardMap[to] = moveString;
                 this.pieces[to] = movePiece;
                 this.updateFEN(movePiece, capturedPiece);
+                this.resetLegalMoves();
             }
         }
         return this.fenString;
     }
 
-    private updateFEN(movePiece: Piece, capturedPiece: Piece): void {
+    private updateFEN(movePiece: Piece, capturedPiece: boolean): void {
         this.fen.piecePlacement = rebuildPlacementFromMap(this.boardMap);
         if (movePiece.color === 'dark') {
             this.fen.fullMoveNumber += 1;
@@ -164,6 +169,12 @@ export class Chess {
         }
         else {
             this.fen.enPassantTargetSquare = '-';
+        }
+    }
+
+    private resetLegalMoves(): void {
+        for (const key of Object.keys(this.pieces)) {
+            this.pieces[key].legalMoves = [];
         }
     }
 
