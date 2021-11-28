@@ -55,7 +55,7 @@ export class Chess {
     public getLegalMoves(position: string): string[] {
         const piece = this.pieces[position];
         if (piece) {
-            return piece.getLegalMoves(this.boardMap);
+            return piece.getLegalMoves(this.boardMap, this.fen);
         }
         return [];
     }
@@ -64,7 +64,7 @@ export class Chess {
         const moveString = this.boardMap[from];
         if (moveString !== 'x') {
             const movePiece = this.pieces[from];
-            if (movePiece.getLegalMoves(this.boardMap).includes(to)) {
+            if (movePiece.getLegalMoves(this.boardMap, this.fen).includes(to)) {
                 let capturedPiece = false;
                 if (this.pieces[to]) {
                     capturedPiece = true;

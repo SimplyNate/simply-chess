@@ -1,4 +1,4 @@
-import { BoardMap } from '@/utils/utils';
+import { BoardMap, FEN } from '@/utils/utils';
 import { Color, Piece } from '@/engine/pieces/Piece';
 
 export default class Pawn extends Piece {
@@ -10,7 +10,7 @@ export default class Pawn extends Piece {
     }
 
     // Check if in check, as well as en passant
-    getLegalMoves(currentBoard: BoardMap): string[] {
+    getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         if (this.legalMoves.length === 0) {
             const moves = [];
             const direction = this.color === 'dark' ? -1 : 1;

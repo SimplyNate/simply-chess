@@ -1,4 +1,4 @@
-import { BoardMap } from '@/utils/utils';
+import { BoardMap, FEN } from '@/utils/utils';
 
 export type Color = 'light' | 'dark';
 
@@ -29,7 +29,7 @@ export abstract class Piece {
         this.file = file;
     }
 
-    getLegalMoves(currentBoard: BoardMap): string[] {
+    getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         return [];
     }
 
