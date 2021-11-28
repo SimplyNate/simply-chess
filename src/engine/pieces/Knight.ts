@@ -7,6 +7,9 @@ export default class Knight extends Piece {
     }
 
     getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
-        return [];
+        if (!this.legalMoves) {
+            this.legalMoves = [];
+        }
+        return this.legalMoves;
     }
 }

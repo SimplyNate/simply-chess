@@ -15,7 +15,10 @@ export default class King extends Piece {
     }
 
     getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
-        return [];
+        if (!this.legalMoves) {
+            this.legalMoves = [];
+        }
+        return this.legalMoves;
     }
 
     getCheckStatus(currentBoard: BoardMap): boolean {
