@@ -64,7 +64,8 @@ export class Chess {
         const moveString = this.boardMap[from];
         if (moveString !== 'x') {
             const movePiece = this.pieces[from];
-            if (movePiece.getLegalMoves(this.boardMap, this.fen).includes(to)) {
+            const legalMoves = movePiece.legalMoves ? movePiece.legalMoves : movePiece.getLegalMoves(this.boardMap, this.fen);
+            if (legalMoves.includes(to)) {
                 let capturedPiece = false;
                 if (this.pieces[to]) {
                     capturedPiece = true;
@@ -174,7 +175,7 @@ export class Chess {
 
     private resetLegalMoves(): void {
         for (const key of Object.keys(this.pieces)) {
-            this.pieces[key].legalMoves = [];
+            this.pieces[key].legalMoves = null;
         }
     }
 

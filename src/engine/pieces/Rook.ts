@@ -1,4 +1,4 @@
-import { BoardMap } from '@/utils/utils';
+import { BoardMap, FEN } from '@/utils/utils';
 import { Color, Piece } from '@/engine/pieces/Piece';
 
 export default class Rook extends Piece {
@@ -26,7 +26,7 @@ export default class Rook extends Piece {
         }
     }
 
-    getLegalMoves(currentBoard: BoardMap): string[] {
+    getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         return [];
     }
 }

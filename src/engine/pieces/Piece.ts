@@ -9,7 +9,7 @@ export abstract class Piece {
     lastPosition: string | null;
     rank: number;
     file: string;
-    legalMoves: string[] = [];
+    legalMoves: string[] | null = [];
 
     protected constructor(color: Color, position: string, name: string) {
         this.color = color;

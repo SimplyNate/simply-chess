@@ -1,4 +1,4 @@
-import { BoardMap } from '@/utils/utils';
+import { BoardMap, FEN } from '@/utils/utils';
 import { Color, Piece } from '@/engine/pieces/Piece';
 
 export default class King extends Piece {
@@ -14,7 +14,7 @@ export default class King extends Piece {
             (castlingAvailability.includes('q') && color === 'dark');
     }
 
-    getLegalMoves(currentBoard: BoardMap): string[] {
+    getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         return [];
     }
 
