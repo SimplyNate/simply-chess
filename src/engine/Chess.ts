@@ -15,11 +15,13 @@ export class Chess {
     fen: FEN;
     boardMap: BoardMap;
     pieces: PieceMap;
+    checkStatus: string = 'none';
 
     constructor(fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1') {
         this.fen = separateFEN(fen);
         this.boardMap = parsePlacementToMap(this.fen.piecePlacement);
         this.pieces = this.parsePieces();
+        this.updateCheckStatus();
     }
 
     private parsePieces(): PieceMap {
@@ -76,6 +78,7 @@ export class Chess {
                 this.pieces[to] = movePiece;
                 this.updateFEN(movePiece, capturedPiece);
                 this.resetLegalMoves();
+                this.updateCheckStatus();
             }
         }
         return this.fenString;
@@ -177,6 +180,10 @@ export class Chess {
         for (const key of Object.keys(this.pieces)) {
             this.pieces[key].legalMoves = null;
         }
+    }
+
+    private updateCheckStatus(): void {
+        this.checkStatus = 'none';
     }
 
     public print(): void {
