@@ -4,7 +4,12 @@
             <div class="w-100">Top Stuff</div>
             <div class="w-100">
                 <h1>Simply Chess</h1>
-                <p>Active Color: {{engine.fen.activeColor}}</p>
+                <p>FEN String: {{ engine.fenString }}</p>
+                <p>Active Color: {{ engine.fen.activeColor }}</p>
+                <p>Castling Availability: {{ engine.fen.castlingAvailability }}</p>
+                <p>En Passant Target Square: {{ engine.fen.enPassantTargetSquare }}</p>
+                <p>Half Move Clock: {{ engine.fen.halfMoveClock }}</p>
+                <p>Full Move Number: {{ engine.fen.fullMoveNumber }}</p>
             </div>
             <div class="w-100">Bottom Stuff</div>
         </div>
