@@ -7,55 +7,70 @@ import Rook from '@/engine/pieces/Rook';
 import { Piece } from '@/engine/pieces/Piece';
 import { BoardMap, FEN, parsePlacementToMap, rebuildPlacementFromMap, separateFEN, stringifyFEN } from '@/utils/utils';
 
+// PieceMap indexes based on position of Piece on board
 interface PieceMap {
     [index: string]: Piece,
+}
+
+interface ParsedPieces {
+    piecesByLocation: PieceMap,
+    piecesByName: PieceMap,
 }
 
 export class Chess {
     fen: FEN;
     boardMap: BoardMap;
-    pieces: PieceMap;
+    piecesByLocation: PieceMap; // this tracks pieces by position
+    piecesByName: PieceMap;
     checkStatus: string = 'none';
+    checkMateStatus: boolean = false;
 
     constructor(fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1') {
         this.fen = separateFEN(fen);
         this.boardMap = parsePlacementToMap(this.fen.piecePlacement);
-        this.pieces = this.parsePieces();
+        const { piecesByLocation, piecesByName } = this.parsePieces();
+        this.piecesByLocation = piecesByLocation;
+        this.piecesByName = piecesByName;
         this.updateCheckStatus();
+        this.updateCheckMate();
     }
 
-    private parsePieces(): PieceMap {
-        const pieceMap: PieceMap = {};
+    private parsePieces(): ParsedPieces {
+        const piecesByLocation: PieceMap = {};
+        const piecesByName: PieceMap = {};
         for (const position of Object.keys(this.boardMap)) {
             const piece = this.boardMap[position];
             if (piece !== 'x') {
+                let pieceInstance: Piece;
                 // If char code of piece is lowercase, it is dark
                 const color = piece.charCodeAt(0) > 96 ? 'dark' : 'light';
                 if (piece === 'p' || piece === 'P') {
-                    pieceMap[position] = new Pawn(color, position);
+                    pieceInstance = new Pawn(color, position);
                 }
                 else if (piece === 'r' || piece === 'R') {
-                    pieceMap[position] = new Rook(color, position, this.fen.castlingAvailability);
+                    pieceInstance = new Rook(color, position, this.fen.castlingAvailability);
                 }
                 else if (piece === 'n' || piece === 'N') {
-                    pieceMap[position] = new Knight(color, position);
+                    pieceInstance = new Knight(color, position);
                 }
                 else if (piece === 'b' || piece === 'B') {
-                    pieceMap[position] = new Bishop(color, position);
+                    pieceInstance = new Bishop(color, position);
                 }
                 else if (piece === 'q' || piece === 'Q') {
-                    pieceMap[position] = new Queen(color, position);
+                    pieceInstance = new Queen(color, position);
                 }
                 else {
-                    pieceMap[position] = new King(color, position, this.fen.castlingAvailability);
+                    pieceInstance = new King(color, position, this.fen.castlingAvailability);
                 }
+                piecesByLocation[position] = pieceInstance;
+                piecesByName[piece] = pieceInstance;
             }
         }
-        return pieceMap;
+        return { piecesByLocation, piecesByName };
     }
 
     public getLegalMoves(position: string): string[] {
-        const piece = this.pieces[position];
+        const piece = this.piecesByLocation[position];
         if (piece) {
             return piece.getLegalMoves(this.boardMap, this.fen);
         }
@@ -65,20 +80,21 @@ export class Chess {
     public move(from: string, to: string): string {
         const moveString = this.boardMap[from];
         if (moveString !== 'x') {
-            const movePiece = this.pieces[from];
+            const movePiece = this.piecesByLocation[from];
             const legalMoves = movePiece.legalMoves ? movePiece.legalMoves : movePiece.getLegalMoves(this.boardMap, this.fen);
             if (legalMoves.includes(to)) {
                 let capturedPiece = false;
-                if (this.pieces[to]) {
+                if (this.piecesByLocation[to]) {
                     capturedPiece = true;
-                    delete this.pieces[to];
+                    delete this.piecesByLocation[to];
                 }
                 movePiece.move(to);
                 this.boardMap[to] = moveString;
-                this.pieces[to] = movePiece;
+                this.piecesByLocation[to] = movePiece;
                 this.updateFEN(movePiece, capturedPiece);
                 this.resetLegalMoves();
                 this.updateCheckStatus();
+                this.updateCheckMate();
             }
         }
         return this.fenString;
@@ -108,13 +124,13 @@ export class Chess {
                 if (movePiece.position === 'g-1' && this.fen.castlingAvailability.includes('K')) {
                     this.fen.castlingAvailability.replace('K', '');
                     this.fen.castlingAvailability.replace('Q', '');
-                    const rook = this.pieces['h-1'];
+                    const rook = this.piecesByLocation['h-1'];
                     rook.move('f-1');
                 }
                 else if (movePiece.position === 'c-1' && this.fen.castlingAvailability.includes('Q')) {
                     this.fen.castlingAvailability.replace('Q', '');
                     this.fen.castlingAvailability.replace('K', '');
-                    const rook = this.pieces['a-1'];
+                    const rook = this.piecesByLocation['a-1'];
                     rook.move('d-1');
                 }
             }
@@ -122,13 +138,13 @@ export class Chess {
                 if (movePiece.position === 'g-8' && this.fen.castlingAvailability.includes('k')) {
                     this.fen.castlingAvailability.replace('k', '');
                     this.fen.castlingAvailability.replace('q', '');
-                    const rook = this.pieces['h-8'];
+                    const rook = this.piecesByLocation['h-8'];
                     rook.move('f-8');
                 }
                 else if (movePiece.position === 'c-8' && this.fen.castlingAvailability.includes('q')) {
                     this.fen.castlingAvailability.replace('q', '');
                     this.fen.castlingAvailability.replace('k', '');
-                    const rook = this.pieces['a-8'];
+                    const rook = this.piecesByLocation['a-8'];
                     rook.move('d-8');
                 }
             }
@@ -177,13 +193,20 @@ export class Chess {
     }
 
     private resetLegalMoves(): void {
-        for (const key of Object.keys(this.pieces)) {
-            this.pieces[key].legalMoves = null;
+        for (const key of Object.keys(this.piecesByLocation)) {
+            this.piecesByLocation[key].legalMoves = null;
         }
     }
 
     private updateCheckStatus(): void {
         this.checkStatus = 'none';
+    }
+
+    private updateCheckMate(): void {
+        if (this.checkStatus === 'dark') {
+
+        }
+        this.checkMateStatus = true;
     }
 
     public print(): void {
