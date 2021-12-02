@@ -86,6 +86,7 @@ export class Chess {
                 let capturedPiece = false;
                 if (this.piecesByLocation[to]) {
                     capturedPiece = true;
+                    delete this.piecesByName[this.piecesByLocation[to].code];
                     delete this.piecesByLocation[to];
                 }
                 movePiece.move(to);
@@ -199,10 +200,19 @@ export class Chess {
     }
 
     private updateCheckStatus(): void {
+        /*
+        Rules for Check:
+            1. King pieces lies within an enemy piece's legal positions
+         */
         this.checkStatus = 'none';
     }
 
     private updateCheckMate(): void {
+        /*
+        Rules for checkmate:
+            1. King cannot move
+            2. No pieces can cover the King
+         */
         if (this.checkStatus === 'dark') {
 
         }
