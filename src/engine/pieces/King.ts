@@ -21,7 +21,9 @@ export default class King extends Piece {
         return this.legalMoves;
     }
 
+    // TODO: Implement
     getCheckStatus(currentBoard: BoardMap): boolean {
-        return false;
+        this.isInCheck = false;
+        return this.isInCheck;
     }
 }

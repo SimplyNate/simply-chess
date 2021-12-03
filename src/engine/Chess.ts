@@ -93,8 +93,8 @@ export class Chess {
                 this.boardMap[to] = moveString;
                 this.piecesByLocation[to] = movePiece;
                 this.updateFEN(movePiece, capturedPiece);
-                this.resetLegalMoves();
                 this.updateCheckStatus();
+                this.resetLegalMoves();
                 this.updateCheckMate();
             }
         }
@@ -206,8 +206,21 @@ export class Chess {
             1. King pieces lies within an enemy piece's legal positions
          */
         const lightKing = this.piecesByName.K;
+        let checkStatus = 'none';
+        if (lightKing instanceof King) {
+            const isCheck = lightKing.getCheckStatus(this.boardMap);
+            if (isCheck) {
+                checkStatus = 'light';
+            }
+        }
         const darkKing = this.piecesByName.k;
-        this.checkStatus = 'none';
+        if (darkKing instanceof King) {
+            const isCheck = darkKing.getCheckStatus(this.boardMap);
+            if (isCheck) {
+                checkStatus = 'dark';
+            }
+        }
+        this.checkStatus = checkStatus;
     }
 
     private updateCheckMate(): void {
