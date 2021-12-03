@@ -196,6 +196,7 @@ export class Chess {
     private resetLegalMoves(): void {
         for (const key of Object.keys(this.piecesByLocation)) {
             this.piecesByLocation[key].legalMoves = null;
+            this.piecesByLocation[key].getLegalMoves(this.boardMap, this.fen);
         }
     }
 
