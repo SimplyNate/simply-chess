@@ -204,6 +204,8 @@ export class Chess {
         Rules for Check:
             1. King pieces lies within an enemy piece's legal positions
          */
+        const lightKing = this.piecesByName.K;
+        const darkKing = this.piecesByName.k;
         this.checkStatus = 'none';
     }
 
@@ -213,10 +215,15 @@ export class Chess {
             1. King cannot move
             2. No pieces can cover the King
          */
-        if (this.checkStatus === 'dark') {
-
+        const possibleMoves = [];
+        for (const pieceName of Object.keys(this.piecesByName)) {
+            const piece = this.piecesByName[pieceName];
+            if (piece.color === this.checkStatus) {
+                const legalMoves = piece.legalMoves ? piece.legalMoves : piece.getLegalMoves(this.boardMap, this.fen);
+                possibleMoves.push(...legalMoves);
+            }
         }
-        this.checkMateStatus = true;
+        this.checkMateStatus = possibleMoves.length === 0;
     }
 
     public print(): void {
