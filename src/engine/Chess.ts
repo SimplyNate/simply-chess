@@ -228,6 +228,8 @@ export class Chess {
         Rules for Check:
             1. King pieces lies within an enemy piece's legal positions
             2. You only need to check if active color's king is in check
+        Consideration:
+            * If a FEN string is a checkmate, this may not calculate properly
          */
         let checkStatus = 'none';
         const activeColor = this.fen.activeColor === 'w' ? 'light' : 'dark';
