@@ -211,26 +211,33 @@ export class Chess {
         return pieces;
     }
 
+    private getPieceOfColor(name: string, color: Color): Piece | null {
+        let p = null;
+        for (const key of Object.keys(this.piecesByName)) {
+            const piece = this.piecesByName[key];
+            if (piece.name === name && piece.color === color) {
+                p = piece;
+                break;
+            }
+        }
+        return p;
+    }
+
     private updateCheckStatus(): void {
         /*
         Rules for Check:
             1. King pieces lies within an enemy piece's legal positions
+            2. You only need to check if active color's king is in check
          */
-        const lightKing = this.piecesByName.K;
         let checkStatus = 'none';
-        if (lightKing instanceof King) {
-            const enemyPieces = this.getPiecesForColor('dark');
-            const isCheck = lightKing.getCheckStatus(enemyPieces, this.boardMap, this.fen);
+        const activeColor = this.fen.activeColor === 'w' ? 'light' : 'dark';
+        const king = this.getPieceOfColor('King', activeColor);
+        if (king instanceof King) {
+            const enemyColor = activeColor === 'light' ? 'dark' : 'light';
+            const enemyPieces = this.getPiecesForColor(enemyColor);
+            const isCheck = king.getCheckStatus(enemyPieces, this.boardMap, this.fen);
             if (isCheck) {
-                checkStatus = 'light';
-            }
-        }
-        const darkKing = this.piecesByName.k;
-        if (darkKing instanceof King) {
-            const enemyPieces = this.getPiecesForColor('light');
-            const isCheck = darkKing.getCheckStatus(enemyPieces, this.boardMap, this.fen);
-            if (isCheck) {
-                checkStatus = 'dark';
+                checkStatus = activeColor;
             }
         }
         this.checkStatus = checkStatus;
