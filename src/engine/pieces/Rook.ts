@@ -6,7 +6,7 @@ export default class Rook extends Piece {
     castleSide: string;
 
     constructor(color: Color, position: string, castlingAvailability: string) {
-        super(color, position, 'Rook');
+        super(color, position, 'Rook', 'consecutive');
         this.canCastle = ((castlingAvailability.includes('Q') || castlingAvailability.includes('K')) && this.color === 'light') ||
             ((castlingAvailability.includes('q') || castlingAvailability.includes('k')) && this.color === 'dark');
         if (castlingAvailability.includes('q') && position === 'a-8') {

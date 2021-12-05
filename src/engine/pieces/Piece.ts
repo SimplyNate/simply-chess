@@ -2,6 +2,8 @@ import { BoardMap, FEN } from '@/utils/utils';
 
 export type Color = 'light' | 'dark';
 
+export type MoveType = 'consecutive' | 'jump';
+
 export abstract class Piece {
     name: string;
     color: Color;
@@ -10,8 +12,9 @@ export abstract class Piece {
     rank: number;
     file: string;
     legalMoves: string[] | null = [];
+    moveType: MoveType;
 
-    protected constructor(color: Color, position: string, name: string) {
+    protected constructor(color: Color, position: string, name: string, moveType: MoveType) {
         this.color = color;
         this.position = position;
         this.lastPosition = null;
@@ -19,6 +22,7 @@ export abstract class Piece {
         const [file, rank] = position.split('-');
         this.rank = Number(rank);
         this.file = file;
+        this.moveType = moveType;
     }
 
     move(position: string): void {

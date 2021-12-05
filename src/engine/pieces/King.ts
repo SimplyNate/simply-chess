@@ -7,7 +7,7 @@ export default class King extends Piece {
     isInCheck = false;
 
     constructor(color: Color, position: string, castlingAvailability: string) {
-        super(color, position, 'King');
+        super(color, position, 'King', 'consecutive');
         this.canCastleShort = (castlingAvailability.includes('K') && color === 'light') ||
             (castlingAvailability.includes('k') && color === 'dark');
         this.canCastleLong = (castlingAvailability.includes('Q') && color === 'light') ||
@@ -23,7 +23,8 @@ export default class King extends Piece {
 
     getCheckStatus(enemyPieces: Piece[], currentBoard: BoardMap, fen: FEN): boolean {
         for (const piece of enemyPieces) {
-            const legalMoves = piece.getLegalMoves(currentBoard, fen);
+            // Use 'none' checkStatus because it would never be any other status
+            const legalMoves = piece.getLegalMoves(currentBoard, fen, 'none');
             if (this.position && legalMoves.includes(this.position)) {
                 this.isInCheck = true;
                 break;

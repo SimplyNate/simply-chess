@@ -5,7 +5,7 @@ export default class Pawn extends Piece {
     inStartingPosition: boolean;
 
     constructor(color: Color, position: string) {
-        super(color, position, 'Pawn');
+        super(color, position, 'Pawn', 'consecutive');
         this.inStartingPosition = (this.rank === 7 && this.color === 'dark') || (this.rank === 2 && this.color === 'light');
     }
 

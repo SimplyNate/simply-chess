@@ -3,7 +3,7 @@ import { Color, Piece } from '@/engine/pieces/Piece';
 
 export default class Bishop extends Piece {
     constructor(color: Color, position: string) {
-        super(color, position, 'Bishop');
+        super(color, position, 'Bishop', 'consecutive');
     }
 
     getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
