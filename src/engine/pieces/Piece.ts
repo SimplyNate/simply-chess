@@ -29,7 +29,7 @@ export abstract class Piece {
         this.file = file;
     }
 
-    getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
+    getLegalMoves(currentBoard: BoardMap, fen: FEN, checkStatus: string): string[] {
         return [];
     }
 

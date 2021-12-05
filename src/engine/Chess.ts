@@ -32,6 +32,7 @@ export class Chess {
         this.piecesByLocation = piecesByLocation;
         this.piecesByName = piecesByName;
         this.updateCheckStatus();
+        this.resetLegalMoves();
         this.updateCheckMate();
     }
 
@@ -72,7 +73,7 @@ export class Chess {
     public getLegalMoves(position: string): string[] {
         const piece = this.piecesByLocation[position];
         if (piece) {
-            return piece.getLegalMoves(this.boardMap, this.fen);
+            return piece.getLegalMoves(this.boardMap, this.fen, this.checkStatus);
         }
         return [];
     }
@@ -81,7 +82,7 @@ export class Chess {
         const moveString = this.boardMap[from];
         if (moveString !== 'x') {
             const movePiece = this.piecesByLocation[from];
-            const legalMoves = movePiece.getLegalMoves(this.boardMap, this.fen);
+            const legalMoves = movePiece.getLegalMoves(this.boardMap, this.fen, this.checkStatus);
             if (legalMoves.includes(to)) {
                 let capturedPiece = false;
                 if (this.piecesByLocation[to]) {
@@ -196,7 +197,7 @@ export class Chess {
     private resetLegalMoves(): void {
         for (const key of Object.keys(this.piecesByLocation)) {
             this.piecesByLocation[key].legalMoves = null;
-            this.piecesByLocation[key].getLegalMoves(this.boardMap, this.fen);
+            this.piecesByLocation[key].getLegalMoves(this.boardMap, this.fen, this.checkStatus);
         }
     }
 
@@ -255,7 +256,7 @@ export class Chess {
         for (const pieceName of Object.keys(this.piecesByName)) {
             const piece = this.piecesByName[pieceName];
             if (piece.color === this.checkStatus) {
-                const legalMoves = piece.getLegalMoves(this.boardMap, this.fen);
+                const legalMoves = piece.getLegalMoves(this.boardMap, this.fen, this.checkStatus);
                 possibleMoves.push(...legalMoves);
             }
         }
