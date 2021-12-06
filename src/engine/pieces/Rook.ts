@@ -26,7 +26,7 @@ export default class Rook extends Piece {
         }
     }
 
-    getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
+    getLegalMoves(currentBoard: BoardMap, fen: FEN, checkStatus: string): string[] {
         if (!this.legalMoves) {
             this.legalMoves = [];
         }

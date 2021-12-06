@@ -14,7 +14,7 @@ export default class King extends Piece {
             (castlingAvailability.includes('q') && color === 'dark');
     }
 
-    getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
+    getLegalMoves(currentBoard: BoardMap, fen: FEN, checkStatus: string): string[] {
         if (!this.legalMoves) {
             this.legalMoves = [];
         }
