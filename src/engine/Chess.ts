@@ -23,6 +23,7 @@ export class Chess {
     piecesByLocation: PieceMap; // this tracks pieces by position
     piecesByName: PieceMap;
     checkStatus: string = 'none';
+    checkBy: null | Piece = null;
     checkMateStatus: boolean = false;
 
     constructor(fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1') {
@@ -239,8 +240,9 @@ export class Chess {
             const enemyColor = activeColor === 'light' ? 'dark' : 'light';
             const enemyPieces = this.getPiecesForColor(enemyColor);
             const isCheck = king.getCheckStatus(enemyPieces, this.boardMap, this.fen);
-            if (isCheck) {
+            if (isCheck.check) {
                 checkStatus = activeColor;
+                this.checkBy = isCheck.piece;
             }
         }
         this.checkStatus = checkStatus;
