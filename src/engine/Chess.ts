@@ -236,11 +236,11 @@ export class Chess {
         return this.piecesByColor[oppositeColor];
     }
 
+    // Useful for getting King or Queen
     private getPieceOfColor(name: string, color: Color): Piece | null {
         let p = null;
-        for (const key of Object.keys(this.piecesByName)) {
-            const piece = this.piecesByName[key];
-            if (piece.name === name && piece.color === color) {
+        for (const piece of this.piecesByColor[color]) {
+            if (piece.name === name) {
                 p = piece;
                 break;
             }
