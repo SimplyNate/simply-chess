@@ -17,11 +17,17 @@ interface ParsedPieces {
     piecesByName: PieceMap,
 }
 
+interface PiecesByColor {
+    light: Piece[],
+    dark: Piece[],
+}
+
 export class Chess {
     fen: FEN;
     boardMap: BoardMap;
     piecesByLocation: PieceMap; // this tracks pieces by position
     piecesByName: PieceMap;
+    piecesByColor: PiecesByColor = { light: [], dark: [] };
     checkStatus: string = 'none';
     checkBy: null | Piece = null;
     checkMateStatus: boolean = false;
@@ -66,6 +72,7 @@ export class Chess {
                 }
                 piecesByLocation[position] = pieceInstance;
                 piecesByName[piece] = pieceInstance;
+                this.piecesByColor[color].push(pieceInstance);
             }
         }
         return { piecesByLocation, piecesByName };
@@ -89,6 +96,13 @@ export class Chess {
             if (legalMoves.includes(to)) {
                 let capturedPiece = false;
                 if (this.piecesByLocation[to]) {
+                    const deletePieceColor = this.piecesByLocation[to].color;
+                    for (let i = 0; i < this.piecesByColor[deletePieceColor].length; i++) {
+                        if (this.piecesByColor[deletePieceColor][i] === this.piecesByLocation[to]) {
+                            this.piecesByColor[deletePieceColor].splice(i, 1);
+                            break;
+                        }
+                    }
                     capturedPiece = true;
                     delete this.piecesByName[this.piecesByLocation[to].code];
                     delete this.piecesByLocation[to];
@@ -218,15 +232,8 @@ export class Chess {
     }
 
     private getPiecesForOppositeColor(color: Color): Piece[] {
-        const pieces: Piece[] = [];
         const oppositeColor = color === 'light' ? 'dark' : 'light';
-        for (const key of Object.keys(this.piecesByName)) {
-            const piece = this.piecesByName[key];
-            if (piece.color === oppositeColor) {
-                pieces.push(piece);
-            }
-        }
-        return pieces;
+        return this.piecesByColor[oppositeColor];
     }
 
     private getPieceOfColor(name: string, color: Color): Piece | null {
