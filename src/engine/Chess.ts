@@ -258,7 +258,7 @@ export class Chess {
          */
         let checkStatus = 'none';
         const activeColor = this.fen.activeColor === 'w' ? 'light' : 'dark';
-        const king = this.getPieceOfColor('King', activeColor);
+        const king = activeColor === 'light' ? this.piecesByName.K : this.piecesByName.k;
         if (king instanceof King) {
             const enemyPieces = this.getPiecesForOppositeColor(activeColor);
             const isCheck = king.getCheckStatus(enemyPieces, this.boardMap, this.fen);
