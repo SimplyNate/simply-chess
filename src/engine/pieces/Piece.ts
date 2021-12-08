@@ -1,4 +1,5 @@
 import { BoardMap, FEN } from '@/utils/utils';
+import King from '@/engine/pieces/King';
 
 export type Color = 'light' | 'dark';
 
@@ -33,7 +34,7 @@ export abstract class Piece {
         this.file = file;
     }
 
-    getLegalMoves(currentBoard: BoardMap, fen: FEN, checkStatus: string, enemyPieces: Piece[]): string[] {
+    getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
         return [];
     }
 

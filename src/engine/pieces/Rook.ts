@@ -1,5 +1,6 @@
 import { BoardMap, FEN } from '@/utils/utils';
 import { Color, Piece } from '@/engine/pieces/Piece';
+import King from '@/engine/pieces/King';
 
 export default class Rook extends Piece {
     canCastle: boolean;
@@ -26,7 +27,7 @@ export default class Rook extends Piece {
         }
     }
 
-    getLegalMoves(currentBoard: BoardMap, fen: FEN, checkStatus: string): string[] {
+    getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
         if (!this.legalMoves) {
             this.legalMoves = [];
         }

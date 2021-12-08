@@ -1,5 +1,6 @@
 import { BoardMap, FEN } from '@/utils/utils';
 import { Color, Piece } from '@/engine/pieces/Piece';
+import King from '@/engine/pieces/King';
 
 export default class Pawn extends Piece {
     inStartingPosition: boolean;
@@ -43,9 +44,9 @@ export default class Pawn extends Piece {
     }
 
     // Check if in check, as well as en passant
-    getLegalMoves(currentBoard: BoardMap, fen: FEN, checkStatus: string): string[] {
+    getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
         if (!this.legalMoves) {
-            if (checkStatus === this.color) {
+            if (king.isInCheck) {
                 this.legalMoves = this.calculateMovesCheck(currentBoard, fen);
             }
             else {
