@@ -4,54 +4,45 @@ import King from '@/engine/pieces/King';
 
 export default class Pawn extends Piece {
     inStartingPosition: boolean;
+    direction: number;
 
     constructor(color: Color, position: string) {
         super(color, position, 'Pawn', 'consecutive');
+        this.direction = this.color === 'dark' ? -1 : 1;
         this.inStartingPosition = (this.rank === 7 && this.color === 'dark') || (this.rank === 2 && this.color === 'light');
-    }
-
-    private calculateMovesNoCheck(currentBoard: BoardMap, fen: FEN): string[] {
-        const moves = [];
-        const direction = this.color === 'dark' ? -1 : 1;
-        const newRank = this.rank + (1 * direction);
-        const move1 = `${this.file}-${newRank}`;
-        if ((newRank <= 8 || newRank >= 1) && currentBoard[move1] === 'x') {
-            moves.push(move1);
-            if (this.inStartingPosition) {
-                const move2 = `${this.file}-${this.rank + (2 * direction)}`;
-                if (currentBoard[move2] === 'x') {
-                    moves.push(move2);
-                }
-            }
-        }
-        if (fen.enPassantTargetSquare !== '-') {
-            const leftFile = String.fromCharCode(this.file.charCodeAt(0) - 1);
-            const rightFile = String.fromCharCode(this.file.charCodeAt(0) + 1);
-            const rank = this.rank + (1 * direction);
-            const possibleEPSquares = [`${leftFile}-${rank}`, `${rightFile}-${rank}`];
-            for (const possibleSquare of possibleEPSquares) {
-                if (possibleSquare === fen.enPassantTargetSquare) {
-                    moves.push(possibleSquare);
-                    break; // There can only ever be one match
-                }
-            }
-        }
-        return moves;
-    }
-
-    private calculateMovesCheck(currentBoard: BoardMap, fen: FEN): string[] {
-        return [];
     }
 
     // Check if in check, as well as en passant
     getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
         if (!this.legalMoves) {
+            const moves = [];
+            const newRank = this.rank + (this.direction);
+            const move1 = `${this.file}-${newRank}`;
+            if ((newRank <= 8 || newRank >= 1) && currentBoard[move1] === 'x') {
+                moves.push(move1);
+                if (this.inStartingPosition) {
+                    const move2 = `${this.file}-${this.rank + (2 * this.direction)}`;
+                    if (currentBoard[move2] === 'x') {
+                        moves.push(move2);
+                    }
+                }
+            }
+            if (fen.enPassantTargetSquare !== '-') {
+                const leftFile = String.fromCharCode(this.file.charCodeAt(0) - 1);
+                const rightFile = String.fromCharCode(this.file.charCodeAt(0) + 1);
+                const rank = this.rank + this.direction;
+                const possibleEPSquares = [`${leftFile}-${rank}`, `${rightFile}-${rank}`];
+                for (const possibleSquare of possibleEPSquares) {
+                    if (possibleSquare === fen.enPassantTargetSquare) {
+                        moves.push(possibleSquare);
+                        break; // There can only ever be one match
+                    }
+                }
+            }
             if (king.isInCheck) {
-                this.legalMoves = this.calculateMovesCheck(currentBoard, fen);
+                this.filterMovesCheck(currentBoard, fen, king, enemyPieces, moves);
             }
-            else {
-                this.legalMoves = this.calculateMovesNoCheck(currentBoard, fen);
-            }
+            this.legalMoves = moves;
         }
         return this.legalMoves;
     }

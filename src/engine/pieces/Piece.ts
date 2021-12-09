@@ -34,6 +34,18 @@ export abstract class Piece {
         this.file = file;
     }
 
+    // Mutates the list of moves to remove any moves that don't defend king
+    protected filterMovesCheck(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[], moves: string[]): string[] {
+        const checkedByPiece = king.checkBy;
+        if (checkedByPiece && moves.length > 0) {
+            const checkType = checkedByPiece.moveType;
+            if (checkType === 'consecutive') {
+
+            }
+        }
+        return moves;
+    }
+
     getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
         return [];
     }
