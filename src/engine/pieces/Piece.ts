@@ -37,13 +37,94 @@ export abstract class Piece {
     // Mutates the list of moves to remove any moves that don't defend king
     protected filterMovesCheck(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[], moves: string[]): string[] {
         const checkedByPiece = king.checkBy;
+        let filteredMoves: string[] = [];
         if (checkedByPiece && moves.length > 0) {
             const checkType = checkedByPiece.moveType;
-            if (checkType === 'consecutive') {
-
+            // For King pieces, filter out moves that overlap enemy moves
+            if (this.name === 'King') {
+                const dangerMoves: string[] = [];
+                for (const enemyPiece of enemyPieces) {
+                    if (enemyPiece.legalMoves) {
+                        dangerMoves.push(...enemyPiece.legalMoves);
+                    }
+                }
+                filteredMoves = moves.filter(move => !dangerMoves.includes(move));
+            }
+            // Else, filter out moves that don't defend King
+            else {
+                const enemyMoves = checkedByPiece.legalMoves;
+                const enemyLocation = checkedByPiece.position;
+                if (enemyMoves && enemyLocation) {
+                    const validMoves: string[] = [enemyLocation];
+                    // If consecutive movement, either block or take piece
+                    if (checkType === 'consecutive') {
+                        // If king and attacker are on same vertical line, add all ranks between and enemyLocation
+                        if (checkedByPiece.file === king.file) {
+                            // If king is above attacker
+                            if (king.rank > checkedByPiece.rank) {
+                                for (let i = king.rank - 1; i > checkedByPiece.rank; i--) {
+                                    const move = `${king.file}-${i}`;
+                                    validMoves.push(move);
+                                }
+                            }
+                            // Else king is below attacker
+                            else {
+                                for (let i = checkedByPiece.rank - 1; i > king.rank; i--) {
+                                    const move = `${king.file}-${i}`;
+                                    validMoves.push(move);
+                                }
+                            }
+                        }
+                        // If king and attacker are on the same rank
+                        else if (checkedByPiece.rank === king.rank) {
+                            const kingFile = king.file.charCodeAt(0);
+                            const enemyFile = checkedByPiece.file.charCodeAt(0);
+                            // If king is to the left of the attacker
+                            if (kingFile < enemyFile) {
+                                for (let i = kingFile + 1; i < enemyFile; i++) {
+                                    const move = `${String.fromCharCode(i)}-${king.rank}`;
+                                    validMoves.push(move);
+                                }
+                            }
+                            // Else king is to the right of the attacker
+                            else {
+                                for (let i = enemyFile + 1; i < kingFile; i++) {
+                                    const move = `${String.fromCharCode(i)}-${king.rank}`;
+                                    validMoves.push(move);
+                                }
+                            }
+                        }
+                        // Else they are diagonal
+                        else {
+                            const kingFile = king.file.charCodeAt(0);
+                            const enemyFile = checkedByPiece.file.charCodeAt(0);
+                            // If king is to the left, use king, else, use enemy
+                            let fileTracker = kingFile < enemyFile ? kingFile + 1 : enemyFile + 1;
+                            let startRank;
+                            let endRank;
+                            // If king is above
+                            if (king.rank > checkedByPiece.rank) {
+                                startRank = checkedByPiece.rank + 1;
+                                endRank = king.rank;
+                            }
+                            // Else king is below
+                            else {
+                                startRank = king.rank + 1;
+                                endRank = checkedByPiece.rank;
+                            }
+                            for (let i = startRank; i < endRank; i++) {
+                                const move = `${String.fromCharCode(fileTracker)}-${i}`;
+                                validMoves.push(move);
+                                fileTracker += 1;
+                            }
+                        }
+                    }
+                    // Else, can only take piece out
+                    filteredMoves = moves.filter(move => validMoves.includes(move));
+                }
             }
         }
-        return moves;
+        return filteredMoves;
     }
 
     getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
