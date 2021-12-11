@@ -117,7 +117,7 @@ export class Chess {
     public move(from: string, to: string): string {
         const moveString = this.boardMap[from];
         if (moveString !== 'x') {
-            const movePiece = this.piecesByLocation[from];
+            let movePiece = this.piecesByLocation[from];
             const enemyPieces = this.getPiecesForOppositeColor(movePiece.color);
             const king = movePiece.color === 'light' ? this.piecesByName.K : this.piecesByName.k;
             const legalMoves = movePiece.getLegalMoves(this.boardMap, this.fen, king, enemyPieces);
@@ -136,11 +136,11 @@ export class Chess {
                     delete this.piecesByLocation[to];
                 }
                 movePiece.move(to);
+                if (movePiece.name === 'Pawn' && (movePiece.rank === 1 || movePiece.rank === 8)) {
+                    movePiece = new Queen(movePiece.color, movePiece.position);
+                }
                 this.boardMap[to] = moveString;
                 this.piecesByLocation[to] = movePiece;
-                if (movePiece.name === 'Pawn' && (movePiece.rank === 1 || movePiece.rank === 8)) {
-                    this.promotePawn();
-                }
                 this.updateFEN(movePiece, capturedPiece);
                 this.updateCheckStatus();
                 this.resetLegalMoves();
@@ -296,9 +296,11 @@ export class Chess {
         }
     }
 
-    private promotePawn(): void {
-        console.log('Upgrade Pawn!');
+    /*
+    private promotePawn(pawn: Piece): Piece {
+        return new Queen(pawn.color, pawn.position);
     }
+     */
 
     public print(): void {
         console.log(`

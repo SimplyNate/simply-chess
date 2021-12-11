@@ -8,7 +8,7 @@ export type MoveType = 'consecutive' | 'jump';
 export abstract class Piece {
     name: string;
     color: Color;
-    position: string | null;
+    position: string;
     lastPosition: string | null;
     rank: number;
     file: string;
