@@ -138,6 +138,9 @@ export class Chess {
                 movePiece.move(to);
                 this.boardMap[to] = moveString;
                 this.piecesByLocation[to] = movePiece;
+                if (movePiece.name === 'Pawn' && (movePiece.rank === 1 || movePiece.rank === 8)) {
+                    this.promotePawn();
+                }
                 this.updateFEN(movePiece, capturedPiece);
                 this.updateCheckStatus();
                 this.resetLegalMoves();
@@ -293,7 +296,7 @@ export class Chess {
         }
     }
 
-    private upgradePawn(): void {
+    private promotePawn(): void {
         console.log('Upgrade Pawn!');
     }
 
