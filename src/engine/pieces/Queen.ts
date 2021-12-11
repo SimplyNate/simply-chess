@@ -7,7 +7,7 @@ export default class Queen extends Piece {
         super(color, position, 'Queen', 'consecutive');
     }
 
-    getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
+    public getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
         if (!this.legalMoves) {
             this.legalMoves = [];
         }

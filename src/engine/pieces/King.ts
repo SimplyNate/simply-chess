@@ -20,14 +20,14 @@ export default class King extends Piece {
             (castlingAvailability.includes('q') && color === 'dark');
     }
 
-    getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
+    public getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
         if (!this.legalMoves) {
             this.legalMoves = [];
         }
         return this.legalMoves;
     }
 
-    getCheckStatus(enemyPieces: Piece[], currentBoard: BoardMap, fen: FEN): CheckStatus {
+    public getCheckStatus(enemyPieces: Piece[], currentBoard: BoardMap, fen: FEN): CheckStatus {
         for (const piece of enemyPieces) {
             // Use 'none' checkStatus because it would never be any other status
             const legalMoves = piece.getLegalMoves(currentBoard, fen, this, enemyPieces);

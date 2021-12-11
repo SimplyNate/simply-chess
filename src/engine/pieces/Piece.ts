@@ -28,7 +28,7 @@ export abstract class Piece {
         this.moveType = moveType;
     }
 
-    move(position: string): void {
+    public move(position: string): void {
         this.lastPosition = this.position;
         this.position = position;
         const [file, rank] = position.split('-');
@@ -129,11 +129,11 @@ export abstract class Piece {
         return filteredMoves;
     }
 
-    getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
+    public getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
         return [];
     }
 
-    parseCode(): string {
+    private parseCode(): string {
         if (this.name === 'Knight') {
             return this.color === 'dark' ? this.name[1].toLowerCase() : this.name[1].toUpperCase();
         }
