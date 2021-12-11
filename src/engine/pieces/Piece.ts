@@ -7,6 +7,7 @@ export type MoveType = 'consecutive' | 'jump';
 
 export abstract class Piece {
     name: string;
+    code: string;
     color: Color;
     position: string;
     lastPosition: string | null;
@@ -20,6 +21,7 @@ export abstract class Piece {
         this.position = position;
         this.lastPosition = null;
         this.name = name;
+        this.code = this.parseCode();
         const [file, rank] = position.split('-');
         this.rank = Number(rank);
         this.file = file;
@@ -131,7 +133,7 @@ export abstract class Piece {
         return [];
     }
 
-    get code(): string {
+    parseCode(): string {
         if (this.name === 'Knight') {
             return this.color === 'dark' ? this.name[1].toLowerCase() : this.name[1].toUpperCase();
         }

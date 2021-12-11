@@ -115,7 +115,7 @@ export class Chess {
     }
 
     public move(from: string, to: string): string {
-        const moveString = this.boardMap[from];
+        let moveString = this.boardMap[from];
         if (moveString !== 'x') {
             let movePiece = this.piecesByLocation[from];
             const enemyPieces = this.getPiecesForOppositeColor(movePiece.color);
@@ -138,6 +138,7 @@ export class Chess {
                 movePiece.move(to);
                 if (movePiece.name === 'Pawn' && (movePiece.rank === 1 || movePiece.rank === 8)) {
                     movePiece = new Queen(movePiece.color, movePiece.position);
+                    moveString = movePiece.code;
                 }
                 this.boardMap[to] = moveString;
                 this.piecesByLocation[to] = movePiece;
