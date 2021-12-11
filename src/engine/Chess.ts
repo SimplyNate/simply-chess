@@ -140,6 +140,7 @@ export class Chess {
                     movePiece = new Queen(movePiece.color, movePiece.position);
                     moveString = movePiece.code;
                 }
+                delete this.piecesByLocation[from];
                 this.boardMap[to] = moveString;
                 this.piecesByLocation[to] = movePiece;
                 this.updateFEN(movePiece, capturedPiece);
@@ -228,7 +229,7 @@ export class Chess {
             if (movePiece.inStartingPosition) {
                 movePiece.inStartingPosition = false;
                 // If the pawn just moved two spaces
-                if (movePiece.lastPosition && movePiece.position && Math.abs(Number(movePiece.lastPosition[2]) - Number(movePiece.position[2])) === 2) {
+                if (movePiece.lastPosition && Math.abs(Number(movePiece.lastPosition[2]) - Number(movePiece.position[2])) === 2) {
                     if (Number(movePiece.lastPosition[2]) > movePiece.rank) {
                         this.fen.enPassantTargetSquare = `${movePiece.file}${movePiece.rank + 1}`;
                     }
