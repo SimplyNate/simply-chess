@@ -7,7 +7,7 @@ export default class Bishop extends Piece {
         super(color, position, 'Bishop', 'consecutive');
     }
 
-    public getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
+    public getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         if (!this.legalMoves) {
             const moves = [];
             const fileCode = this.file.charCodeAt(0);

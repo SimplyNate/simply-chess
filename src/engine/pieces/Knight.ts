@@ -7,7 +7,7 @@ export default class Knight extends Piece {
         super(color, position, 'Knight', 'jump');
     }
 
-    public getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
+    public getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         if (!this.legalMoves) {
             this.legalMoves = [];
         }

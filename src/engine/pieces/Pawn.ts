@@ -13,7 +13,7 @@ export default class Pawn extends Piece {
     }
 
     // Check if in check, as well as en passant
-    public getLegalMoves(currentBoard: BoardMap, fen: FEN, king: King, enemyPieces: Piece[]): string[] {
+    public getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         if (!this.legalMoves) {
             const moves = [];
             const newRank = this.rank + (this.direction);
@@ -38,9 +38,6 @@ export default class Pawn extends Piece {
                         break; // There can only ever be one match
                     }
                 }
-            }
-            if (king.isInCheck) {
-                this.filterMovesCheck(currentBoard, fen, king, enemyPieces, moves);
             }
             this.legalMoves = moves;
         }
