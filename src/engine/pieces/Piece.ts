@@ -37,7 +37,7 @@ export abstract class Piece {
     }
 
     // Mutates the list of moves to remove any moves that don't defend king
-    protected filterMovesCheck(king: King, enemyPieces: Piece[], moves: string[]): string[] {
+    public filterMovesCheck(king: King, enemyPieces: Piece[], moves: string[]): string[] {
         const checkedByPiece = king.checkBy;
         let filteredMoves: string[] = [];
         if (checkedByPiece && moves.length > 0) {
@@ -126,6 +126,7 @@ export abstract class Piece {
                 }
             }
         }
+        this.legalMoves = filteredMoves;
         return filteredMoves;
     }
 

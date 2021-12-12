@@ -38,7 +38,6 @@ export class Chess {
     piecesByName: PiecesByName;
     piecesByColor: PiecesByColor = { light: [], dark: [] };
     checkStatus: CheckStatus = 'none';
-    checkBy: null | Piece = null;
     checkMateStatus: boolean = false;
 
     constructor(fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1') {
@@ -47,8 +46,7 @@ export class Chess {
         const { piecesByLocation, piecesByName } = this.parsePieces();
         this.piecesByLocation = piecesByLocation;
         this.piecesByName = piecesByName;
-        this.updateCheckStatus();
-        this.resetLegalMoves();
+        this.resetLegalMovesAndCheckStatus();
         this.updateCheckMate();
     }
 
@@ -107,9 +105,7 @@ export class Chess {
     public getLegalMoves(position: string): string[] {
         const piece = this.piecesByLocation[position];
         if (piece) {
-            const enemyPieces = this.getPiecesForOppositeColor(piece.color);
-            const king = piece.color === 'light' ? this.piecesByName.K : this.piecesByName.k;
-            return piece.getLegalMoves(this.boardMap, this.fen, king, enemyPieces);
+            return piece.getLegalMoves(this.boardMap, this.fen);
         }
         return [];
     }
@@ -118,9 +114,7 @@ export class Chess {
         let moveString = this.boardMap[from];
         if (moveString !== 'x') {
             let movePiece = this.piecesByLocation[from];
-            const enemyPieces = this.getPiecesForOppositeColor(movePiece.color);
-            const king = movePiece.color === 'light' ? this.piecesByName.K : this.piecesByName.k;
-            const legalMoves = movePiece.getLegalMoves(this.boardMap, this.fen, king, enemyPieces);
+            const legalMoves = movePiece.getLegalMoves(this.boardMap, this.fen);
             if (legalMoves.includes(to)) {
                 let capturedPiece = false;
                 if (this.piecesByLocation[to]) {
@@ -144,8 +138,7 @@ export class Chess {
                 this.boardMap[to] = moveString;
                 this.piecesByLocation[to] = movePiece;
                 this.updateFEN(movePiece, capturedPiece);
-                this.updateCheckStatus();
-                this.resetLegalMoves();
+                this.resetLegalMovesAndCheckStatus();
                 this.updateCheckMate();
             }
         }
@@ -244,14 +237,42 @@ export class Chess {
         }
     }
 
-    private resetLegalMoves(): void {
-        for (const key of Object.keys(this.piecesByLocation)) {
-            const piece = this.piecesByLocation[key];
-            piece.legalMoves = null;
-            const enemyPieces = this.getPiecesForOppositeColor(piece.color);
-            const king = piece.color === 'light' ? this.piecesByName.K : this.piecesByName.k;
-            piece.getLegalMoves(this.boardMap, this.fen, king, enemyPieces);
+    private processMovesForColor(color: Color, filterMovesCheck: boolean): void {
+        let pieces: Piece[];
+        let king: King;
+        let enemyPieces: Piece[];
+        if (color === 'light') {
+            pieces = this.piecesByColor.light;
+            king = this.piecesByName.K;
+            enemyPieces = this.piecesByColor.dark;
         }
+        else {
+            pieces = this.piecesByColor.dark;
+            king = this.piecesByName.k;
+            enemyPieces = this.piecesByColor.light;
+        }
+        for (const piece of pieces) {
+            const moves = piece.getLegalMoves(this.boardMap, this.fen);
+            if (filterMovesCheck) {
+                piece.filterMovesCheck(king, enemyPieces, moves);
+            }
+        }
+    }
+
+    private resetLegalMovesAndCheckStatus(): void {
+        let justMoved: Color;
+        let activeColor: Color;
+        if (this.fen.activeColor === 'w') {
+            justMoved = 'light';
+            activeColor = 'dark';
+        }
+        else {
+            justMoved = 'dark';
+            activeColor = 'light';
+        }
+        this.processMovesForColor(justMoved, false);
+        this.updateCheckStatus();
+        this.processMovesForColor(activeColor, this.checkStatus !== 'none');
     }
 
     private getPiecesForOppositeColor(color: Color): Piece[] {
@@ -274,7 +295,6 @@ export class Chess {
         const isCheck = king.getCheckStatus(enemyPieces, this.boardMap, this.fen);
         if (isCheck.check) {
             checkStatus = activeColor;
-            this.checkBy = isCheck.piece;
         }
         this.checkStatus = checkStatus;
     }
@@ -289,9 +309,8 @@ export class Chess {
         if (this.checkStatus !== 'none') {
             const pieces = this.piecesByColor[this.checkStatus];
             for (const piece of pieces) {
-                const enemyPieces = this.getPiecesForOppositeColor(piece.color);
-                const king = piece.color === 'light' ? this.piecesByName.K : this.piecesByName.k;
-                const legalMoves = piece.getLegalMoves(this.boardMap, this.fen, king, enemyPieces);
+                // This should already be pre-calculated and filtered for checked move sets
+                const legalMoves = piece.getLegalMoves(this.boardMap, this.fen);
                 possibleMoves.push(...legalMoves);
             }
             this.checkMateStatus = possibleMoves.length === 0;
