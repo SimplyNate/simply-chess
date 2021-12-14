@@ -11,17 +11,15 @@ import { BoardMap, FEN, parsePlacementToMap, rebuildPlacementFromMap, separateFE
 interface PieceMap {
     [index: string]: Piece,
 }
-interface PiecesByName {
-    [index: string]: Piece | null,
+
+interface Kings {
     k: King,
-    q: Queen | null,
     K: King,
-    Q: Queen | null,
 }
 
 interface ParsedPieces {
     piecesByLocation: PieceMap,
-    piecesByName: PiecesByName,
+    kings: Kings,
 }
 
 interface PiecesByColor {
@@ -35,7 +33,7 @@ export class Chess {
     fen: FEN;
     boardMap: BoardMap;
     piecesByLocation: PieceMap; // this tracks pieces by position
-    piecesByName: PiecesByName;
+    kings: Kings;
     piecesByColor: PiecesByColor = { light: [], dark: [] };
     checkStatus: CheckStatus = 'none';
     checkMateStatus: boolean = false;
@@ -43,9 +41,9 @@ export class Chess {
     constructor(fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1') {
         this.fen = separateFEN(fen);
         this.boardMap = parsePlacementToMap(this.fen.piecePlacement);
-        const { piecesByLocation, piecesByName } = this.parsePieces();
+        const { piecesByLocation, kings } = this.parsePieces();
         this.piecesByLocation = piecesByLocation;
-        this.piecesByName = piecesByName;
+        this.kings = kings;
         this.resetLegalMovesAndCheckStatus();
         this.updateCheckMate();
     }
@@ -53,12 +51,8 @@ export class Chess {
     private parsePieces(): ParsedPieces {
         const piecesByLocation: PieceMap = {};
         // For typescript consistency, pre-assign Kings so compiler doesn't get angry
-        const piecesByName: PiecesByName = {
-            k: new King('dark', '', ''),
-            q: null,
-            K: new King('dark', '', ''),
-            Q: null,
-        };
+        let lightKing = new King('light', '', '');
+        let darkKing = new King('light', '', '');
         for (const position of Object.keys(this.boardMap)) {
             const piece = this.boardMap[position];
             if (piece !== 'x') {
@@ -79,27 +73,21 @@ export class Chess {
                 }
                 else if (piece === 'q' || piece === 'Q') {
                     pieceInstance = new Queen(color, position);
-                    if (piece === 'q') {
-                        piecesByName.q = pieceInstance;
-                    }
-                    else {
-                        piecesByName.Q = pieceInstance;
-                    }
                 }
                 else {
                     pieceInstance = new King(color, position, this.fen.castlingAvailability);
                     if (piece === 'k') {
-                        piecesByName.k = pieceInstance;
+                        darkKing = pieceInstance;
                     }
                     else {
-                        piecesByName.K = pieceInstance;
+                        lightKing = pieceInstance;
                     }
                 }
                 piecesByLocation[position] = pieceInstance;
                 this.piecesByColor[color].push(pieceInstance);
             }
         }
-        return { piecesByLocation, piecesByName };
+        return { piecesByLocation, kings: { k: darkKing, K: lightKing } };
     }
 
     public getLegalMoves(position: string): string[] {
@@ -126,7 +114,6 @@ export class Chess {
                         }
                     }
                     capturedPiece = true;
-                    delete this.piecesByName[this.piecesByLocation[to].code];
                     delete this.piecesByLocation[to];
                 }
                 movePiece.move(to);
@@ -243,12 +230,12 @@ export class Chess {
         let enemyPieces: Piece[];
         if (color === 'light') {
             pieces = this.piecesByColor.light;
-            king = this.piecesByName.K;
+            king = this.kings.K;
             enemyPieces = this.piecesByColor.dark;
         }
         else {
             pieces = this.piecesByColor.dark;
-            king = this.piecesByName.k;
+            king = this.kings.k;
             enemyPieces = this.piecesByColor.light;
         }
         for (const piece of pieces) {
@@ -290,7 +277,7 @@ export class Chess {
          */
         let checkStatus: CheckStatus = 'none';
         const activeColor = this.fen.activeColor === 'w' ? 'light' : 'dark';
-        const king = activeColor === 'light' ? this.piecesByName.K : this.piecesByName.k;
+        const king = activeColor === 'light' ? this.kings.K : this.kings.k;
         const enemyPieces = this.getPiecesForOppositeColor(activeColor);
         const isCheck = king.getCheckStatus(enemyPieces, this.boardMap, this.fen);
         if (isCheck.check) {
