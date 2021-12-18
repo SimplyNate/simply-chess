@@ -35,7 +35,12 @@ export default class King extends Piece {
             this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank}`);
             // Right
             this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank}`);
-            this.legalMoves.filter(move => currentBoard[move] === 'x');
+            if (this.color === 'light') {
+                this.legalMoves.filter(move => currentBoard[move] && currentBoard[move].charCodeAt(0) > 74);
+            }
+            else {
+                this.legalMoves.filter(move => currentBoard[move] && (currentBoard[move].charCodeAt(0) < 74 || currentBoard[move] === 'x'));
+            }
         }
         return this.legalMoves;
     }
