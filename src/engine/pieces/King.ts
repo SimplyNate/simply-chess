@@ -1,4 +1,4 @@
-import { BoardMap, FEN } from '@/utils/utils';
+import { BoardMap, FEN, shiftChar } from '@/utils/utils';
 import { Color, Piece } from '@/engine/pieces/Piece';
 
 interface CheckStatus {
@@ -23,6 +23,19 @@ export default class King extends Piece {
     public getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         if (!this.legalMoves) {
             this.legalMoves = [];
+            // Up
+            this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank + 1}`);
+            this.legalMoves.push(`${this.file}-${this.rank + 1}`);
+            this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank + 1}`);
+            // Down
+            this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank - 1}`);
+            this.legalMoves.push(`${this.file}-${this.rank - 1}`);
+            this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank - 1}`);
+            // Left
+            this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank}`);
+            // Right
+            this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank}`);
+            this.legalMoves.filter(move => currentBoard[move] === 'x');
         }
         return this.legalMoves;
     }

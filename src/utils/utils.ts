@@ -82,6 +82,10 @@ export function rebuildPlacementFromMap(boardMap: BoardMap): string {
     return piecePlacement;
 }
 
+export function shiftChar(char: string, by: number) {
+    return String.fromCharCode(char.charCodeAt(0) + by);
+}
+
 export const rank = [8, 7, 6, 5, 4, 3, 2, 1];
 export const file = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 export const pieceMap = [66, 75, 78, 80, 81, 82, 98, 107, 110, 112, 113, 114];
