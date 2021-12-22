@@ -35,7 +35,6 @@ export default class King extends Piece {
             this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank}`);
             // Right
             this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank}`);
-            // TODO: Calculate castling moves
             if (this.canCastleShort && this.canPerformCastleShort(currentBoard)) {
                 const castleShortPosition = this.color === 'light' ? 'g-1' : 'g-8';
                 this.legalMoves.push(castleShortPosition);
