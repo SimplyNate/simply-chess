@@ -36,9 +36,25 @@ export default class King extends Piece {
             // Right
             this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank}`);
             // TODO: Calculate castling moves
+            if (this.canCastleShort && this.canPerformCastleShort(currentBoard)) {
+                const castleShortPosition = this.color === 'light' ? 'g-1' : 'g-8';
+                this.legalMoves.push(castleShortPosition);
+            }
+            if (this.canCastleLong && this.canPerformCastleLong(currentBoard)) {
+                const castleLongPosition = this.color === 'light' ? 'c-1' : 'c-8';
+                this.legalMoves.push(castleLongPosition);
+            }
             this.filterValidMoves(this.legalMoves, currentBoard);
         }
         return this.legalMoves;
+    }
+
+    private canPerformCastleShort(currentBoard: BoardMap): boolean {
+        return currentBoard[`${shiftChar(this.file, 1)}-${this.rank}`] === 'x' && currentBoard[`${shiftChar(this.file, 2)}-${this.rank}`] === 'x';
+    }
+
+    private canPerformCastleLong(currentBoard: BoardMap): boolean {
+        return currentBoard[`${shiftChar(this.file, -1)}-${this.rank}`] === 'x' && currentBoard[`${shiftChar(this.file, -2)}-${this.rank}`] === 'x' && currentBoard[`${shiftChar(this.file, -3)}-${this.rank}`] === 'x';
     }
 
     public getCheckStatus(enemyPieces: Piece[], currentBoard: BoardMap, fen: FEN): CheckStatus {
