@@ -35,6 +35,7 @@ export default class King extends Piece {
             this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank}`);
             // Right
             this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank}`);
+            // TODO: Calculate castling moves
             this.filterValidMoves(this.legalMoves, currentBoard);
         }
         return this.legalMoves;

@@ -135,13 +135,21 @@ export abstract class Piece {
     }
 
     // Filters valid moves based on if the space exists and if the piece is either x or an enemy piece
-    protected filterValidMoves(moves: string[], currentBoard: BoardMap) {
+    protected filterValidMoves(moves: string[], currentBoard: BoardMap): void {
+        // TODO: Filter out everything after a blocking piece is in the way
         if (this.color === 'light') {
             moves.filter(move => currentBoard[move] && currentBoard[move].charCodeAt(0) > 74);
         }
         else {
             moves.filter(move => currentBoard[move] && (currentBoard[move].charCodeAt(0) < 74 || currentBoard[move] === 'x'));
         }
+    }
+
+    protected isValidMovePosition(move: string, currentBoard: BoardMap): boolean {
+        const lowerRangeEnemyCodes = this.color === 'dark' ? 65 : 97;
+        const upperRangeEnemyCodes = this.color === 'dark' ? 72 : 104;
+        return currentBoard && (currentBoard[move] === 'x' ||
+            (currentBoard[move].charCodeAt(0) >= lowerRangeEnemyCodes && currentBoard[move].charCodeAt(0) <= upperRangeEnemyCodes));
     }
 
     private parseCode(): string {

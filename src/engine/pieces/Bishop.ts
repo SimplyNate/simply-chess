@@ -1,6 +1,5 @@
 import { BoardMap, FEN, shiftChar } from '@/utils/utils';
 import { Color, Piece } from '@/engine/pieces/Piece';
-import King from '@/engine/pieces/King';
 
 export default class Bishop extends Piece {
     constructor(color: Color, position: string) {
@@ -10,15 +9,50 @@ export default class Bishop extends Piece {
     public getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         if (!this.legalMoves) {
             this.legalMoves = [];
+            let lookUpLeft = true;
+            let lookUpRight = true;
+            let lookDownLeft = true;
+            let lookDownRight = true;
             for (let i = this.rank; i < 8; i++) {
-                this.legalMoves.push(`${shiftChar(this.file, i)}-${i}`);
-                this.legalMoves.push(`${shiftChar(this.file, i * -1)}-${i}`);
+                if (lookUpRight) {
+                    const move = `${shiftChar(this.file, i)}-${i}`;
+                    if (this.isValidMovePosition(move, currentBoard)) {
+                        this.legalMoves.push(move);
+                    }
+                    else {
+                        lookUpRight = false;
+                    }
+                }
+                if (lookUpLeft) {
+                    const move = `${shiftChar(this.file, i * -1)}-${i}`;
+                    if (this.isValidMovePosition(move, currentBoard)) {
+                        this.legalMoves.push(move);
+                    }
+                    else {
+                        lookUpLeft = false;
+                    }
+                }
             }
             for (let i = this.rank; i > 1; i--) {
-                this.legalMoves.push(`${shiftChar(this.file, i)}-${i}`);
-                this.legalMoves.push(`${shiftChar(this.file, i * -1)}-${i}`);
+                if (lookDownRight) {
+                    const move = `${shiftChar(this.file, i)}-${i}`;
+                    if (this.isValidMovePosition(move, currentBoard)) {
+                        this.legalMoves.push(move);
+                    }
+                    else {
+                        lookDownRight = false;
+                    }
+                }
+                if (lookDownLeft) {
+                    const move = `${shiftChar(this.file, i * -1)}-${i}`;
+                    if (this.isValidMovePosition(move, currentBoard)) {
+                        this.legalMoves.push(move);
+                    }
+                    else {
+                        lookDownLeft = false;
+                    }
+                }
             }
-            this.filterValidMoves(this.legalMoves, currentBoard);
         }
         return this.legalMoves;
     }
