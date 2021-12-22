@@ -32,6 +32,9 @@ export default class Bishop extends Piece {
                         lookUpLeft = false;
                     }
                 }
+                if (!lookUpLeft && !lookUpRight) {
+                    break;
+                }
             }
             for (let i = this.rank; i > 1; i--) {
                 if (lookDownRight) {
@@ -51,6 +54,9 @@ export default class Bishop extends Piece {
                     else {
                         lookDownLeft = false;
                     }
+                }
+                if (!lookDownLeft && !lookDownRight) {
+                    break;
                 }
             }
         }
