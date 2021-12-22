@@ -134,6 +134,16 @@ export abstract class Piece {
         return [];
     }
 
+    // Filters valid moves based on if the space exists and if the piece is either x or an enemy piece
+    protected filterValidMoves(moves: string[], currentBoard: BoardMap) {
+        if (this.color === 'light') {
+            moves.filter(move => currentBoard[move] && currentBoard[move].charCodeAt(0) > 74);
+        }
+        else {
+            moves.filter(move => currentBoard[move] && (currentBoard[move].charCodeAt(0) < 74 || currentBoard[move] === 'x'));
+        }
+    }
+
     private parseCode(): string {
         if (this.name === 'Knight') {
             return this.color === 'dark' ? this.name[1].toLowerCase() : this.name[1].toUpperCase();
