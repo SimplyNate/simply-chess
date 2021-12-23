@@ -13,7 +13,7 @@ export default class Bishop extends Piece {
             let lookUpRight = true;
             let lookDownLeft = true;
             let lookDownRight = true;
-            for (let i = this.rank; i < 8; i++) {
+            for (let i = this.rank; i <= 8; i++) {
                 if (lookUpRight) {
                     const move = `${shiftChar(this.file, i)}-${i}`;
                     if (this.isValidMovePosition(move, currentBoard)) {
@@ -36,7 +36,7 @@ export default class Bishop extends Piece {
                     break;
                 }
             }
-            for (let i = this.rank; i > 1; i--) {
+            for (let i = this.rank; i >= 1; i--) {
                 if (lookDownRight) {
                     const move = `${shiftChar(this.file, i)}-${i}`;
                     if (this.isValidMovePosition(move, currentBoard)) {

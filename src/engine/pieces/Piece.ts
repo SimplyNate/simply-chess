@@ -1,4 +1,4 @@
-import { BoardMap, FEN } from '@/utils/utils';
+import { BoardMap, FEN, shiftChar } from '@/utils/utils';
 import King from '@/engine/pieces/King';
 
 export type Color = 'light' | 'dark';
@@ -136,7 +136,6 @@ export abstract class Piece {
 
     // Filters valid moves based on if the space exists and if the piece is either x or an enemy piece
     protected filterValidMoves(moves: string[], currentBoard: BoardMap): void {
-        // TODO: Filter out everything after a blocking piece is in the way
         if (this.color === 'light') {
             moves.filter(move => currentBoard[move] && currentBoard[move].charCodeAt(0) > 74);
         }
@@ -150,6 +149,126 @@ export abstract class Piece {
         const upperRangeEnemyCodes = this.color === 'dark' ? 72 : 104;
         return currentBoard && (currentBoard[move] === 'x' ||
             (currentBoard[move].charCodeAt(0) >= lowerRangeEnemyCodes && currentBoard[move].charCodeAt(0) <= upperRangeEnemyCodes));
+    }
+
+    protected consecutiveMoveSearch(currentBoard: BoardMap, straight: boolean, diagonal: boolean): string[] {
+        const moveArray: string[] = [];
+        let lookUpLeft = false;
+        let lookUp = false;
+        let lookUpRight = false;
+        let lookDownRight = false;
+        let lookDown = false;
+        let lookDownLeft = false;
+        let lookLeft = false;
+        let lookRight = false;
+        if (straight) {
+            lookUp = true;
+            lookDown = true;
+            lookLeft = true;
+            lookRight = true;
+        }
+        if (diagonal) {
+            lookUpLeft = true;
+            lookUpRight = true;
+            lookDownRight = true;
+            lookDownLeft = true;
+        }
+        // Look up
+        for (let i = this.rank; i <= 8; i++) {
+            if (!lookUpLeft && !lookUpRight && !lookUp) {
+                break;
+            }
+            if (lookUp) {
+                const newPosition = `${this.file}-${i}`;
+                if (this.isValidMovePosition(newPosition, currentBoard)) {
+                    moveArray.push(newPosition);
+                }
+                else {
+                    lookUp = false;
+                }
+            }
+            if (lookUpRight) {
+                const move = `${shiftChar(this.file, i)}-${i}`;
+                if (this.isValidMovePosition(move, currentBoard)) {
+                    moveArray.push(move);
+                }
+                else {
+                    lookUpRight = false;
+                }
+            }
+            if (lookUpLeft) {
+                const move = `${shiftChar(this.file, i * -1)}-${i}`;
+                if (this.isValidMovePosition(move, currentBoard)) {
+                    moveArray.push(move);
+                }
+                else {
+                    lookUpLeft = false;
+                }
+            }
+        }
+        // Look down
+        for (let i = this.rank; i >= 1; i--) {
+            if (!lookDownLeft && !lookDownRight && !lookDown) {
+                break;
+            }
+            if (lookDown) {
+                const newPosition = `${this.file}-${i}`;
+                if (this.isValidMovePosition(newPosition, currentBoard)) {
+                    moveArray.push(newPosition);
+                }
+                else {
+                    lookDown = false;
+                }
+            }
+            if (lookDownRight) {
+                const move = `${shiftChar(this.file, i)}-${i}`;
+                if (this.isValidMovePosition(move, currentBoard)) {
+                    moveArray.push(move);
+                }
+                else {
+                    lookDownRight = false;
+                }
+            }
+            if (lookDownLeft) {
+                const move = `${shiftChar(this.file, i * -1)}-${i}`;
+                if (this.isValidMovePosition(move, currentBoard)) {
+                    moveArray.push(move);
+                }
+                else {
+                    lookDownLeft = false;
+                }
+            }
+        }
+        const fileNumber = this.file.charCodeAt(0);
+        let fileLowerBound = 65;
+        let fileUpperBound = 72;
+        if (this.color === 'dark') {
+            fileLowerBound = 97;
+            fileUpperBound = 104;
+        }
+        if (lookLeft) {
+            for (let i = fileNumber - 1; i >= fileLowerBound; i--) {
+                const newPosition = `${String.fromCharCode(i)}-${this.rank}`;
+                if (this.isValidMovePosition(newPosition, currentBoard)) {
+                    moveArray.push(newPosition);
+                }
+                else {
+                    break;
+                }
+            }
+        }
+        if (lookRight) {
+            for (let i = fileNumber + 1; i <= fileUpperBound; i++) {
+                const newPosition = `${String.fromCharCode(i)}-${this.rank}`;
+                if (this.isValidMovePosition(newPosition, currentBoard)) {
+                    moveArray.push(newPosition);
+                }
+                else {
+                    break;
+                }
+            }
+        }
+        return moveArray;
     }
 
     private parseCode(): string {

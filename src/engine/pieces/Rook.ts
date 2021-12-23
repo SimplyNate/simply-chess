@@ -29,7 +29,7 @@ export default class Rook extends Piece {
     public getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         if (!this.legalMoves) {
             this.legalMoves = [];
-            for (let i = this.rank; i < 8; i++) {
+            for (let i = this.rank; i <= 8; i++) {
                 const newPosition = `${this.file}-${i}`;
                 if (this.isValidMovePosition(newPosition, currentBoard)) {
                     this.legalMoves.push(newPosition);
@@ -38,7 +38,7 @@ export default class Rook extends Piece {
                     break;
                 }
             }
-            for (let i = this.rank; i > 1; i--) {
+            for (let i = this.rank; i >= 1; i--) {
                 const newPosition = `${this.file}-${i}`;
                 if (this.isValidMovePosition(newPosition, currentBoard)) {
                     this.legalMoves.push(newPosition);

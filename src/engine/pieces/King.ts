@@ -35,6 +35,7 @@ export default class King extends Piece {
             this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank}`);
             // Right
             this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank}`);
+            this.filterValidMoves(this.legalMoves, currentBoard);
             if (this.canCastleShort && this.canPerformCastleShort(currentBoard)) {
                 const castleShortPosition = this.color === 'light' ? 'g-1' : 'g-8';
                 this.legalMoves.push(castleShortPosition);
@@ -43,7 +44,6 @@ export default class King extends Piece {
                 const castleLongPosition = this.color === 'light' ? 'c-1' : 'c-8';
                 this.legalMoves.push(castleLongPosition);
             }
-            this.filterValidMoves(this.legalMoves, currentBoard);
         }
         return this.legalMoves;
     }
