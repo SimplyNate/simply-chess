@@ -28,52 +28,7 @@ export default class Rook extends Piece {
 
     public getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         if (!this.legalMoves) {
-            this.legalMoves = [];
-            for (let i = this.rank; i <= 8; i++) {
-                const newPosition = `${this.file}-${i}`;
-                if (this.isValidMovePosition(newPosition, currentBoard)) {
-                    this.legalMoves.push(newPosition);
-                }
-                else {
-                    break;
-                }
-            }
-            for (let i = this.rank; i >= 1; i--) {
-                const newPosition = `${this.file}-${i}`;
-                if (this.isValidMovePosition(newPosition, currentBoard)) {
-                    this.legalMoves.push(newPosition);
-                }
-                else {
-                    break;
-                }
-            }
-            const fileNumber = this.file.charCodeAt(0);
-            let fileLowerBound = 65;
-            let fileUpperBound = 72;
-            if (this.color === 'dark') {
-                fileLowerBound = 97;
-                fileUpperBound = 104;
-            }
-            for (let i = fileNumber - 1; i >= fileLowerBound; i--) {
-                const newPosition = `${String.fromCharCode(i)}-${this.rank}`;
-                if (this.isValidMovePosition(newPosition, currentBoard)) {
-                    this.legalMoves.push(newPosition);
-                }
-                else {
-                    break;
-                }
-            }
-            for (let i = fileNumber + 1; i <= fileUpperBound; i++) {
-                const newPosition = `${String.fromCharCode(i)}-${this.rank}`;
-                if (this.isValidMovePosition(newPosition, currentBoard)) {
-                    this.legalMoves.push(newPosition);
-                }
-                else {
-                    break;
-                }
-            }
-            // Don't need to filter valid moves since it is being checked at each move calculation
-            // this.filterValidMoves(this.legalMoves, currentBoard);
+            this.legalMoves = this.consecutiveMoveSearch(currentBoard, true, false);
         }
         return this.legalMoves;
     }
