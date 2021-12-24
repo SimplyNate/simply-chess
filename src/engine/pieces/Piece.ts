@@ -13,7 +13,7 @@ export abstract class Piece {
     lastPosition: string | null;
     rank: number;
     file: string;
-    legalMoves: string[] | null = [];
+    legalMoves: string[] | null = null;
     moveType: MoveType;
 
     protected constructor(color: Color, position: string, name: string, moveType: MoveType) {
@@ -147,7 +147,7 @@ export abstract class Piece {
     protected isValidMovePosition(move: string, currentBoard: BoardMap): boolean {
         const lowerRangeEnemyCodes = this.color === 'dark' ? 65 : 97;
         const upperRangeEnemyCodes = this.color === 'dark' ? 72 : 104;
-        return currentBoard && (currentBoard[move] === 'x' ||
+        return !!(currentBoard[move]) && (currentBoard[move] === 'x' ||
             (currentBoard[move].charCodeAt(0) >= lowerRangeEnemyCodes && currentBoard[move].charCodeAt(0) <= upperRangeEnemyCodes));
     }
 

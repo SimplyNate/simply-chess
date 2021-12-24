@@ -1,4 +1,4 @@
-import { BoardMap, FEN, shiftChar } from '@/utils/utils';
+import { BoardMap, FEN } from '@/utils/utils';
 import { Color, Piece } from '@/engine/pieces/Piece';
 
 export default class Queen extends Piece {

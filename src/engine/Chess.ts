@@ -46,6 +46,7 @@ export class Chess {
         this.kings = kings;
         this.resetLegalMovesAndCheckStatus();
         this.updateCheckMate();
+        this.print();
     }
 
     private parsePieces(): ParsedPieces {
@@ -250,12 +251,12 @@ export class Chess {
         let justMoved: Color;
         let activeColor: Color;
         if (this.fen.activeColor === 'w') {
-            justMoved = 'light';
-            activeColor = 'dark';
-        }
-        else {
             justMoved = 'dark';
             activeColor = 'light';
+        }
+        else {
+            justMoved = 'light';
+            activeColor = 'dark';
         }
         this.processMovesForColor(justMoved, false);
         this.updateCheckStatus();

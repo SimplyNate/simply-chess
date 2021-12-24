@@ -98,6 +98,7 @@ export default defineComponent({
             this.legalMoves = this.engine.getLegalMoves(selection.place);
         },
         clearLegalMoves() {
+            this.selectedPiece = '';
             this.legalMoves.length = 0;
         },
         makeMove(payload: MovePayload) {
