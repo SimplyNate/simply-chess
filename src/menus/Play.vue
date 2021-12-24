@@ -1,18 +1,18 @@
 <template>
     <div id="app" class="d-flex flex-row">
         <div class="side-menu mt-1 align-self-center">
-            <div class="w-100">Top Stuff</div>
             <div class="w-100">
                 <h1>Simply Chess</h1>
-                <p>FEN String: {{ engine.fen.piecePlacement }}</p>
+                <p>Piece Placement: {{ engine.fen.piecePlacement }}</p>
                 <p>Active Color: {{ engine.fen.activeColor }}</p>
                 <p>Castling Availability: {{ engine.fen.castlingAvailability }}</p>
                 <p>En Passant Target Square: {{ engine.fen.enPassantTargetSquare }}</p>
                 <p>Half Move Clock: {{ engine.fen.halfMoveClock }}</p>
                 <p>Full Move Number: {{ engine.fen.fullMoveNumber }}</p>
                 <p>Check Status: {{ engine.checkStatus }}</p>
+                <p>Selected Piece: {{ selectedPiece }}</p>
+                <p>Legal Moves: {{ legalMoves }}</p>
             </div>
-            <div class="w-100">Bottom Stuff</div>
         </div>
         <div class="float-end" :style="`width: ${containerWidth}px; height: ${containerHeight}px`">
             <canvas-board
@@ -44,6 +44,7 @@ interface AppData {
     fenString: string,
     fen: FEN,
     engine: Chess,
+    selectedPiece: string,
 }
 
 interface MovePayload {
@@ -73,6 +74,7 @@ export default defineComponent({
                 fullMoveNumber: 0,
             },
             engine: new Chess(),
+            selectedPiece: '',
         };
     },
     async beforeRouteUpdate(to) {
@@ -92,7 +94,7 @@ export default defineComponent({
             this.containerWidth = window.innerWidth * 0.6;
         },
         calculateLegalMoves(selection: Selection) {
-            console.log(`Received: ${selection.piece}, ${selection.place}`);
+            this.selectedPiece = `${selection.piece}, ${selection.place}`;
             this.legalMoves = this.engine.getLegalMoves(selection.place);
         },
         clearLegalMoves() {
