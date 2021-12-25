@@ -100,9 +100,8 @@ export class Chess {
     }
 
     public move(from: string, to: string): string {
-        let moveString = this.boardMap[from];
-        if (moveString !== 'x') {
-            let movePiece = this.piecesByLocation[from];
+        let movePiece = this.piecesByLocation[from];
+        if (movePiece) {
             const legalMoves = movePiece.getLegalMoves(this.boardMap, this.fen);
             if (legalMoves.includes(to)) {
                 let capturedPiece = false;
@@ -120,10 +119,10 @@ export class Chess {
                 movePiece.move(to);
                 if (movePiece.name === 'Pawn' && (movePiece.rank === 1 || movePiece.rank === 8)) {
                     movePiece = new Queen(movePiece.color, movePiece.position);
-                    moveString = movePiece.code;
                 }
                 delete this.piecesByLocation[from];
-                this.boardMap[to] = moveString;
+                this.boardMap[to] = movePiece.code;
+                this.boardMap[from] = 'x';
                 this.piecesByLocation[to] = movePiece;
                 this.updateFEN(movePiece, capturedPiece);
                 this.resetLegalMovesAndCheckStatus();
