@@ -120,10 +120,10 @@ export class Chess {
                 if (movePiece.name === 'Pawn' && (movePiece.rank === 1 || movePiece.rank === 8)) {
                     movePiece = new Queen(movePiece.color, movePiece.position);
                 }
-                delete this.piecesByLocation[from];
-                this.boardMap[to] = movePiece.code;
-                this.boardMap[from] = 'x';
                 this.piecesByLocation[to] = movePiece;
+                this.boardMap[to] = movePiece.code;
+                delete this.piecesByLocation[from];
+                this.boardMap[from] = 'x';
                 this.updateFEN(movePiece, capturedPiece);
                 this.resetLegalMovesAndCheckStatus();
                 this.updateCheckMate();
