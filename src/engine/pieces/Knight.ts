@@ -9,15 +9,20 @@ export default class Knight extends Piece {
     public getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         if (!this.legalMoves) {
             this.legalMoves = [];
+            // rank + 2
             this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank + 2}`);
             this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank + 2}`);
+            // rank + 1
             this.legalMoves.push(`${shiftChar(this.file, 2)}-${this.rank + 1}`);
             this.legalMoves.push(`${shiftChar(this.file, -2)}-${this.rank + 1}`);
+            // rank - 1
             this.legalMoves.push(`${shiftChar(this.file, 2)}-${this.rank - 1}`);
             this.legalMoves.push(`${shiftChar(this.file, -2)}-${this.rank - 1}`);
+            // rank - 2
             this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank - 2}`);
             this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank - 2}`);
-            this.filterValidMoves(this.legalMoves, currentBoard);
+            this.legalMoves.filter(move => this.isValidMovePosition(move, currentBoard));
+            // this.filterValidMoves(this.legalMoves, currentBoard);
         }
         return this.legalMoves;
     }
