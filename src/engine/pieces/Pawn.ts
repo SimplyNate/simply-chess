@@ -13,7 +13,6 @@ export default class Pawn extends Piece {
 
     // Check if in check, as well as en passant
     public getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
-        console.log('Calculating moves for pawn');
         if (!this.legalMoves) {
             const moves = [];
             const newRank = this.rank + (this.direction);
@@ -39,7 +38,6 @@ export default class Pawn extends Piece {
                     }
                 }
             }
-            console.log(moves);
             this.legalMoves = moves;
         }
         return this.legalMoves;

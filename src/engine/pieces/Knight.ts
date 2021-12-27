@@ -21,8 +21,7 @@ export default class Knight extends Piece {
             // rank - 2
             this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank - 2}`);
             this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank - 2}`);
-            this.legalMoves.filter(move => this.isValidMovePosition(move, currentBoard));
-            // this.filterValidMoves(this.legalMoves, currentBoard);
+            this.legalMoves = this.filterValidMoves(this.legalMoves, currentBoard);
         }
         return this.legalMoves;
     }
