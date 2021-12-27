@@ -94,7 +94,7 @@ export class Chess {
     public getLegalMoves(position: string): string[] {
         const piece = this.piecesByLocation[position];
         if (piece) {
-            return piece.getLegalMoves(this.boardMap, this.fen);
+            return [...piece.getLegalMoves(this.boardMap, this.fen)];
         }
         return [];
     }
