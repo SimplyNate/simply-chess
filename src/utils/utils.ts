@@ -62,10 +62,28 @@ export function parsePlacementToMap(piecePlacement: string): BoardMap {
     return map;
 }
 
+export function filterAndSortPositionsToArray(positions: string[], rank: string): string[] {
+    return positions.filter(position => position.includes(rank)).sort((a, b) => Number(a[2]) - Number(b[2]));
+}
+
+export function splitBoardMapToArray(boardMap: BoardMap): string[][] {
+    const positions = Object.keys(boardMap);
+    return [
+        filterAndSortPositionsToArray(positions, '8'),
+        filterAndSortPositionsToArray(positions, '7'),
+        filterAndSortPositionsToArray(positions, '6'),
+        filterAndSortPositionsToArray(positions, '5'),
+        filterAndSortPositionsToArray(positions, '4'),
+        filterAndSortPositionsToArray(positions, '3'),
+        filterAndSortPositionsToArray(positions, '2'),
+        filterAndSortPositionsToArray(positions, '1'),
+    ];
+}
+
 export function rebuildPlacementFromMap(boardMap: BoardMap): string {
     let piecePlacement = '';
     let localAccumulator = 0;
-    const positions = Object.keys(boardMap);
+    const positions = splitBoardMapToArray(boardMap);
     for (let i = 0; i < positions.length; i++) {
         const piece = boardMap[positions[i]];
         if (i > 0 && i % 8 === 0) {

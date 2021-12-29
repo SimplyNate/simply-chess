@@ -124,6 +124,8 @@ export class Chess {
                 this.boardMap[to] = movePiece.code;
                 delete this.piecesByLocation[from];
                 this.boardMap[from] = 'x';
+                console.log(this.piecesByLocation);
+                console.log(this.boardMap);
                 this.updateFEN(movePiece, capturedPiece);
                 this.resetLegalMovesAndCheckStatus();
                 this.updateCheckMate();
