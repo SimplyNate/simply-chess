@@ -6,7 +6,8 @@
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build --modern",
         "ui": "vue ui",
-        "lint": "vue-cli-service lint"
+        "lint": "vue-cli-service lint",
+        "test": "jest ./tests/*"
     },
     "dependencies": {
         "bootstrap": "^5.1.3",
