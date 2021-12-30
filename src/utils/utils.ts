@@ -82,19 +82,25 @@ export function splitBoardMapToArray(boardMap: BoardMap): string[][] {
 
 export function rebuildPlacementFromMap(boardMap: BoardMap): string {
     let piecePlacement = '';
-    let localAccumulator = 0;
     const positions = splitBoardMapToArray(boardMap);
-    for (let i = 0; i < positions.length; i++) {
-        const piece = boardMap[positions[i]];
-        if (i > 0 && i % 8 === 0) {
+    for (let r = 0; r < positions.length; r++) {
+        const rank = positions[r];
+        let localAccumulator = 0;
+        for (let i = 0; i < rank.length; i++) {
+            const piece = boardMap[rank[i]];
+            if (piece === 'x') {
+                localAccumulator += 1;
+            }
+            else if (localAccumulator > 0) {
+                piecePlacement = `${piecePlacement}${localAccumulator}${piece}`;
+                localAccumulator = 0;
+            }
+            else {
+                piecePlacement = `${piecePlacement}${piece}`;
+            }
+        }
+        if (r < positions.length - 1) {
             piecePlacement = `${piecePlacement}/`;
-        }
-        if (piece === 'x') {
-            localAccumulator += 1;
-        }
-        else if (localAccumulator > 0) {
-            piecePlacement = `${piecePlacement}${localAccumulator}${piece}`;
-            localAccumulator = 0;
         }
     }
     return piecePlacement;
