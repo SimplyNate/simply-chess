@@ -259,6 +259,9 @@ export class Chess {
             justMoved = 'light';
             activeColor = 'dark';
         }
+        for (const location of Object.keys(this.piecesByLocation)) {
+            this.piecesByLocation[location].resetLegalMoves();
+        }
         this.processMovesForColor(justMoved, false);
         this.updateCheckStatus();
         this.processMovesForColor(activeColor, this.checkStatus !== 'none');

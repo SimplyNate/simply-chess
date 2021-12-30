@@ -266,6 +266,10 @@ export abstract class Piece {
         return moveArray;
     }
 
+    public resetLegalMoves(): void {
+        this.legalMoves = null;
+    }
+
     private parseCode(): string {
         if (this.name === 'Knight') {
             return this.color === 'dark' ? this.name[1].toLowerCase() : this.name[1].toUpperCase();

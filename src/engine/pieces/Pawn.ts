@@ -11,7 +11,6 @@ export default class Pawn extends Piece {
         this.inStartingPosition = (this.rank === 7 && this.color === 'dark') || (this.rank === 2 && this.color === 'light');
     }
 
-    // Check if in check, as well as en passant
     public getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         if (!this.legalMoves) {
             const moves = [];
