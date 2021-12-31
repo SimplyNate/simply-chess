@@ -106,15 +106,26 @@ export class Chess {
             if (legalMoves.includes(to)) {
                 let capturedPiece = false;
                 if (this.piecesByLocation[to]) {
-                    const deletePieceColor = this.piecesByLocation[to].color;
+                    let deleteLocation = to;
+                    if (`${to[0]}${to[2]}` === this.fen.enPassantTargetSquare) {
+                        deleteLocation = `${to[0]}-`;
+                        if (to[2] === '3') {
+                            deleteLocation += '4';
+                        }
+                        else {
+                            deleteLocation += '5';
+                        }
+                    }
+                    const deletePieceColor = this.piecesByLocation[deleteLocation].color;
                     for (let i = 0; i < this.piecesByColor[deletePieceColor].length; i++) {
-                        if (this.piecesByColor[deletePieceColor][i] === this.piecesByLocation[to]) {
+                        if (this.piecesByColor[deletePieceColor][i] === this.piecesByLocation[deleteLocation]) {
                             this.piecesByColor[deletePieceColor].splice(i, 1);
                             break;
                         }
                     }
                     capturedPiece = true;
-                    delete this.piecesByLocation[to];
+                    delete this.piecesByLocation[deleteLocation];
+                    this.boardMap[deleteLocation] = 'x';
                 }
                 movePiece.move(to);
                 if (movePiece.name === 'Pawn' && (movePiece.rank === 1 || movePiece.rank === 8)) {
@@ -124,8 +135,6 @@ export class Chess {
                 this.boardMap[to] = movePiece.code;
                 delete this.piecesByLocation[from];
                 this.boardMap[from] = 'x';
-                console.log(this.piecesByLocation);
-                console.log(this.boardMap);
                 this.updateFEN(movePiece, capturedPiece);
                 this.resetLegalMovesAndCheckStatus();
                 this.updateCheckMate();
