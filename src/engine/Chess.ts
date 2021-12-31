@@ -216,6 +216,7 @@ export class Chess {
     }
 
     private updateEnPassant(movePiece: Piece) {
+        this.fen.enPassantTargetSquare = '-';
         if (movePiece instanceof Pawn) {
             if (movePiece.inStartingPosition) {
                 movePiece.inStartingPosition = false;
@@ -229,9 +230,6 @@ export class Chess {
                     }
                 }
             }
-        }
-        else {
-            this.fen.enPassantTargetSquare = '-';
         }
     }
 
