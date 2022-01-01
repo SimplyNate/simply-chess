@@ -146,6 +146,14 @@ export abstract class Piece {
             (currentBoard[move].charCodeAt(0) >= lowerRangeEnemyCodes && currentBoard[move].charCodeAt(0) <= upperRangeEnemyCodes));
     }
 
+    protected isOppositeColor(pieceCode: string): boolean {
+        const charCode = pieceCode.charCodeAt(0);
+        if (this.color === 'dark') {
+            return charCode >= 65 && charCode <= 72;
+        }
+        return charCode >= 97 && charCode <= 104;
+    }
+
     protected consecutiveMoveSearch(currentBoard: BoardMap, straight: boolean, diagonal: boolean): string[] {
         const moveArray: string[] = [];
         let lookUpLeft = false;
