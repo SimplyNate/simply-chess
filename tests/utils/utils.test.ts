@@ -75,6 +75,7 @@ describe('parsePlacementToMap', () => {
     test('parses fen string to map', () => {
         const placement = 'rnbqkb1r/pp2pppp/5n2/2pp4/3P4/2N1PP2/PPP3PP/R1BQKBNR';
         const expectation = {
+            /* eslint-disable object-property-newline */
             'a-8': 'r', 'b-8': 'n', 'c-8': 'b', 'd-8': 'q', 'e-8': 'k', 'f-8': 'b', 'g-8': 'x', 'h-8': 'r',
             'a-7': 'p', 'b-7': 'p', 'c-7': 'x', 'd-7': 'x', 'e-7': 'p', 'f-7': 'p', 'g-7': 'p', 'h-7': 'p',
             'a-6': 'x', 'b-6': 'x', 'c-6': 'x', 'd-6': 'x', 'e-6': 'x', 'f-6': 'n', 'g-6': 'x', 'h-6': 'x',
