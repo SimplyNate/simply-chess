@@ -99,6 +99,9 @@ export function rebuildPlacementFromMap(boardMap: BoardMap): string {
                 piecePlacement = `${piecePlacement}${piece}`;
             }
         }
+        if (localAccumulator > 0) {
+            piecePlacement = `${piecePlacement}${localAccumulator}`;
+        }
         if (r < positions.length - 1) {
             piecePlacement = `${piecePlacement}/`;
         }
