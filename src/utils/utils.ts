@@ -63,7 +63,7 @@ export function parsePlacementToMap(piecePlacement: string): BoardMap {
 }
 
 export function filterAndSortPositionsToArray(positions: string[], rank: string): string[] {
-    return positions.filter(position => position.includes(rank)).sort((a, b) => Number(a[2]) - Number(b[2]));
+    return positions.filter(position => position.includes(rank)).sort((a, b) => a[0].charCodeAt(0) - b[0].charCodeAt(0));
 }
 
 export function splitBoardMapToArray(boardMap: BoardMap): string[][] {
