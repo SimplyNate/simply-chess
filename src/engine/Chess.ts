@@ -1,11 +1,11 @@
-import Pawn from '@/engine/pieces/Pawn';
-import Knight from '@/engine/pieces/Knight';
-import King from '@/engine/pieces/King';
-import Queen from '@/engine/pieces/Queen';
-import Bishop from '@/engine/pieces/Bishop';
-import Rook from '@/engine/pieces/Rook';
-import { Color, Piece } from '@/engine/pieces/Piece';
-import { BoardMap, FEN, parsePlacementToMap, rebuildPlacementFromMap, separateFEN, stringifyFEN } from '@/utils/utils';
+import Pawn from './pieces/Pawn';
+import Knight from './pieces/Knight';
+import King from './pieces/King';
+import Queen from './pieces/Queen';
+import Bishop from './pieces/Bishop';
+import Rook from './pieces/Rook';
+import { Color, Piece } from './pieces/Piece';
+import { BoardMap, FEN, parsePlacementToMap, rebuildPlacementFromMap, separateFEN, stringifyFEN } from '../utils/utils';
 
 // PieceMap indexes based on position of Piece on board
 interface PieceMap {

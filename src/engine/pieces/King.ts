@@ -1,5 +1,5 @@
-import { BoardMap, FEN, shiftChar } from '@/utils/utils';
-import { Color, Piece } from '@/engine/pieces/Piece';
+import { BoardMap, FEN, shiftChar } from '../../utils/utils';
+import { Color, Piece } from './Piece';
 
 interface CheckStatus {
     check: boolean,

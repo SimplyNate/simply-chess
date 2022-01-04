@@ -1,5 +1,5 @@
-import { BoardMap, FEN, shiftChar } from '@/utils/utils';
-import King from '@/engine/pieces/King';
+import { BoardMap, FEN, shiftChar } from '../../utils/utils';
+import King from './King';
 
 export type Color = 'light' | 'dark';
 

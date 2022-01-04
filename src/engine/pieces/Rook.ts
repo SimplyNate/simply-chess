@@ -1,5 +1,5 @@
-import { BoardMap, FEN } from '@/utils/utils';
-import { Color, Piece } from '@/engine/pieces/Piece';
+import { BoardMap, FEN } from '../../utils/utils';
+import { Color, Piece } from './Piece';
 
 export default class Rook extends Piece {
     canCastle: boolean;
