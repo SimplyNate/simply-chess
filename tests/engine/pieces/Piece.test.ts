@@ -1,4 +1,5 @@
 import { Color, Piece } from '../../../src/engine/pieces/Piece';
+import King from '../../../src/engine/pieces/King';
 
 class TestPiece extends Piece {
     constructor(color: Color, position: string) {
@@ -27,7 +28,7 @@ describe('Piece', () => {
         expect(piece.file).toBe('b');
     });
     test('filterMovesCheck no check', () => {
-        const king = ''
+        const king = new King('light', 'e-1', '-');
     });
     test('filterMovesCheck in check', () => {
 
