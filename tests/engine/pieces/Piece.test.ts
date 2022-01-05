@@ -1,5 +1,11 @@
 import { Color, Piece } from '../../../src/engine/pieces/Piece';
 import King from '../../../src/engine/pieces/King';
+import Pawn from '../../../src/engine/pieces/Pawn';
+import Rook from '../../../src/engine/pieces/Rook';
+import Knight from '../../../src/engine/pieces/Knight';
+import Bishop from '../../../src/engine/pieces/Bishop';
+import Queen from '../../../src/engine/pieces/Queen';
+import { BoardMap } from '../../../src/utils/utils';
 
 class TestPiece extends Piece {
     constructor(color: Color, position: string) {
@@ -29,6 +35,9 @@ describe('Piece', () => {
     });
     test('filterMovesCheck no check', () => {
         const king = new King('light', 'e-1', '-');
+        const enemyPieces = [
+            new Pawn('dark', 'a-7'),
+        ];
     });
     test('filterMovesCheck in check', () => {
 
