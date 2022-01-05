@@ -11,6 +11,10 @@ class TestPiece extends Piece {
     constructor(color: Color, position: string) {
         super(color, position, 'TestPiece', 'consecutive');
     }
+
+    public testOppositeColor(pieceCode: string): boolean {
+        return this.isOppositeColor(pieceCode);
+    }
 }
 
 describe('Piece', () => {
@@ -41,5 +45,13 @@ describe('Piece', () => {
     });
     test('filterMovesCheck in check', () => {
 
+    });
+    test('isOppositeColor', () => {
+        const light = new TestPiece('light', 'a-4');
+        const dark = new TestPiece('dark', 'a-6');
+        expect(light.testOppositeColor(dark.code)).toBeTruthy();
+        expect(light.testOppositeColor(light.code)).toBeFalsy();
+        expect(dark.testOppositeColor(light.code)).toBeTruthy();
+        expect(dark.testOppositeColor(dark.code)).toBeFalsy();
     });
 });

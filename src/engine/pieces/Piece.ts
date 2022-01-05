@@ -149,9 +149,9 @@ export abstract class Piece {
     protected isOppositeColor(pieceCode: string): boolean {
         const charCode = pieceCode.charCodeAt(0);
         if (this.color === 'dark') {
-            return charCode >= 65 && charCode <= 72;
+            return charCode <= 90;
         }
-        return charCode >= 97 && charCode <= 104;
+        return charCode >= 97;
     }
 
     protected consecutiveMoveSearch(currentBoard: BoardMap, straight: boolean, diagonal: boolean): string[] {
