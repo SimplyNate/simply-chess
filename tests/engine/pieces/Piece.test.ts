@@ -12,8 +12,20 @@ class TestPiece extends Piece {
         super(color, position, 'TestPiece', 'consecutive');
     }
 
+    public testFilterValidMoves(moves: string[], currentBoard: BoardMap): string[] {
+        return this.filterValidMoves(moves, currentBoard);
+    }
+
+    public testIsValidMovePosition(move: string, currentBoard: BoardMap): boolean {
+        return this.isValidMovePosition(move, currentBoard);
+    }
+
     public testOppositeColor(pieceCode: string): boolean {
         return this.isOppositeColor(pieceCode);
+    }
+
+    public testConsecutiveMoveSearch(currentBoard: BoardMap, straight: boolean, diagonal: boolean): string[] {
+        return this.consecutiveMoveSearch(currentBoard, straight, diagonal);
     }
 }
 
