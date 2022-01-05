@@ -30,24 +30,9 @@ export default class Pawn extends Piece {
             const possibleEPSquares = [`${leftFile}-${newRank}`, `${rightFile}-${newRank}`];
             for (const possibleSquare of possibleEPSquares) {
                 const enPassantCheck = possibleSquare[0] + possibleSquare[2];
-                if (enPassantCheck === fen.enPassantTargetSquare) {
-                    moves.push(possibleSquare);
-                }
-                else {
-                    if (currentBoard[possibleSquare]) {
-                        if (currentBoard[possibleSquare] !== 'x') {
-                            const isOpposite = this.isOppositeColor(currentBoard[possibleSquare]);
-                            if (isOpposite) {
-                                moves.push(possibleSquare);
-                            }
-                        }
-                    }
-                }
-                /*
                 if (enPassantCheck === fen.enPassantTargetSquare || (currentBoard[possibleSquare] && currentBoard[possibleSquare] !== 'x' && this.isOppositeColor(currentBoard[possibleSquare]))) {
                     moves.push(`${possibleSquare}`);
                 }
-                 */
             }
             this.legalMoves = moves;
         }
