@@ -141,9 +141,20 @@ export abstract class Piece {
 
     protected isValidMovePosition(move: string, currentBoard: BoardMap): boolean {
         const lowerRangeEnemyCodes = this.color === 'dark' ? 65 : 97;
-        const upperRangeEnemyCodes = this.color === 'dark' ? 72 : 104;
-        return !!(currentBoard[move]) && (currentBoard[move] === 'x' ||
-            (currentBoard[move].charCodeAt(0) >= lowerRangeEnemyCodes && currentBoard[move].charCodeAt(0) <= upperRangeEnemyCodes));
+        const upperRangeEnemyCodes = this.color === 'dark' ? 90 : 122;
+        if (currentBoard[move] === 'x') {
+            return true;
+        }
+        return !!currentBoard[move] && currentBoard[move].charCodeAt(0) >= lowerRangeEnemyCodes && currentBoard[move].charCodeAt(0) <= upperRangeEnemyCodes;
+    }
+
+    protected isMoveCapture(move: string, currentBoard: BoardMap): boolean {
+        const lowerRangeEnemyCodes = this.color === 'dark' ? 65 : 97;
+        const upperRangeEnemyCodes = this.color === 'dark' ? 90 : 122;
+        if (currentBoard[move] === 'x') {
+            return false;
+        }
+        return !!currentBoard[move] && currentBoard[move].charCodeAt(0) >= lowerRangeEnemyCodes && currentBoard[move].charCodeAt(0) <= upperRangeEnemyCodes;
     }
 
     protected isOppositeColor(pieceCode: string): boolean {
@@ -185,24 +196,33 @@ export abstract class Piece {
                 const newPosition = `${this.file}-${i}`;
                 if (this.isValidMovePosition(newPosition, currentBoard)) {
                     moveArray.push(newPosition);
+                    if (this.isMoveCapture(newPosition, currentBoard)) {
+                        lookUp = false;
+                    }
                 }
                 else {
                     lookUp = false;
                 }
             }
             if (lookUpRight) {
-                const move = `${shiftChar(this.file, i)}-${i}`;
+                const move = `${shiftChar(this.file, i - this.rank)}-${i}`;
                 if (this.isValidMovePosition(move, currentBoard)) {
                     moveArray.push(move);
+                    if (this.isMoveCapture(move, currentBoard)) {
+                        lookUpRight = false;
+                    }
                 }
                 else {
                     lookUpRight = false;
                 }
             }
             if (lookUpLeft) {
-                const move = `${shiftChar(this.file, i * -1)}-${i}`;
+                const move = `${shiftChar(this.file, (i - this.rank) * -1)}-${i}`;
                 if (this.isValidMovePosition(move, currentBoard)) {
                     moveArray.push(move);
+                    if (this.isMoveCapture(move, currentBoard)) {
+                        lookUpLeft = false;
+                    }
                 }
                 else {
                     lookUpLeft = false;
@@ -218,24 +238,33 @@ export abstract class Piece {
                 const newPosition = `${this.file}-${i}`;
                 if (this.isValidMovePosition(newPosition, currentBoard)) {
                     moveArray.push(newPosition);
+                    if (this.isMoveCapture(newPosition, currentBoard)) {
+                        lookDown = false;
+                    }
                 }
                 else {
                     lookDown = false;
                 }
             }
             if (lookDownRight) {
-                const move = `${shiftChar(this.file, i)}-${i}`;
+                const move = `${shiftChar(this.file, i - this.rank)}-${i}`;
                 if (this.isValidMovePosition(move, currentBoard)) {
                     moveArray.push(move);
+                    if (this.isMoveCapture(move, currentBoard)) {
+                        lookDownRight = false;
+                    }
                 }
                 else {
                     lookDownRight = false;
                 }
             }
             if (lookDownLeft) {
-                const move = `${shiftChar(this.file, i * -1)}-${i}`;
+                const move = `${shiftChar(this.file, (i - this.rank) * -1)}-${i}`;
                 if (this.isValidMovePosition(move, currentBoard)) {
                     moveArray.push(move);
+                    if (this.isMoveCapture(move, currentBoard)) {
+                        lookDownLeft = false;
+                    }
                 }
                 else {
                     lookDownLeft = false;
@@ -250,6 +279,9 @@ export abstract class Piece {
                 const newPosition = `${String.fromCharCode(i)}-${this.rank}`;
                 if (this.isValidMovePosition(newPosition, currentBoard)) {
                     moveArray.push(newPosition);
+                    if (this.isMoveCapture(newPosition, currentBoard)) {
+                        break;
+                    }
                 }
                 else {
                     break;
@@ -261,6 +293,9 @@ export abstract class Piece {
                 const newPosition = `${String.fromCharCode(i)}-${this.rank}`;
                 if (this.isValidMovePosition(newPosition, currentBoard)) {
                     moveArray.push(newPosition);
+                    if (this.isMoveCapture(newPosition, currentBoard)) {
+                        break;
+                    }
                 }
                 else {
                     break;

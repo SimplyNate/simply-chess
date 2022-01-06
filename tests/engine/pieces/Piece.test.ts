@@ -83,14 +83,79 @@ describe('Piece', () => {
                 ['a-4', 'b-4', 'c-4', 'e-4', 'f-4', 'g-4', 'h-4',
                     'd-1', 'd-2', 'd-3', 'd-5', 'd-6', 'd-7', 'd-8'].sort());
         });
-        test('straight moves with blocks', () => {
-
+        test('straight moves with blocks as friendlies', () => {
+            const fen = '3P4/8/8/8/1P1R2P1/3P4/8/8 w - - 0 1';
+            const parsed = separateFEN(fen);
+            const boardMap = parsePlacementToMap(parsed.piecePlacement);
+            const piece = new TestPiece('light', 'd-4');
+            const moves = piece.testConsecutiveMoveSearch(boardMap, true, false);
+            expect(moves.sort()).toEqual(
+                ['c-4', 'e-4', 'f-4', 'd-7', 'd-6', 'd-5'].sort());
+        });
+        test('straight moves with blocks as enemies', () => {
+            const fen = '3p4/8/8/8/1p1R2p1/3p4/8/8 w - - 0 1';
+            const parsed = separateFEN(fen);
+            const boardMap = parsePlacementToMap(parsed.piecePlacement);
+            const piece = new TestPiece('light', 'd-4');
+            const moves = piece.testConsecutiveMoveSearch(boardMap, true, false);
+            expect(moves.sort()).toEqual(
+                ['c-4', 'e-4', 'f-4', 'd-7', 'd-6', 'd-5', 'b-4', 'd-3', 'd-8', 'g-4'].sort());
         });
         test('diagonal moves no blocks', () => {
-
+            const fen = '8/8/8/8/3B4/8/8/8 w - - 0 1';
+            const parsed = separateFEN(fen);
+            const boardMap = parsePlacementToMap(parsed.piecePlacement);
+            const piece = new TestPiece('light', 'd-4');
+            const moves = piece.testConsecutiveMoveSearch(boardMap, false, true);
+            expect(moves.sort()).toEqual(
+                ['a-1', 'a-7', 'b-2', 'b-6', 'c-3', 'c-5', 'e-3', 'e-5', 'f-2', 'f-6', 'g-1', 'g-7', 'h-8'].sort());
         });
-        test('diagonal moves with blocks', () => {
-
+        test('diagonal moves with blocks as friendlies', () => {
+            const fen = '7P/8/8/2P5/3B4/8/1P6/6P1 w - - 0 1';
+            const parsed = separateFEN(fen);
+            const boardMap = parsePlacementToMap(parsed.piecePlacement);
+            const piece = new TestPiece('light', 'd-4');
+            const moves = piece.testConsecutiveMoveSearch(boardMap, false, true);
+            expect(moves.sort()).toEqual(
+                ['c-3', 'e-3', 'e-5', 'f-2', 'f-6', 'g-7'].sort());
+        });
+        test('diagonal moves with blocks as enemies', () => {
+            const fen = '7p/8/8/2p5/3B4/8/1p6/6p1 w - - 0 1';
+            const parsed = separateFEN(fen);
+            const boardMap = parsePlacementToMap(parsed.piecePlacement);
+            const piece = new TestPiece('light', 'd-4');
+            const moves = piece.testConsecutiveMoveSearch(boardMap, false, true);
+            expect(moves.sort()).toEqual(
+                ['c-3', 'e-3', 'e-5', 'f-2', 'f-6', 'g-7', 'b-2', 'c-5', 'g-1', 'h-8'].sort());
+        });
+        test('combined no blocks', () => {
+            const fen = '8/8/8/8/3Q4/8/8/8 w - - 0 1';
+            const parsed = separateFEN(fen);
+            const boardMap = parsePlacementToMap(parsed.piecePlacement);
+            const piece = new TestPiece('light', 'd-4');
+            const moves = piece.testConsecutiveMoveSearch(boardMap, true, true);
+            expect(moves.sort()).toEqual(
+                ['a-4', 'b-4', 'c-4', 'e-4', 'f-4', 'g-4', 'h-4', 'd-1', 'd-2', 'd-3', 'd-5', 'd-6', 'd-7', 'd-8',
+                    'a-1', 'a-7', 'b-2', 'b-6', 'c-3', 'c-5', 'e-3', 'e-5', 'f-2', 'f-6', 'g-1', 'g-7', 'h-8'].sort());
+        });
+        test('combined with blocks as friendly', () => {
+            const fen = '3P3P/8/8/2P5/2PQ2P1/8/1P1P4/6P1 w - - 0 1';
+            const parsed = separateFEN(fen);
+            const boardMap = parsePlacementToMap(parsed.piecePlacement);
+            const piece = new TestPiece('light', 'd-4');
+            const moves = piece.testConsecutiveMoveSearch(boardMap, true, true);
+            expect(moves.sort()).toEqual(
+                ['c-3', 'd-3', 'd-5', 'd-6', 'd-7', 'e-3', 'e-4', 'e-5', 'f-2', 'f-4', 'f-6', 'g-7'].sort());
+        });
+        test('combined with blocks as enemies', () => {
+            const fen = '3p3p/8/8/2p5/2pQ2p1/8/1p1p4/6p1 w - - 0 1';
+            const parsed = separateFEN(fen);
+            const boardMap = parsePlacementToMap(parsed.piecePlacement);
+            const piece = new TestPiece('light', 'd-4');
+            const moves = piece.testConsecutiveMoveSearch(boardMap, true, true);
+            expect(moves.sort()).toEqual(
+                ['c-3', 'd-3', 'd-5', 'd-6', 'd-7', 'e-3', 'e-4', 'e-5', 'f-2', 'f-4', 'f-6', 'g-7',
+                    'b-2', 'c-4', 'c-5', 'd-2', 'd-8', 'g-1', 'g-4', 'h-8'].sort());
         });
     });
     test('resetLegalMoves', () => {
