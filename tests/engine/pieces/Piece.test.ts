@@ -20,6 +20,10 @@ class TestPiece extends Piece {
         return this.isValidMovePosition(move, currentBoard);
     }
 
+    public testIsMoveCapture(move: string, currentBoard: BoardMap): boolean {
+        return this.isMoveCapture(move, currentBoard);
+    }
+
     public testOppositeColor(pieceCode: string): boolean {
         return this.isOppositeColor(pieceCode);
     }
@@ -61,8 +65,54 @@ describe('Piece', () => {
     test('filterValidMoves', () => {
 
     });
-    test('isValidMovePosition', () => {
-
+    describe('isValidMovePosition and isMoveCapture', () => {
+        const fen = '3P3P/8/8/2p5/2PQ2P1/8/1P1p4/6P1 w - - 0 1';
+        const parsed = separateFEN(fen);
+        const boardMap = parsePlacementToMap(parsed.piecePlacement);
+        const piece = new TestPiece('light', 'd-4');
+        test('empty spots should return true', () => {
+            expect(piece.testIsValidMovePosition('d-5', boardMap)).toBeTruthy();
+            expect(piece.testIsValidMovePosition('d-1', boardMap)).toBeTruthy();
+            expect(piece.testIsValidMovePosition('c-7', boardMap)).toBeTruthy();
+            expect(piece.testIsValidMovePosition('b-3', boardMap)).toBeTruthy();
+            expect(piece.testIsValidMovePosition('a-6', boardMap)).toBeTruthy();
+            expect(piece.testIsValidMovePosition('e-8', boardMap)).toBeTruthy();
+            expect(piece.testIsValidMovePosition('f-5', boardMap)).toBeTruthy();
+            expect(piece.testIsValidMovePosition('g-3', boardMap)).toBeTruthy();
+            expect(piece.testIsValidMovePosition('g-2', boardMap)).toBeTruthy();
+            expect(piece.testIsValidMovePosition('h-1', boardMap)).toBeTruthy();
+        });
+        test('enemy spots should return true', () => {
+            expect(piece.testIsValidMovePosition('c-5', boardMap)).toBeTruthy();
+            expect(piece.testIsValidMovePosition('d-2', boardMap)).toBeTruthy();
+        });
+        test('friendly spots should return false', () => {
+            expect(piece.testIsValidMovePosition('c-4', boardMap)).toBeFalsy();
+            expect(piece.testIsValidMovePosition('b-2', boardMap)).toBeFalsy();
+            expect(piece.testIsValidMovePosition('g-1', boardMap)).toBeFalsy();
+            expect(piece.testIsValidMovePosition('g-4', boardMap)).toBeFalsy();
+            expect(piece.testIsValidMovePosition('d-8', boardMap)).toBeFalsy();
+            expect(piece.testIsValidMovePosition('h-8', boardMap)).toBeFalsy();
+        });
+        test('non-existent points should return false', () => {
+            expect(piece.testIsValidMovePosition('', boardMap)).toBeFalsy();
+            expect(piece.testIsValidMovePosition('A-4', boardMap)).toBeFalsy();
+            expect(piece.testIsValidMovePosition('A4', boardMap)).toBeFalsy();
+            expect(piece.testIsValidMovePosition('i40', boardMap)).toBeFalsy();
+            expect(piece.testIsValidMovePosition('-43', boardMap)).toBeFalsy();
+            expect(piece.testIsValidMovePosition('~/\t', boardMap)).toBeFalsy();
+        });
+        test('light on dark returns true', () => {
+            expect(piece.testIsMoveCapture('c-5', boardMap)).toBeTruthy();
+            expect(piece.testIsMoveCapture('d-2', boardMap)).toBeTruthy();
+        });
+        test('light on light returns false', () => {
+            expect(piece.testIsMoveCapture('c-4', boardMap)).toBeFalsy();
+            expect(piece.testIsMoveCapture('b-2', boardMap)).toBeFalsy();
+            expect(piece.testIsMoveCapture('g-1', boardMap)).toBeFalsy();
+            expect(piece.testIsMoveCapture('e-6', boardMap)).toBeFalsy();
+            expect(piece.testIsMoveCapture('f-1', boardMap)).toBeFalsy();
+        });
     });
     test('isOppositeColor', () => {
         const light = new TestPiece('light', 'a-4');
