@@ -5,7 +5,7 @@ import Rook from '../../../src/engine/pieces/Rook';
 import Knight from '../../../src/engine/pieces/Knight';
 import Bishop from '../../../src/engine/pieces/Bishop';
 import Queen from '../../../src/engine/pieces/Queen';
-import { BoardMap } from '../../../src/utils/utils';
+import { BoardMap, separateFEN, parsePlacementToMap } from '../../../src/utils/utils';
 
 class TestPiece extends Piece {
     constructor(color: Color, position: string) {
@@ -73,10 +73,25 @@ describe('Piece', () => {
         expect(dark.testOppositeColor(dark.code)).toBeFalsy();
     });
     describe('consecutiveMoveSearch', () => {
-        test('straight moves no blocks');
-        test('straight moves with blocks');
-        test('diagonal moves no blocks');
-        test('diagonal moves with blocks');
+        test('straight moves no blocks', () => {
+            const fen = '8/8/8/8/3R4/8/8/8 w - - 0 1';
+            const parsed = separateFEN(fen);
+            const boardMap = parsePlacementToMap(parsed.piecePlacement);
+            const piece = new TestPiece('light', 'd-4');
+            const moves = piece.testConsecutiveMoveSearch(boardMap, true, false);
+            expect(moves.sort()).toEqual(
+                ['a-4', 'b-4', 'c-4', 'e-4', 'f-4', 'g-4', 'h-4',
+                    'd-1', 'd-2', 'd-3', 'd-5', 'd-6', 'd-7', 'd-8'].sort());
+        });
+        test('straight moves with blocks', () => {
+
+        });
+        test('diagonal moves no blocks', () => {
+
+        });
+        test('diagonal moves with blocks', () => {
+
+        });
     });
     test('resetLegalMoves', () => {
         const piece = new TestPiece('light', 'a-2');

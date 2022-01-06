@@ -177,7 +177,7 @@ export abstract class Piece {
             lookDownLeft = true;
         }
         // Look up
-        for (let i = this.rank; i <= 8; i++) {
+        for (let i = this.rank + 1; i <= 8; i++) {
             if (!lookUpLeft && !lookUpRight && !lookUp) {
                 break;
             }
@@ -210,7 +210,7 @@ export abstract class Piece {
             }
         }
         // Look down
-        for (let i = this.rank; i >= 1; i--) {
+        for (let i = this.rank - 1; i >= 1; i--) {
             if (!lookDownLeft && !lookDownRight && !lookDown) {
                 break;
             }
@@ -243,12 +243,8 @@ export abstract class Piece {
             }
         }
         const fileNumber = this.file.charCodeAt(0);
-        let fileLowerBound = 65;
-        let fileUpperBound = 72;
-        if (this.color === 'dark') {
-            fileLowerBound = 97;
-            fileUpperBound = 104;
-        }
+        const fileLowerBound = 97;
+        const fileUpperBound = 104;
         if (lookLeft) {
             for (let i = fileNumber - 1; i >= fileLowerBound; i--) {
                 const newPosition = `${String.fromCharCode(i)}-${this.rank}`;
