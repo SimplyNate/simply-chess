@@ -48,11 +48,11 @@ export default class King extends Piece {
         return this.legalMoves;
     }
 
-    private canPerformCastleShort(currentBoard: BoardMap): boolean {
+    public canPerformCastleShort(currentBoard: BoardMap): boolean {
         return currentBoard[`${shiftChar(this.file, 1)}-${this.rank}`] === 'x' && currentBoard[`${shiftChar(this.file, 2)}-${this.rank}`] === 'x';
     }
 
-    private canPerformCastleLong(currentBoard: BoardMap): boolean {
+    public canPerformCastleLong(currentBoard: BoardMap): boolean {
         return currentBoard[`${shiftChar(this.file, -1)}-${this.rank}`] === 'x' && currentBoard[`${shiftChar(this.file, -2)}-${this.rank}`] === 'x' && currentBoard[`${shiftChar(this.file, -3)}-${this.rank}`] === 'x';
     }
 
