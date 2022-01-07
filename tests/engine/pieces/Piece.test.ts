@@ -53,17 +53,25 @@ describe('Piece', () => {
         expect(piece.rank).toEqual(3);
         expect(piece.file).toBe('b');
     });
-    test('filterMovesCheck no check', () => {
-        const king = new King('light', 'e-1', '-');
-        const enemyPieces = [
-            new Pawn('dark', 'a-7'),
-        ];
-    });
-    test('filterMovesCheck in check', () => {
-
+    describe('filterMovesCheck', () => {
+        test('filter king moves', () => {
+            const king = new King('light', 'e-1', '-');
+            const enemyPieces = [
+                new Pawn('dark', 'a-7'),
+            ];
+        });
     });
     test('filterValidMoves', () => {
-
+        const fen = '3P3P/8/8/2p5/2PQ2P1/8/1P1p4/6P1 w - - 0 1';
+        const parsed = separateFEN(fen);
+        const boardMap = parsePlacementToMap(parsed.piecePlacement);
+        const piece = new TestPiece('light', 'd-4');
+        const moves = [
+            'd-5', 'd-1', 'c-7', 'b-3', 'a-6', 'e-8', 'f-5', 'g-3', 'g-2', 'h-1', 'c-4', 'b-2', 'g-1', 'g-4', 'd-8', 'h-8',
+        ];
+        const expectation = ['d-5', 'd-1', 'c-7', 'b-3', 'a-6', 'e-8', 'f-5', 'g-3', 'g-2', 'h-1'];
+        const filtered = piece.testFilterValidMoves(moves, boardMap);
+        expect(filtered.sort()).toEqual(expectation.sort());
     });
     describe('isValidMovePosition and isMoveCapture', () => {
         const fen = '3P3P/8/8/2p5/2PQ2P1/8/1P1p4/6P1 w - - 0 1';
