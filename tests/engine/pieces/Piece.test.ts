@@ -53,6 +53,7 @@ describe('Piece', () => {
         expect(piece.rank).toEqual(3);
         expect(piece.file).toBe('b');
     });
+    // Maybe needs to move to Chess, since it needs a lot more context than itself
     describe('filterMovesCheck', () => {
         test('filter king moves', () => {
             const king = new King('light', 'e-1', '-');
