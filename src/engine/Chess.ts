@@ -105,9 +105,9 @@ export class Chess {
             const legalMoves = movePiece.getLegalMoves(this.boardMap, this.fen);
             if (legalMoves.includes(to)) {
                 let capturedPiece = false;
-                if (this.piecesByLocation[to]) {
+                if (this.piecesByLocation[to] || (`${to[0]}${to[2]}` === this.fen.enPassantTargetSquare && movePiece.name === 'Pawn')) {
                     let deleteLocation = to;
-                    if (`${to[0]}${to[2]}` === this.fen.enPassantTargetSquare) {
+                    if (`${to[0]}${to[2]}` === this.fen.enPassantTargetSquare && movePiece.name === 'Pawn') {
                         deleteLocation = `${to[0]}-`;
                         if (to[2] === '3') {
                             deleteLocation += '4';
