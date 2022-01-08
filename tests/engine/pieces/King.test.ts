@@ -1,5 +1,7 @@
 import King from '../../../src/engine/pieces/King';
 import { parsePlacementToMap, separateFEN } from '../../../src/utils/utils';
+import Rook from '../../../src/engine/pieces/Rook';
+import Pawn from '../../../src/engine/pieces/Pawn';
 
 describe('King', () => {
     test('constructs correctly', () => {
@@ -69,6 +71,34 @@ describe('King', () => {
             const fenString = 'rp2kp1r/8/8/8/8/8/4R3/R1P1K1P1 w - - 0 1';
             const fen = separateFEN(fenString);
             const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'e-1', '-');
+            const k = new King('dark', 'e-8', '-');
+            const lightPieces = [
+                new Rook('light', 'a-1', '-'),
+                new Pawn('light', 'c-1'),
+                new Rook('light', 'e-2', '-'),
+                new Pawn('light', 'g-1'),
+                K,
+            ];
+            const darkPieces = [
+                new Rook('dark', 'a-8', '-'),
+                new Pawn('dark', 'b-8'),
+                new Pawn('dark', 'f-8'),
+                new Rook('dark', 'h-8', '-'),
+                k,
+            ];
+            for (const piece of lightPieces) {
+                piece.getLegalMoves(board, fen);
+            }
+            for (const piece of darkPieces) {
+                piece.getLegalMoves(board, fen);
+            }
+            const lightCheckStatus = K.getCheckStatus(darkPieces, board, fen);
+            expect(lightCheckStatus.check).toBeFalsy();
+            expect(lightCheckStatus.piece).toBeNull();
+            const darkCheckStatus = k.getCheckStatus(lightPieces, board, fen);
+            expect(darkCheckStatus.check).toBeTruthy();
+            expect(darkCheckStatus.piece).toBe(lightPieces[2]);
         });
     });
 });
