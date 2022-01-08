@@ -53,15 +53,6 @@ describe('Piece', () => {
         expect(piece.rank).toEqual(3);
         expect(piece.file).toBe('b');
     });
-    // Maybe needs to move to Chess, since it needs a lot more context than itself
-    describe('filterMovesCheck', () => {
-        test('filter king moves', () => {
-            const king = new King('light', 'e-1', '-');
-            const enemyPieces = [
-                new Pawn('dark', 'a-7'),
-            ];
-        });
-    });
     test('filterValidMoves', () => {
         const fen = '3P3P/8/8/2p5/2PQ2P1/8/1P1p4/6P1 w - - 0 1';
         const parsed = separateFEN(fen);
