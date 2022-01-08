@@ -16,6 +16,11 @@ describe('constructor', () => {
         expect(chess.checkStatus).toBe('none');
         expect(chess.checkMateStatus).toBeFalsy();
     });
+    test('checkmate on white', () => {
+        const chess = new Chess('4k3/8/8/8/8/5b2/6q1/6K1 w - - 0 1');
+        expect(chess.checkStatus).toBe('light');
+        expect(chess.checkMateStatus).toBeTruthy();
+    });
 });
 
 describe('updateCastling', () => {

@@ -245,6 +245,9 @@ export class Chess {
                 for (const enemyPiece of enemyPieces) {
                     if (enemyPiece.legalMoves) {
                         dangerMoves.push(...enemyPiece.legalMoves);
+                        for (const defense of enemyPiece.defending) {
+                            dangerMoves.push(defense.position);
+                        }
                     }
                 }
                 filteredMoves = moves.filter(move => !dangerMoves.includes(move));

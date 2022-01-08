@@ -5,6 +5,11 @@ export type Color = 'light' | 'dark';
 
 export type MoveType = 'consecutive' | 'jump';
 
+export interface DefendPiece {
+    code: string,
+    position: string,
+}
+
 export abstract class Piece {
     name: string;
     code: string;
@@ -15,6 +20,7 @@ export abstract class Piece {
     file: string;
     legalMoves: string[] | null = null;
     moveType: MoveType;
+    defending: DefendPiece[] = [];
 
     protected constructor(color: Color, position: string, name: string, moveType: MoveType) {
         this.color = color;
@@ -48,10 +54,19 @@ export abstract class Piece {
     protected isValidMovePosition(move: string, currentBoard: BoardMap): boolean {
         const lowerRangeEnemyCodes = this.color === 'dark' ? 65 : 97;
         const upperRangeEnemyCodes = this.color === 'dark' ? 90 : 122;
-        if (currentBoard[move] === 'x') {
-            return true;
+        const lowerRangeAllyCodes = this.color === 'dark' ? 97 : 65;
+        const upperRangeAllyCodes = this.color === 'dark' ? 122 : 90;
+        if (currentBoard[move]) {
+            const moveCharCode = currentBoard[move].charCodeAt(0);
+            if (currentBoard[move] === 'x') {
+                return true;
+            }
+            else if (moveCharCode >= lowerRangeAllyCodes && moveCharCode <= upperRangeAllyCodes) {
+                this.defending.push({ code: currentBoard[move], position: move });
+            }
+            return !!currentBoard[move] && currentBoard[move].charCodeAt(0) >= lowerRangeEnemyCodes && currentBoard[move].charCodeAt(0) <= upperRangeEnemyCodes;
         }
-        return !!currentBoard[move] && currentBoard[move].charCodeAt(0) >= lowerRangeEnemyCodes && currentBoard[move].charCodeAt(0) <= upperRangeEnemyCodes;
+        return false;
     }
 
     protected isMoveCapture(move: string, currentBoard: BoardMap): boolean {
@@ -213,6 +228,7 @@ export abstract class Piece {
 
     public resetLegalMoves(): void {
         this.legalMoves = null;
+        this.defending.length = 0;
     }
 
     private parseCode(): string {
