@@ -98,11 +98,11 @@ export class Chess {
         return [];
     }
 
-    public move(from: string, to: string): string {
+    public move(from: string, to: string, skipValidation: boolean = false): string {
         let movePiece = this.piecesByLocation[from];
         if (movePiece) {
             const legalMoves = movePiece.getLegalMoves(this.boardMap, this.fen);
-            if (legalMoves.includes(to)) {
+            if (legalMoves.includes(to) || skipValidation) {
                 let capturedPiece = false;
                 if (this.piecesByLocation[to] || (`${to[0]}${to[2]}` === this.fen.enPassantTargetSquare && movePiece.name === 'Pawn')) {
                     let deleteLocation = to;
@@ -155,7 +155,7 @@ export class Chess {
         }
         this.updateEnPassant(movePiece);
         this.updateCastling(movePiece);
-        this.fen.activeColor = this.fen.activeColor === 'w' ? 'b' : 'w';
+        this.fen.activeColor = movePiece.color === 'light' ? 'b' : 'w';
     }
 
     private updateCastling(movePiece: Piece): void {
@@ -166,28 +166,24 @@ export class Chess {
                 if (movePiece.position === 'g-1' && this.fen.castlingAvailability.includes('K')) {
                     this.fen.castlingAvailability.replace('K', '');
                     this.fen.castlingAvailability.replace('Q', '');
-                    const rook = this.piecesByLocation['h-1'];
-                    rook.move('f-1');
+                    this.move('h-1', 'f-1', true);
                 }
                 else if (movePiece.position === 'c-1' && this.fen.castlingAvailability.includes('Q')) {
                     this.fen.castlingAvailability.replace('Q', '');
                     this.fen.castlingAvailability.replace('K', '');
-                    const rook = this.piecesByLocation['a-1'];
-                    rook.move('d-1');
+                    this.move('a-1', 'd-1', true);
                 }
             }
             else {
                 if (movePiece.position === 'g-8' && this.fen.castlingAvailability.includes('k')) {
                     this.fen.castlingAvailability.replace('k', '');
                     this.fen.castlingAvailability.replace('q', '');
-                    const rook = this.piecesByLocation['h-8'];
-                    rook.move('f-8');
+                    this.move('h-8', 'f-8', true);
                 }
                 else if (movePiece.position === 'c-8' && this.fen.castlingAvailability.includes('q')) {
                     this.fen.castlingAvailability.replace('q', '');
                     this.fen.castlingAvailability.replace('k', '');
-                    const rook = this.piecesByLocation['a-8'];
-                    rook.move('d-8');
+                    this.move('a-8', 'd-8', true);
                 }
             }
         }
