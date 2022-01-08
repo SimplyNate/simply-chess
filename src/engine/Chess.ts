@@ -46,7 +46,6 @@ export class Chess {
         this.kings = kings;
         this.resetLegalMovesAndCheckStatus();
         this.updateCheckMate();
-        this.print();
     }
 
     private parsePieces(): ParsedPieces {

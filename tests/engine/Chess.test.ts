@@ -16,10 +16,25 @@ describe('constructor', () => {
         expect(chess.checkStatus).toBe('none');
         expect(chess.checkMateStatus).toBeFalsy();
     });
-    test('checkmate on white', () => {
+    test('checkmate on light', () => {
         const chess = new Chess('4k3/8/8/8/8/5b2/6q1/6K1 w - - 0 1');
         expect(chess.checkStatus).toBe('light');
         expect(chess.checkMateStatus).toBeTruthy();
+    });
+    test('checkmate on dark', () => {
+        const chess = new Chess('7R/4k3/4Q3/8/8/4R3/8/2K5 b - - 0 1');
+        expect(chess.checkStatus).toBe('dark');
+        expect(chess.checkMateStatus).toBeTruthy();
+    });
+    test('check dark not mate', () => {
+        const chess = new Chess('2q4R/4k3/4Q3/8/8/4R3/8/1K6 b - - 0 1');
+        expect(chess.checkStatus).toBe('dark');
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.piecesByLocation['c-8']).toBeDefined();
+        // @ts-ignore
+        expect(chess.piecesByLocation['c-8'].legalMoves.length).toEqual(1);
+        // @ts-ignore
+        expect(chess.piecesByLocation['c-8'].legalMoves[0]).toBe('e-6');
     });
 });
 
