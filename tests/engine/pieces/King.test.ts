@@ -33,17 +33,20 @@ describe('King', () => {
         expect(dkingNoCastle.canCastleShort).toBeFalsy();
     });
     describe('getLegalMoves', () => {
-        test('both castling available', () => {
-
-        });
+        const fen = 'r3k2r/8/8/8/8/8/8/R3K2R w Kq - 0 1';
+        const parsed = separateFEN(fen);
+        const board = parsePlacementToMap(parsed.piecePlacement);
+        const K = new King('light', 'e-1', 'K');
+        const k = new King('dark', 'e-8', 'q');
         test('long castle available', () => {
-
+            const moves = K.getLegalMoves(board, parsed);
+            const expectation = ['d-1', 'd-2', 'e-2', 'f-2', 'f-1', 'g-1'].sort();
+            expect(moves.sort()).toEqual(expectation);
         });
         test('short castle available', () => {
-
-        });
-        test('no castle available', () => {
-
+            const moves = k.getLegalMoves(board, parsed);
+            const expectation = ['d-8', 'd-7', 'e-7', 'f-7', 'f-8', 'c-8'].sort();
+            expect(moves.sort()).toEqual(expectation);
         });
     });
     const noCastle = 'rp2kp1r/8/8/8/8/8/8/R1P1K1PR w - - 0 1';
