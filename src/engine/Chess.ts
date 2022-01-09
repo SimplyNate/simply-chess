@@ -160,50 +160,54 @@ export class Chess {
 
     private updateCastling(movePiece: Piece): void {
         // If Piece is king, check if move is castling
-        if (this.fen.castlingAvailability !== '-' && movePiece.name === 'King') {
+        if (this.fen.castlingAvailability !== '-' && movePiece instanceof King) {
             // check if it has gone to the castling long or short position
             if (movePiece.color === 'light') {
                 if (movePiece.position === 'g-1' && this.fen.castlingAvailability.includes('K')) {
-                    this.fen.castlingAvailability.replace('K', '');
-                    this.fen.castlingAvailability.replace('Q', '');
+                    this.fen.castlingAvailability = this.fen.castlingAvailability.replace('K', '');
+                    this.fen.castlingAvailability = this.fen.castlingAvailability.replace('Q', '');
                     this.move('h-1', 'f-1', true);
                 }
                 else if (movePiece.position === 'c-1' && this.fen.castlingAvailability.includes('Q')) {
-                    this.fen.castlingAvailability.replace('Q', '');
-                    this.fen.castlingAvailability.replace('K', '');
+                    this.fen.castlingAvailability = this.fen.castlingAvailability.replace('Q', '');
+                    this.fen.castlingAvailability = this.fen.castlingAvailability.replace('K', '');
                     this.move('a-1', 'd-1', true);
                 }
             }
             else {
                 if (movePiece.position === 'g-8' && this.fen.castlingAvailability.includes('k')) {
-                    this.fen.castlingAvailability.replace('k', '');
-                    this.fen.castlingAvailability.replace('q', '');
+                    this.fen.castlingAvailability = this.fen.castlingAvailability.replace('k', '');
+                    this.fen.castlingAvailability = this.fen.castlingAvailability.replace('q', '');
                     this.move('h-8', 'f-8', true);
                 }
                 else if (movePiece.position === 'c-8' && this.fen.castlingAvailability.includes('q')) {
-                    this.fen.castlingAvailability.replace('q', '');
-                    this.fen.castlingAvailability.replace('k', '');
+                    this.fen.castlingAvailability = this.fen.castlingAvailability.replace('q', '');
+                    this.fen.castlingAvailability = this.fen.castlingAvailability.replace('k', '');
                     this.move('a-8', 'd-8', true);
                 }
             }
+            movePiece.canCastleShort = false;
+            movePiece.canCastleLong = false;
         }
-        else if (movePiece.name === 'Rook' && this.fen.castlingAvailability !== '-') {
+        else if (movePiece instanceof Rook && this.fen.castlingAvailability !== '-') {
             if (movePiece.color === 'light') {
                 if (this.fen.castlingAvailability.includes('K') && movePiece.lastPosition === 'h-1') {
-                    this.fen.castlingAvailability.replace('K', '');
+                    this.fen.castlingAvailability = this.fen.castlingAvailability.replace('K', '');
                 }
                 else if (this.fen.castlingAvailability.includes('Q') && movePiece.lastPosition === 'a-1') {
-                    this.fen.castlingAvailability.replace('Q', '');
+                    this.fen.castlingAvailability = this.fen.castlingAvailability.replace('Q', '');
                 }
             }
             else { // movePiece.color === 'dark'
                 if (this.fen.castlingAvailability.includes('k') && movePiece.lastPosition === 'h-8') {
-                    this.fen.castlingAvailability.replace('k', '');
+                    this.fen.castlingAvailability = this.fen.castlingAvailability.replace('k', '');
                 }
                 else if (this.fen.castlingAvailability.includes('q') && movePiece.lastPosition === 'a-8') {
-                    this.fen.castlingAvailability.replace('q', '');
+                    this.fen.castlingAvailability = this.fen.castlingAvailability.replace('q', '');
                 }
             }
+            movePiece.canCastle = false;
+            movePiece.castleSide = '-';
         }
         if (this.fen.castlingAvailability.length === 0) {
             this.fen.castlingAvailability = '-';
