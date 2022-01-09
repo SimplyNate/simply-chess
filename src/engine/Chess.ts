@@ -232,6 +232,21 @@ export class Chess {
         }
     }
 
+    protected filterKingMovesDanger(king: King, enemyPieces: Piece[]): void {
+        // this should just return legalMoves and shouldn't recalculate
+        const kingMoves = king.getLegalMoves(this.boardMap, this.fen);
+        const dangerMoves: string[] = [];
+        for (const enemyPiece of enemyPieces) {
+            if (enemyPiece.legalMoves) {
+                dangerMoves.push(...enemyPiece.legalMoves);
+                for (const defense of enemyPiece.defending) {
+                    dangerMoves.push(defense.position);
+                }
+            }
+        }
+        king.legalMoves = kingMoves.filter(move => !dangerMoves.includes(move));
+    }
+
     // Mutates the list of moves to remove any moves that don't defend king
     protected filterMovesCheck(piece: Piece, king: King, enemyPieces: Piece[], moves: string[]): string[] {
         const checkedByPiece = king.checkBy;
@@ -347,6 +362,9 @@ export class Chess {
             const moves = piece.getLegalMoves(this.boardMap, this.fen);
             if (filterMovesCheck) {
                 this.filterMovesCheck(piece, king, enemyPieces, moves);
+            }
+            if (piece instanceof King) {
+                this.filterKingMovesDanger(piece, enemyPieces);
             }
         }
     }
