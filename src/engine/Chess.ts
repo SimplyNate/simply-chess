@@ -5,7 +5,7 @@ import Queen from './pieces/Queen';
 import Bishop from './pieces/Bishop';
 import Rook from './pieces/Rook';
 import { Color, Piece } from './pieces/Piece';
-import { BoardMap, FEN, parsePlacementToMap, rebuildPlacementFromMap, separateFEN, stringifyFEN } from '../utils/utils';
+import { BoardMap, FEN, parsePlacementToMap, rebuildPlacementFromMap, separateFEN, shiftChar, stringifyFEN } from '../utils/utils';
 
 // PieceMap indexes based on position of Piece on board
 interface PieceMap {
@@ -264,6 +264,55 @@ export class Chess {
                         }
                     }
                 }
+                // Check straight line pieces
+                if (checkedByPiece instanceof Queen || checkedByPiece instanceof Rook) {
+                    // If king and attacker are on the same row
+                    if (checkedByPiece.rank === king.rank) {
+                        // If attacker is to the left of king
+                        if (checkedByPiece.file.charCodeAt(0) < king.file.charCodeAt(0)) {
+                            // King cannot move right
+                            dangerMoves.push(`${shiftChar(king.file, 1)}-${king.rank}`);
+                        }
+                        // Else the attacker is to the right of king
+                        else {
+                            // King cannot move left
+                            dangerMoves.push(`${shiftChar(king.file, -1)}-${king.rank}`);
+                        }
+                    }
+                    // Else if king and attacker are on same column
+                    else if (checkedByPiece.file === king.file) {
+                        // If attacker is above king
+                        if (checkedByPiece.rank > king.rank) {
+                            // King cannot move down
+                            dangerMoves.push(`${king.file}-${king.rank - 1}`);
+                        }
+                        // Else attacker is below king
+                        else {
+                            // King cannot move up
+                            dangerMoves.push(`${king.file}-${king.rank + 1}`);
+                        }
+                    }
+                }
+                // Check diagonal pieces
+                if (checkedByPiece instanceof Queen || checkedByPiece instanceof Bishop) {
+                    // If king is up-left
+                    if (king.file.charCodeAt(0) < checkedByPiece.file.charCodeAt(0) && king.rank > checkedByPiece.rank) {
+                        // King cannot move up-left
+                        dangerMoves.push(`${shiftChar(king.file, -1)}-${king.rank + 1}`);
+                    }
+                    // If king is up-right
+                    else if (king.file.charCodeAt(0) > checkedByPiece.file.charCodeAt(0) && king.rank > checkedByPiece.rank) {
+                        dangerMoves.push(`${shiftChar(king.file, 1)}-${king.rank + 1}`);
+                    }
+                    // If king is down-left
+                    else if (king.file.charCodeAt(0) < checkedByPiece.file.charCodeAt(0) && king.rank < checkedByPiece.rank) {
+                        dangerMoves.push(`${shiftChar(king.file, -1)}-${king.rank - 1}`);
+                    }
+                    // If king is down-right
+                    else if (king.file.charCodeAt(0) > checkedByPiece.file.charCodeAt(0) && king.rank < checkedByPiece.rank) {
+                        dangerMoves.push(`${shiftChar(king.file, 1)}-${king.rank + 1}`);
+                    }
+                }
                 filteredMoves = moves.filter(move => !dangerMoves.includes(move));
             }
             // Else, filter out moves that don't defend King
@@ -342,6 +391,12 @@ export class Chess {
         }
         piece.legalMoves = filteredMoves;
         return filteredMoves;
+    }
+
+    // Remove moves that would expose king to an attacker
+    protected filterMovesThatExposeKing(): string[] {
+        // Simulate move and see if king is in check
+
     }
 
     private processMovesForColor(color: Color, filterMovesCheck: boolean): void {
