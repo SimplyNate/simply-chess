@@ -56,6 +56,7 @@ export default class King extends Piece {
         return currentBoard[`${shiftChar(this.file, -1)}-${this.rank}`] === 'x' && currentBoard[`${shiftChar(this.file, -2)}-${this.rank}`] === 'x' && currentBoard[`${shiftChar(this.file, -3)}-${this.rank}`] === 'x';
     }
 
+    // TODO: Refactor this to only require currentBoard
     public getCheckStatus(enemyPieces: Piece[], currentBoard: BoardMap, fen: FEN): CheckStatus {
         for (const piece of enemyPieces) {
             // Use 'none' checkStatus because it would never be any other status

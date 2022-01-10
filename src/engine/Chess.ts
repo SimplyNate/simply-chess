@@ -394,9 +394,15 @@ export class Chess {
     }
 
     // Remove moves that would expose king to an attacker
-    protected filterMovesThatExposeKing(): string[] {
+    protected filterMovesThatExposeKing(piece: Piece, king: King, enemyPieces: Piece[]): string[] {
         // Simulate move and see if king is in check
-
+        const kingPosition = king.position;
+        const pieceMoves = piece.legalMoves;
+        if (pieceMoves) {
+            for (const move of pieceMoves) {
+                if ()
+            }
+        }
     }
 
     private processMovesForColor(color: Color, filterMovesCheck: boolean): void {
@@ -420,6 +426,9 @@ export class Chess {
             }
             if (piece instanceof King) {
                 this.filterKingMovesDanger(piece, enemyPieces);
+            }
+            else {
+                this.filterMovesThatExposeKing(piece, king, enemyPieces);
             }
         }
     }
