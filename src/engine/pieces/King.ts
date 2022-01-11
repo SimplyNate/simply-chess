@@ -57,7 +57,13 @@ export default class King extends Piece {
     }
 
     // TODO: Refactor this to only require currentBoard
-    public getCheckStatus(enemyPieces: Piece[], currentBoard: BoardMap, fen: FEN): CheckStatus {
+    public getCheckStatus(currentBoard: BoardMap): CheckStatus {
+        const currentPosition = this.position;
+        const direction = this.color === 'light' ? 1 : -1;
+        // Check for attacking pawns
+        // Check for attacking knights
+        // Check for attacking Rook/Queen
+        // Check for attacking Bishop/Queen
         for (const piece of enemyPieces) {
             // Use 'none' checkStatus because it would never be any other status
             const legalMoves = piece.getLegalMoves(currentBoard, fen);
