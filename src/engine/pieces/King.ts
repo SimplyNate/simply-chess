@@ -3,14 +3,14 @@ import { Color, Piece } from './Piece';
 
 interface CheckStatus {
     check: boolean,
-    piece: Piece | null,
+    piece: string | null,
 }
 
 export default class King extends Piece {
     canCastleShort: boolean;
     canCastleLong: boolean;
     isInCheck = false;
-    checkBy: Piece | null = null;
+    checkBy: string | null = null;
 
     constructor(color: Color, position: string, castlingAvailability: string) {
         super(color, position, 'King', 'consecutive');
@@ -56,22 +56,87 @@ export default class King extends Piece {
         return currentBoard[`${shiftChar(this.file, -1)}-${this.rank}`] === 'x' && currentBoard[`${shiftChar(this.file, -2)}-${this.rank}`] === 'x' && currentBoard[`${shiftChar(this.file, -3)}-${this.rank}`] === 'x';
     }
 
+    public findAttackersFromPositions(positions: string[], boardMap: BoardMap, attackingPieceCode: string): boolean {
+        const boardKeys = Object.keys(boardMap);
+        positions = positions.filter((position) => boardKeys.includes(position));
+        const attackers = positions.filter((position) => boardMap[position] === attackingPieceCode);
+        // Theoretically there can only be one attacker at a time
+        if (attackers.length > 0) {
+            this.isInCheck = true;
+            this.checkBy = attackers[0];
+            return true;
+        }
+        return false;
+    }
+
     // TODO: Refactor this to only require currentBoard
     public getCheckStatus(currentBoard: BoardMap): CheckStatus {
-        const currentPosition = this.position;
-        const direction = this.color === 'light' ? 1 : -1;
+        // Theoretically, this can live on Chess and recalculate everyone's
+        const boardKeys = Object.keys(currentBoard); // TODO: Make this static array in utils
+        let direction: number;
+        let aKnight: string;
+        let aPawn: string;
+        let aQueen: string;
+        let aRook: string;
+        let aBishop: string;
+        if (this.color === 'light') {
+            direction = 1;
+            aKnight = 'n';
+            aPawn = 'p';
+            aQueen = 'q';
+            aRook = 'r';
+            aBishop = 'b';
+        }
+        else {
+            direction = -1;
+            aKnight = 'N';
+            aPawn = 'P';
+            aQueen = 'Q';
+            aRook = 'R';
+            aBishop = 'B';
+        }
         // Check for attacking knights
-        // Check for attacking Rook/Queen
-        // Check for attacking Bishop/Queen/pawn
-        for (const piece of enemyPieces) {
-            // Use 'none' checkStatus because it would never be any other status
-            const legalMoves = piece.getLegalMoves(currentBoard, fen);
-            if (this.position && legalMoves.includes(this.position)) {
-                this.isInCheck = true;
-                this.checkBy = piece;
-                break;
+        const possibleKnightPositions = [
+            `${shiftChar(this.file, 1)}-${this.rank + 2}`,
+            `${shiftChar(this.file, -1)}-${this.rank + 2}`,
+            `${shiftChar(this.file, 2)}-${this.rank + 1}`,
+            `${shiftChar(this.file, -2)}-${this.rank + 1}`,
+            `${shiftChar(this.file, 2)}-${this.rank - 1}`,
+            `${shiftChar(this.file, -2)}-${this.rank - 1}`,
+            `${shiftChar(this.file, 1)}-${this.rank - 2}`,
+            `${shiftChar(this.file, -1)}-${this.rank - 2}`,
+        ];
+        // If no attacking knights
+        if (!this.findAttackersFromPositions(possibleKnightPositions, currentBoard, aKnight)) {
+            // Check for attacking pawn
+            const possiblePawnPositions = [
+                `${shiftChar(this.file, 1)}-${this.rank + direction}`,
+                `${shiftChar(this.file, -1)}-${this.rank + direction}`,
+            ];
+            // If no attacking pawns
+            if (!this.findAttackersFromPositions(possiblePawnPositions, currentBoard, aPawn)) {
+                // Check for attacking rooks or queens
+                const possibleRookQueenPositions = [];
+                // Look up
+                for (let i = this.rank + 1; i <= 8; i++) {
+                    const newPosition = `${this.file}-${i}`;
+                    if (!(currentBoard[newPosition] === 'x')) {
+                        if (currentBoard[newPosition] === aQueen || currentBoard[newPosition] === aRook) {
+
+                        }
+                    }
+                }
+                // Look down
+                for (let i = this.rank - 1; i >= 1; i--) {
+
+                }
+                // Look left
+
+                // If no attacking rooks or queens
             }
         }
+        // Check for attacking Bishop/Queen/pawn
+
         return { check: this.isInCheck, piece: this.checkBy };
     }
 }
