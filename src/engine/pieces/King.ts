@@ -71,7 +71,6 @@ export default class King extends Piece {
 
     // TODO: Refactor this to only require currentBoard
     public getCheckStatus(currentBoard: BoardMap): CheckStatus {
-        // Theoretically, this can live on Chess and recalculate everyone's
         const boardKeys = Object.keys(currentBoard); // TODO: Make this static array in utils
         let direction: number;
         let aKnight: string;
@@ -122,17 +121,62 @@ export default class King extends Piece {
                     const newPosition = `${this.file}-${i}`;
                     if (!(currentBoard[newPosition] === 'x')) {
                         if (currentBoard[newPosition] === aQueen || currentBoard[newPosition] === aRook) {
-
+                            this.isInCheck = true;
+                            this.checkBy = newPosition;
+                            return { check: this.isInCheck, piece: this.checkBy };
+                        }
+                        else {
+                            break;
                         }
                     }
                 }
                 // Look down
                 for (let i = this.rank - 1; i >= 1; i--) {
-
+                    const newPosition = `${this.file}-${i}`;
+                    if (!(currentBoard[newPosition] === 'x')) {
+                        if (currentBoard[newPosition] === aQueen || currentBoard[newPosition] === aRook) {
+                            this.isInCheck = true;
+                            this.checkBy = newPosition;
+                            return { check: this.isInCheck, piece: this.checkBy };
+                        }
+                        else {
+                            break;
+                        }
+                    }
                 }
                 // Look left
-
+                for (let i = this.file.charCodeAt(0) - 1; i <= 'a'.charCodeAt(0); i--) {
+                    const newPosition = `${String.fromCharCode(i)}-${this.rank}`;
+                    if (!(currentBoard[newPosition] === 'x')) {
+                        if (currentBoard[newPosition] === aQueen || currentBoard[newPosition] === aRook) {
+                            this.isInCheck = true;
+                            this.checkBy = newPosition;
+                            return { check: this.isInCheck, piece: this.checkBy };
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                }
+                // Look right
+                for (let i = this.file.charCodeAt(0) + 1; i >= 'h'.charCodeAt(0); i++) {
+                    const newPosition = `${String.fromCharCode(i)}-${this.rank}`;
+                    if (!(currentBoard[newPosition] === 'x')) {
+                        if (currentBoard[newPosition] === aQueen || currentBoard[newPosition] === aRook) {
+                            this.isInCheck = true;
+                            this.checkBy = newPosition;
+                            return { check: this.isInCheck, piece: this.checkBy };
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                }
                 // If no attacking rooks or queens
+                // Look up-left
+                // Look up-right
+                // Look down-left
+                // Look down-right
             }
         }
         // Check for attacking Bishop/Queen/pawn
