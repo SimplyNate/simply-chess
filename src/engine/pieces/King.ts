@@ -83,7 +83,6 @@ export default class King extends Piece {
         return false;
     }
 
-    // TODO: Refactor this to only require currentBoard
     public getCheckStatus(currentBoard: BoardMap): CheckStatus {
         this.isInCheck = false;
         this.checkBy = null;
