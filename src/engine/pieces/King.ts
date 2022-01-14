@@ -85,6 +85,8 @@ export default class King extends Piece {
 
     // TODO: Refactor this to only require currentBoard
     public getCheckStatus(currentBoard: BoardMap): CheckStatus {
+        this.isInCheck = false;
+        this.checkBy = null;
         const boardKeys = Object.keys(currentBoard); // TODO: Make this static array in utils
         let direction: number;
         let aKnight: string;
@@ -128,8 +130,6 @@ export default class King extends Piece {
             ];
             // If no attacking pawns
             if (!this.findAttackersFromPositions(possiblePawnPositions, currentBoard, aPawn)) {
-                // Check for attacking rooks or queens
-                const possibleRookQueenPositions = [];
                 let up = true;
                 let down = true;
                 let left = true;
@@ -138,8 +138,6 @@ export default class King extends Piece {
                 let upRight = true;
                 let downLeft = true;
                 let downRight = true;
-                // Look up
-                // TODO: Look into doing up/down/left/right at same time
                 for (let i = 1; i <= 8; i++) {
                     if (up) {
                         const newPosition = `${this.file}-${this.rank + i}`;
@@ -173,13 +171,12 @@ export default class King extends Piece {
                         const newPosition = `${shiftChar(this.file, i)}-${this.rank + i}`;
                         downRight = this.checkDirection(boardKeys, currentBoard, newPosition, aQueen, aBishop);
                     }
-                    if (!up && !down && !left && !right && !upLeft && !upRight && !downLeft && !downRight) {
+                    if ((!up && !down && !left && !right && !upLeft && !upRight && !downLeft && !downRight) || (this.isInCheck)) {
                         break;
                     }
                 }
             }
         }
-        // Check for attacking Bishop/Queen/pawn
 
         return { check: this.isInCheck, piece: this.checkBy };
     }
