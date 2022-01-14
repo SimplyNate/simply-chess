@@ -249,7 +249,7 @@ export class Chess {
 
     // Mutates the list of moves to remove any moves that don't defend king
     protected filterMovesCheck(piece: Piece, king: King, enemyPieces: Piece[], moves: string[]): string[] {
-        const checkedByPiece = king.checkBy;
+        const checkedByPiece = king.checkBy ? this.piecesByLocation[king.checkBy] : null;
         let filteredMoves: string[] = [];
         if (checkedByPiece && moves.length > 0) {
             const checkType = checkedByPiece.moveType;
@@ -394,15 +394,25 @@ export class Chess {
     }
 
     // Remove moves that would expose king to an attacker
-    protected filterMovesThatExposeKing(piece: Piece, king: King, enemyPieces: Piece[]): string[] {
+    protected filterMovesThatExposeKing(piece: Piece, king: King): string[] {
         // Simulate move and see if king is in check
-        const kingPosition = king.position;
-        const pieceMoves = piece.legalMoves;
-        if (pieceMoves) {
-            for (const move of pieceMoves) {
-                if ()
+        const pieceMoves = piece.getLegalMoves(this.boardMap, this.fen);
+        const kingOriginalCheckStatus = king.isInCheck;
+        const kingOriginalCheckBy = king.checkBy;
+        const filteredMoves: string[] = [];
+        for (const move of pieceMoves) {
+            const testBoard: BoardMap = JSON.parse(JSON.stringify(this.boardMap));
+            testBoard[move] = piece.code;
+            testBoard[piece.position] = 'x';
+            king.getCheckStatus(testBoard);
+            if (!king.isInCheck) {
+                filteredMoves.push(move);
             }
         }
+        // Reset king check status
+        king.isInCheck = kingOriginalCheckStatus;
+        king.checkBy = kingOriginalCheckBy;
+        return filteredMoves;
     }
 
     private processMovesForColor(color: Color, filterMovesCheck: boolean): void {
@@ -428,7 +438,7 @@ export class Chess {
                 this.filterKingMovesDanger(piece, enemyPieces);
             }
             else {
-                this.filterMovesThatExposeKing(piece, king, enemyPieces);
+                this.filterMovesThatExposeKing(piece, king);
             }
         }
     }
@@ -468,8 +478,7 @@ export class Chess {
         let checkStatus: CheckStatus = 'none';
         const activeColor = this.fen.activeColor === 'w' ? 'light' : 'dark';
         const king = activeColor === 'light' ? this.kings.K : this.kings.k;
-        const enemyPieces = this.getPiecesForOppositeColor(activeColor);
-        const isCheck = king.getCheckStatus(enemyPieces, this.boardMap, this.fen);
+        const isCheck = king.getCheckStatus(this.boardMap);
         if (isCheck.check) {
             checkStatus = activeColor;
         }
