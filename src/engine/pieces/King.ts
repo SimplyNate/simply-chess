@@ -1,4 +1,4 @@
-import { BoardMap, FEN, shiftChar } from '../../utils/utils';
+import { BoardMap, FEN, shiftChar, rankAndFile } from '../../utils/utils';
 import { Color, Piece } from './Piece';
 
 interface CheckStatus {
@@ -57,8 +57,7 @@ export default class King extends Piece {
     }
 
     public findAttackersFromPositions(positions: string[], boardMap: BoardMap, attackingPieceCode: string): boolean {
-        const boardKeys = Object.keys(boardMap);
-        positions = positions.filter((position) => boardKeys.includes(position));
+        positions = positions.filter((position) => rankAndFile.includes(position));
         const attackers = positions.filter((position) => boardMap[position] === attackingPieceCode);
         // Theoretically there can only be one attacker at a time
         if (attackers.length > 0) {
@@ -69,8 +68,8 @@ export default class King extends Piece {
         return false;
     }
 
-    public checkDirection(boardKeys: string[], currentBoard: BoardMap, position: string, piece1: string, piece2: string): boolean {
-        if (boardKeys.includes(position)) {
+    public checkDirection(currentBoard: BoardMap, position: string, piece1: string, piece2: string): boolean {
+        if (rankAndFile.includes(position)) {
             if (currentBoard[position] === 'x') {
                 return true;
             }
@@ -86,7 +85,6 @@ export default class King extends Piece {
     public getCheckStatus(currentBoard: BoardMap): CheckStatus {
         this.isInCheck = false;
         this.checkBy = null;
-        const boardKeys = Object.keys(currentBoard); // TODO: Make this static array in utils
         let direction: number;
         let aKnight: string;
         let aPawn: string;
@@ -140,35 +138,35 @@ export default class King extends Piece {
                 for (let i = 1; i <= 8; i++) {
                     if (up) {
                         const newPosition = `${this.file}-${this.rank + i}`;
-                        up = this.checkDirection(boardKeys, currentBoard, newPosition, aQueen, aRook);
+                        up = this.checkDirection(currentBoard, newPosition, aQueen, aRook);
                     }
                     if (down) {
                         const newPosition = `${this.file}-${this.rank - i}`;
-                        down = this.checkDirection(boardKeys, currentBoard, newPosition, aQueen, aRook);
+                        down = this.checkDirection(currentBoard, newPosition, aQueen, aRook);
                     }
                     if (left) {
                         const newPosition = `${shiftChar(this.file, -i)}-${this.rank}`;
-                        left = this.checkDirection(boardKeys, currentBoard, newPosition, aQueen, aRook);
+                        left = this.checkDirection(currentBoard, newPosition, aQueen, aRook);
                     }
                     if (right) {
                         const newPosition = `${shiftChar(this.file, i)}-${this.rank}`;
-                        right = this.checkDirection(boardKeys, currentBoard, newPosition, aQueen, aRook);
+                        right = this.checkDirection(currentBoard, newPosition, aQueen, aRook);
                     }
                     if (upLeft) {
                         const newPosition = `${shiftChar(this.file, -i)}-${this.rank + i}`;
-                        upLeft = this.checkDirection(boardKeys, currentBoard, newPosition, aQueen, aBishop);
+                        upLeft = this.checkDirection(currentBoard, newPosition, aQueen, aBishop);
                     }
                     if (upRight) {
                         const newPosition = `${shiftChar(this.file, i)}-${this.rank + i}`;
-                        upRight = this.checkDirection(boardKeys, currentBoard, newPosition, aQueen, aBishop);
+                        upRight = this.checkDirection(currentBoard, newPosition, aQueen, aBishop);
                     }
                     if (downLeft) {
                         const newPosition = `${shiftChar(this.file, -i)}-${this.rank - i}`;
-                        downLeft = this.checkDirection(boardKeys, currentBoard, newPosition, aQueen, aBishop);
+                        downLeft = this.checkDirection(currentBoard, newPosition, aQueen, aBishop);
                     }
                     if (downRight) {
                         const newPosition = `${shiftChar(this.file, i)}-${this.rank + i}`;
-                        downRight = this.checkDirection(boardKeys, currentBoard, newPosition, aQueen, aBishop);
+                        downRight = this.checkDirection(currentBoard, newPosition, aQueen, aBishop);
                     }
                     if ((!up && !down && !left && !right && !upLeft && !upRight && !downLeft && !downRight) || (this.isInCheck)) {
                         break;
