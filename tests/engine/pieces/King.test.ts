@@ -76,32 +76,12 @@ describe('King', () => {
             const board = parsePlacementToMap(fen.piecePlacement);
             const K = new King('light', 'e-1', '-');
             const k = new King('dark', 'e-8', '-');
-            const lightPieces = [
-                new Rook('light', 'a-1', '-'),
-                new Pawn('light', 'c-1'),
-                new Rook('light', 'e-2', '-'),
-                new Pawn('light', 'g-1'),
-                K,
-            ];
-            const darkPieces = [
-                new Rook('dark', 'a-8', '-'),
-                new Pawn('dark', 'b-8'),
-                new Pawn('dark', 'f-8'),
-                new Rook('dark', 'h-8', '-'),
-                k,
-            ];
-            for (const piece of lightPieces) {
-                piece.getLegalMoves(board, fen);
-            }
-            for (const piece of darkPieces) {
-                piece.getLegalMoves(board, fen);
-            }
-            const lightCheckStatus = K.getCheckStatus(darkPieces, board, fen);
+            const lightCheckStatus = K.getCheckStatus(board);
             expect(lightCheckStatus.check).toBeFalsy();
             expect(lightCheckStatus.piece).toBeNull();
-            const darkCheckStatus = k.getCheckStatus(lightPieces, board, fen);
+            const darkCheckStatus = k.getCheckStatus(board);
             expect(darkCheckStatus.check).toBeTruthy();
-            expect(darkCheckStatus.piece).toBe(lightPieces[2]);
+            expect(darkCheckStatus.piece).toBe('e-2');
         });
     });
 });

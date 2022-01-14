@@ -115,7 +115,7 @@ export function shiftChar(char: string, by: number) {
 
 export const rank = [8, 7, 6, 5, 4, 3, 2, 1];
 export const file = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-export const pieceMap = [66, 75, 78, 80, 81, 82, 98, 107, 110, 112, 113, 114];
+export const pieceCodes = [66, 75, 78, 80, 81, 82, 98, 107, 110, 112, 113, 114];
 export const rankAndFile = [
     'a-1', 'a-2', 'a-3', 'a-4', 'a-5', 'a-6', 'a-7', 'a-8',
     'b-1', 'b-2', 'b-3', 'b-4', 'b-5', 'b-6', 'b-7', 'b-8',
