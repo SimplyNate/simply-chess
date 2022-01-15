@@ -165,7 +165,7 @@ export default class King extends Piece {
                         downLeft = this.checkDirection(currentBoard, newPosition, aQueen, aBishop);
                     }
                     if (downRight) {
-                        const newPosition = `${shiftChar(this.file, i)}-${this.rank + i}`;
+                        const newPosition = `${shiftChar(this.file, i)}-${this.rank - i}`;
                         downRight = this.checkDirection(currentBoard, newPosition, aQueen, aBishop);
                     }
                     if ((!up && !down && !left && !right && !upLeft && !upRight && !downLeft && !downRight) || (this.isInCheck)) {
