@@ -10,8 +10,13 @@
                 <p>Half Move Clock: {{ engine.fen.halfMoveClock }}</p>
                 <p>Full Move Number: {{ engine.fen.fullMoveNumber }}</p>
                 <p>Check Status: {{ engine.checkStatus }}</p>
+                <p>Check Mate Status: {{ engine.checkMateStatus }}</p>
                 <p>Selected Piece: {{ selectedPiece }}</p>
                 <p>Legal Moves: {{ legalMoves }}</p>
+            </div>
+            <div class="w-100" v-if="engine.checkMateStatus">
+                <h2>Winner: {{ engine.checkStatus === 'light' ? 'dark' : 'light' }}</h2>
+                <button @click="restart">Restart?</button>
             </div>
         </div>
         <div class="float-end" :style="`width: ${containerWidth}px; height: ${containerHeight}px`">
@@ -33,7 +38,7 @@
 import { defineComponent } from 'vue';
 import CanvasBoard from '@/board/CanvasBoard.vue';
 import { Selection } from '@/board/BoardUtils';
-import { FEN, separateFEN } from '@/utils/utils';
+import { FEN } from '@/utils/utils';
 import { Chess } from '@/engine/Chess';
 
 interface AppData {
@@ -77,13 +82,10 @@ export default defineComponent({
             selectedPiece: '',
         };
     },
-    async beforeRouteUpdate(to) {
-        this.fenString = String(to.query.fen);
-        this.fen = separateFEN(this.fenString);
-    },
     mounted() {
         this.fenString = String(this.$route.query.fen);
         this.engine = new Chess(this.fenString);
+        console.log('created new engine');
         this.onResize();
         window.addEventListener('resize', this.onResize);
         this.isMounted = true;
@@ -102,10 +104,10 @@ export default defineComponent({
             this.legalMoves.length = 0;
         },
         makeMove(payload: MovePayload) {
-            const fen = this.engine.move(payload.from, payload.to);
-            if (fen !== this.fenString) {
-                this.$router.push(`/play?fen=${fen}`);
-            }
+            this.fenString = this.engine.move(payload.from, payload.to);
+        },
+        restart() {
+            this.engine = new Chess(this.fenString);
         },
     },
 });
