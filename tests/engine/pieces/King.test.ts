@@ -101,30 +101,33 @@ describe('King', () => {
             `${shiftChar('d', -1)}-${4 - 2}`,
         ];
         test('should return true with attacking piece', () => {
-            const { K, k, board } = generateTestingEnvironment('rp1k1p1r/8/8/8/3K4/7B/4n3/R1P1R1P1 w - - 0 1');
+            const { K, board } = generateTestingEnvironment('rp1k1p1r/8/8/8/3K4/7B/4n3/R1P1R1P1 w - - 0 1');
             expect(K.findAttackersFromPositions(possibleKnightPositions, board, 'n')).toBeTruthy();
             expect(K.isInCheck).toBeTruthy();
             expect(K.checkBy).toBe('e-2');
         });
         test('should return false when no attacking piece', () => {
-            const { K, k, board } = generateTestingEnvironment('rp1k1p1r/8/8/8/3K4/7B/5n2/R1P1R1P1 w - - 0 1');
+            const { K, board } = generateTestingEnvironment('rp1k1p1r/8/8/8/3K4/7B/5n2/R1P1R1P1 w - - 0 1');
             expect(K.findAttackersFromPositions(possibleKnightPositions, board, 'n')).toBeFalsy();
             expect(K.isInCheck).toBeFalsy();
             expect(K.checkBy).toBeNull();
         });
     });
     describe('checkDirection', () => {
+        const { K, board } = generateTestingEnvironment('1p1k1p1r/8/5b2/8/r2K4/7B/8/R1P1R1P1 w - - 0 1');
         test('should return true for an x position', () => {
-
+            expect(K.checkDirection(board, 'c-4', 'r', 'q')).toBeTruthy();
         });
         test('should return false if position does not exist', () => {
-
+            expect(K.checkDirection(board, 'i-4', 'r', 'q')).toBeFalsy();
         });
         test('should return false if position exists, but non-attacking piece inhabits position', () => {
-
+            expect(K.checkDirection(board, 'd-8', 'r', 'q')).toBeFalsy();
         });
         test('should return false and flip check bit if position exists and attacking piece inhabits position', () => {
-
+            expect(K.checkDirection(board, 'a-4', 'r', 'q')).toBeFalsy();
+            expect(K.isInCheck).toBeTruthy();
+            expect(K.checkBy).toBe('a-4');
         });
     });
     describe('getCheckStatus', () => {
