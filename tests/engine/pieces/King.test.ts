@@ -1,7 +1,5 @@
 import King from '../../../src/engine/pieces/King';
 import { parsePlacementToMap, separateFEN } from '../../../src/utils/utils';
-import Rook from '../../../src/engine/pieces/Rook';
-import Pawn from '../../../src/engine/pieces/Pawn';
 
 describe('King', () => {
     test('constructs correctly', () => {
@@ -173,6 +171,162 @@ describe('King', () => {
             const darkCheckStatus = k.getCheckStatus(board);
             expect(darkCheckStatus.check).toBeTruthy();
             expect(darkCheckStatus.piece).toBe('h-3');
+        });
+        test('light in check by knight upR1', () => {
+            const fenString = 'rp1k1p1r/8/4n3/8/3K4/7B/8/R1P1R1P1 w - - 0 1';
+            const fen = separateFEN(fenString);
+            const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'd-4', '-');
+            const k = new King('dark', 'd-8', '-');
+            const lightCheckStatus = K.getCheckStatus(board);
+            const darkCheckStatus = k.getCheckStatus(board);
+            expect(darkCheckStatus.check).toBeFalsy();
+            expect(darkCheckStatus.piece).toBeNull();
+            expect(lightCheckStatus.check).toBeTruthy();
+            expect(lightCheckStatus.piece).toBe('e-6');
+        });
+        test('light in check by knight upR2', () => {
+            const fenString = 'rp1k1p1r/8/8/5n2/3K4/7B/8/R1P1R1P1 w - - 0 1';
+            const fen = separateFEN(fenString);
+            const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'd-4', '-');
+            const k = new King('dark', 'd-8', '-');
+            const lightCheckStatus = K.getCheckStatus(board);
+            const darkCheckStatus = k.getCheckStatus(board);
+            expect(darkCheckStatus.check).toBeFalsy();
+            expect(darkCheckStatus.piece).toBeNull();
+            expect(lightCheckStatus.check).toBeTruthy();
+            expect(lightCheckStatus.piece).toBe('f-5');
+        });
+        test('light in check by knight downR2', () => {
+            const fenString = 'rp1k1p1r/8/8/8/3K4/5n1B/8/R1P1R1P1 w - - 0 1';
+            const fen = separateFEN(fenString);
+            const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'd-4', '-');
+            const k = new King('dark', 'd-8', '-');
+            const lightCheckStatus = K.getCheckStatus(board);
+            const darkCheckStatus = k.getCheckStatus(board);
+            expect(darkCheckStatus.check).toBeFalsy();
+            expect(darkCheckStatus.piece).toBeNull();
+            expect(lightCheckStatus.check).toBeTruthy();
+            expect(lightCheckStatus.piece).toBe('f-3');
+        });
+        test('light in check by knight downR1', () => {
+            const fenString = 'rp1k1p1r/8/8/8/3K4/7B/4n3/R1P1R1P1 w - - 0 1';
+            const fen = separateFEN(fenString);
+            const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'd-4', '-');
+            const k = new King('dark', 'd-8', '-');
+            const lightCheckStatus = K.getCheckStatus(board);
+            const darkCheckStatus = k.getCheckStatus(board);
+            expect(darkCheckStatus.check).toBeFalsy();
+            expect(darkCheckStatus.piece).toBeNull();
+            expect(lightCheckStatus.check).toBeTruthy();
+            expect(lightCheckStatus.piece).toBe('e-2');
+        });
+        test('light in check by knight downL1', () => {
+            const fenString = 'rp1k1p1r/8/8/8/3K4/7B/2n5/R1P1R1P1 w - - 0 1';
+            const fen = separateFEN(fenString);
+            const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'd-4', '-');
+            const k = new King('dark', 'd-8', '-');
+            const lightCheckStatus = K.getCheckStatus(board);
+            const darkCheckStatus = k.getCheckStatus(board);
+            expect(darkCheckStatus.check).toBeFalsy();
+            expect(darkCheckStatus.piece).toBeNull();
+            expect(lightCheckStatus.check).toBeTruthy();
+            expect(lightCheckStatus.piece).toBe('c-2');
+        });
+        test('light in check by knight downL2', () => {
+            const fenString = 'rp1k1p1r/8/8/8/3K4/1n5B/8/R1P1R1P1 w - - 0 1';
+            const fen = separateFEN(fenString);
+            const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'd-4', '-');
+            const k = new King('dark', 'd-8', '-');
+            const lightCheckStatus = K.getCheckStatus(board);
+            const darkCheckStatus = k.getCheckStatus(board);
+            expect(darkCheckStatus.check).toBeFalsy();
+            expect(darkCheckStatus.piece).toBeNull();
+            expect(lightCheckStatus.check).toBeTruthy();
+            expect(lightCheckStatus.piece).toBe('b-3');
+        });
+        test('light in check by knight upL2', () => {
+            const fenString = 'rp1k1p1r/8/8/1n6/3K4/7B/8/R1P1R1P1 w - - 0 1';
+            const fen = separateFEN(fenString);
+            const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'd-4', '-');
+            const k = new King('dark', 'd-8', '-');
+            const lightCheckStatus = K.getCheckStatus(board);
+            const darkCheckStatus = k.getCheckStatus(board);
+            expect(darkCheckStatus.check).toBeFalsy();
+            expect(darkCheckStatus.piece).toBeNull();
+            expect(lightCheckStatus.check).toBeTruthy();
+            expect(lightCheckStatus.piece).toBe('b-5');
+        });
+        test('light in check by knight upL1', () => {
+            const fenString = 'rp1k1p1r/8/2n5/8/3K4/7B/8/R1P1R1P1 w - - 0 1';
+            const fen = separateFEN(fenString);
+            const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'd-4', '-');
+            const k = new King('dark', 'd-8', '-');
+            const lightCheckStatus = K.getCheckStatus(board);
+            const darkCheckStatus = k.getCheckStatus(board);
+            expect(darkCheckStatus.check).toBeFalsy();
+            expect(darkCheckStatus.piece).toBeNull();
+            expect(lightCheckStatus.check).toBeTruthy();
+            expect(lightCheckStatus.piece).toBe('c-6');
+        });
+        test('dark in check by pawn left', () => {
+            const fenString = 'rpnk1p1r/2P5/8/8/3K4/7B/8/R3R1P1 w - - 0 1';
+            const fen = separateFEN(fenString);
+            const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'd-4', '-');
+            const k = new King('dark', 'd-8', '-');
+            const lightCheckStatus = K.getCheckStatus(board);
+            const darkCheckStatus = k.getCheckStatus(board);
+            expect(lightCheckStatus.check).toBeFalsy();
+            expect(lightCheckStatus.piece).toBeNull();
+            expect(darkCheckStatus.check).toBeTruthy();
+            expect(darkCheckStatus.piece).toBe('c-7');
+        });
+        test('dark in check by pawn right', () => {
+            const fenString = 'rpnk1p1r/4P3/8/8/3K4/7B/8/R3R1P1 w - - 0 1';
+            const fen = separateFEN(fenString);
+            const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'd-4', '-');
+            const k = new King('dark', 'd-8', '-');
+            const lightCheckStatus = K.getCheckStatus(board);
+            const darkCheckStatus = k.getCheckStatus(board);
+            expect(lightCheckStatus.check).toBeFalsy();
+            expect(lightCheckStatus.piece).toBeNull();
+            expect(darkCheckStatus.check).toBeTruthy();
+            expect(darkCheckStatus.piece).toBe('e-7');
+        });
+        test('light in check by pawn left', () => {
+            const fenString = 'rpnk3r/8/6P1/2p5/3K4/7B/8/R3R1P1 w - - 0 1';
+            const fen = separateFEN(fenString);
+            const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'd-4', '-');
+            const k = new King('dark', 'd-8', '-');
+            const lightCheckStatus = K.getCheckStatus(board);
+            const darkCheckStatus = k.getCheckStatus(board);
+            expect(darkCheckStatus.check).toBeFalsy();
+            expect(darkCheckStatus.piece).toBeNull();
+            expect(lightCheckStatus.check).toBeTruthy();
+            expect(lightCheckStatus.piece).toBe('c-5');
+        });
+        test('light in check by pawn right', () => {
+            const fenString = 'rpnk3r/8/6P1/4p3/3K4/7B/8/R3R1P1 w - - 0 1';
+            const fen = separateFEN(fenString);
+            const board = parsePlacementToMap(fen.piecePlacement);
+            const K = new King('light', 'd-4', '-');
+            const k = new King('dark', 'd-8', '-');
+            const lightCheckStatus = K.getCheckStatus(board);
+            const darkCheckStatus = k.getCheckStatus(board);
+            expect(darkCheckStatus.check).toBeFalsy();
+            expect(darkCheckStatus.piece).toBeNull();
+            expect(lightCheckStatus.check).toBeTruthy();
+            expect(lightCheckStatus.piece).toBe('e-5');
         });
     });
 });
