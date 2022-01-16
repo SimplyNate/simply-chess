@@ -49,3 +49,22 @@ describe('updateCheckStatus', () => {
 describe('updateCheckMate', () => {
 
 });
+
+describe('Full game test', () => {
+    const startingFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+    const chess = new Chess('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+    test('engine constructs starting positions', () => {
+        expect(chess.fenString).toBe(startingFen);
+        expect(Object.keys(chess.piecesByLocation).length).toEqual(32);
+        expect(chess.kings.k).toBeDefined();
+        expect(chess.kings.K).toBeDefined();
+        expect(chess.piecesByColor.light.length).toBe(16);
+        expect(chess.piecesByColor.dark.length).toBe(16);
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+    });
+    chess.move('b-2', 'b-4');
+    test('P b2 to b4', () => {
+        expect(chess.fenString).toBe('rnbqkbnr/pppppppp/8/8/1P6/8/P1PPPPPP/RNBQKBNR b KQkq - 0 1');
+    });
+});
