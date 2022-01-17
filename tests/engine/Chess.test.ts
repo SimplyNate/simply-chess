@@ -63,8 +63,34 @@ describe('Full game test', () => {
         expect(chess.checkStatus).toBe('none');
         expect(chess.checkMateStatus).toBeFalsy();
     });
-    chess.move('b-2', 'b-4');
     test('P b2 to b4', () => {
-        expect(chess.fenString).toBe('rnbqkbnr/pppppppp/8/8/1P6/8/P1PPPPPP/RNBQKBNR b KQkq - 0 1');
+        chess.move('b-2', 'b-4');
+        expect(chess.fenString).toBe('rnbqkbnr/pppppppp/8/8/1P6/8/P1PPPPPP/RNBQKBNR b KQkq b3 0 1');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+    });
+    test('p c7 to c5', () => {
+        chess.move('c-7', 'c-5');
+        expect(chess.fenString).toBe('rnbqkbnr/pp1ppppp/8/2p5/1P6/8/P1PPPPPP/RNBQKBNR w KQkq c6 0 2');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+    });
+    test('P b4 to b5', () => {
+        chess.move('b-4', 'b-5');
+        expect(chess.fenString).toBe('rnbqkbnr/pp1ppppp/8/1Pp5/8/8/P1PPPPPP/RNBQKBNR b KQkq - 0 2');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+    });
+    test('p a7 to a5', () => {
+        chess.move('a-7', 'a-5');
+        expect(chess.fenString).toBe('rnbqkbnr/1p1ppppp/8/pPp5/8/8/P1PPPPPP/RNBQKBNR w KQkq a6 0 3');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+    });
+    test('P b5 to a6 en passant capture', () => {
+        chess.move('b-5', 'a-6');
+        expect(chess.fenString).toBe('rnbqkbnr/1p1ppppp/P7/2p5/8/8/P1PPPPPP/RNBQKBNR b KQkq a6 0 3');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
     });
 });
