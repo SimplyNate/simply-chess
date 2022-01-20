@@ -246,4 +246,30 @@ describe('Full game test', () => {
         expect(chess.kings.k.legalMoves?.includes('g-8')).toBeFalsy();
         expect(chess.kings.k.legalMoves).toHaveLength(2);
     });
+    test('n a6 to b4', () => {
+        chess.move('a-6', 'b-4');
+        expect(chess.fenString).toBe('2b1k2r/rp1ppp2/1q6/2p3R1/QnP4p/B1b2N2/P2PPP1P/2KR1B2 w k - 0 14');
+        expect(chess.kings.k.legalMoves?.includes('g-8')).toBeFalsy();
+        expect(chess.kings.k.legalMoves).toHaveLength(2);
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.piecesByLocation['d-7'].legalMoves).toBeDefined();
+        expect(chess.piecesByLocation['d-7'].legalMoves).toHaveLength(0);
+    });
+    test('R g5 to g8, k in check, 1 legal move for dark to make', () => {
+        chess.move('g-5', 'g-8');
+        expect(chess.fenString).toBe('2b1k1Rr/rp1ppp2/1q6/2p5/QnP4p/B1b2N2/P2PPP1P/2KR1B2 b - - 0 14');
+        expect(chess.kings.k.legalMoves).toHaveLength(0);
+        expect(chess.checkStatus).toBe('dark');
+        expect(chess.checkMateStatus).toBeFalsy();
+        for (const darkPiece of chess.piecesByColor.dark) {
+            if (darkPiece.position === 'h-8') {
+                expect(darkPiece.legalMoves).toHaveLength(1);
+                expect(darkPiece.legalMoves?.includes('g-8')).toBeTruthy();
+            }
+            else {
+                expect(darkPiece.legalMoves).toHaveLength(0);
+            }
+        }
+    });
 });
