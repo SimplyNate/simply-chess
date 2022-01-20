@@ -272,4 +272,69 @@ describe('Full game test', () => {
             }
         }
     });
+    test('r h8 to g8 capture R', () => {
+        chess.move('h-8', 'g-8');
+        expect(chess.fenString).toBe('2b1k1r1/rp1ppp2/1q6/2p5/QnP4p/B1b2N2/P2PPP1P/2KR1B2 w - - 0 15');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.kings.k.legalMoves).toHaveLength(2);
+        expect(chess.kings.k.canCastleShort).toBeFalsy();
+        expect(chess.piecesByLocation['d-7'].legalMoves).toBeDefined();
+        expect(chess.piecesByLocation['d-7'].legalMoves).toHaveLength(0);
+    });
+    test('N f3 to h4 p capture', () => {
+        chess.move('f-3', 'h-4');
+        expect(chess.fenString).toBe('2b1k1r1/rp1ppp2/1q6/2p5/QnP4N/B1b5/P2PPP1P/2KR1B2 b - - 0 15');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.piecesByLocation['d-7'].legalMoves).toHaveLength(0);
+    });
+    test('n b4 to d3 K in check', () => {
+        chess.move('b-4', 'd-3');
+        expect(chess.fenString).toBe('2b1k1r1/rp1ppp2/1q6/2p5/Q1P4N/B1bn4/P2PPP1P/2KR1B2 w - - 0 16');
+        expect(chess.checkStatus).toBe('light');
+        expect(chess.checkMateStatus).toBeTruthy();
+        expect(chess.piecesByLocation['d-7'].legalMoves).toHaveLength(0);
+        for (const lightPiece of chess.piecesByColor.light) {
+            if (lightPiece.position === 'c-1') {
+                expect(lightPiece.legalMoves).toHaveLength(1);
+                expect(lightPiece.legalMoves?.includes('c-2')).toBeTruthy();
+            }
+            else if (lightPiece.position === 'e-2') {
+                expect(lightPiece.legalMoves).toHaveLength(1);
+                expect(lightPiece.legalMoves?.includes('d-3')).toBeTruthy();
+            }
+            else {
+                expect(lightPiece.legalMoves).toHaveLength(0);
+            }
+        }
+    });
+    test('P e2 to d3 capture n', () => {
+        chess.move('e-2', 'd-3');
+        expect(chess.fenString).toBe('2b1k1r1/rp1ppp2/1q6/2p5/Q1P4N/B1bP4/P2P1P1P/2KR1B2 b - - 0 16');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.piecesByLocation['d-7'].legalMoves).toHaveLength(0);
+    });
+    test('b c3 to b2, K in check', () => {
+        chess.move('c-3', 'b-2');
+        expect(chess.fenString).toBe('2b1k1r1/rp1ppp2/1q6/2p5/Q1P4N/B2P4/Pb1P1P1P/2KR1B2 w - - 0 17');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.piecesByLocation['d-7'].legalMoves).toHaveLength(0);
+        for (const lightPiece of chess.piecesByColor.light) {
+            if (lightPiece.position === 'c-1') {
+                expect(lightPiece.legalMoves).toHaveLength(2);
+                expect(lightPiece.legalMoves?.sort()).toEqual(['b-1', 'c-2']);
+            }
+            else if (lightPiece.position === 'a-3') {
+                expect(lightPiece.legalMoves).toHaveLength(1);
+                expect(lightPiece.legalMoves?.includes('b-2')).toBeTruthy();
+            }
+            else {
+                expect(lightPiece.legalMoves).toHaveLength(0);
+            }
+        }
+    });
+    test('B a3 to b2');
 });
