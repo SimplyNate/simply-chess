@@ -293,7 +293,7 @@ describe('Full game test', () => {
         chess.move('b-4', 'd-3');
         expect(chess.fenString).toBe('2b1k1r1/rp1ppp2/1q6/2p5/Q1P4N/B1bn4/P2PPP1P/2KR1B2 w - - 0 16');
         expect(chess.checkStatus).toBe('light');
-        expect(chess.checkMateStatus).toBeTruthy();
+        expect(chess.checkMateStatus).toBeFalsy();
         expect(chess.piecesByLocation['d-7'].legalMoves).toHaveLength(0);
         for (const lightPiece of chess.piecesByColor.light) {
             if (lightPiece.position === 'c-1') {
@@ -336,5 +336,96 @@ describe('Full game test', () => {
             }
         }
     });
-    test('B a3 to b2');
+    test('B a3 to b2 capture b', () => {
+        chess.move('a-3', 'b-2');
+        expect(chess.fenString).toBe('2b1k1r1/rp1ppp2/1q6/2p5/Q1P4N/3P4/PB1P1P1P/2KR1B2 b - - 0 17');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.piecesByLocation['d-7'].legalMoves).toHaveLength(0);
+    });
+    test('r a7 to a4 capture Q', () => {
+        chess.move('a-7', 'a-4');
+        expect(chess.fenString).toBe('2b1k1r1/1p1ppp2/1q6/2p5/r1P4N/3P4/PB1P1P1P/2KR1B2 w - - 0 18');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.piecesByLocation['d-7'].legalMoves).toHaveLength(2);
+    });
+    test('R d1 to e1', () => {
+        chess.move('d-1', 'e-1');
+        expect(chess.fenString).toBe('2b1k1r1/1p1ppp2/1q6/2p5/r1P4N/3P4/PB1P1P1P/2K1RB2 b - - 0 18');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.piecesByLocation['e-7'].legalMoves).toHaveLength(2);
+    });
+    test('r a4 to b4', () => {
+        chess.move('a-4', 'b-4');
+        expect(chess.fenString).toBe('2b1k1r1/1p1ppp2/1q6/2p5/1rP4N/3P4/PB1P1P1P/2K1RB2 w - - 0 19');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+    });
+    test('B f1 to h3', () => {
+        chess.move('f-1', 'h-3');
+        expect(chess.fenString).toBe('2b1k1r1/1p1ppp2/1q6/2p5/1rP4N/3P3B/PB1P1P1P/2K1R3 b - - 0 19');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+    });
+    test('r b4 to b2 capture B, K in check', () => {
+        chess.move('b-4', 'b-2');
+        expect(chess.fenString).toBe('2b1k1r1/1p1ppp2/1q6/2p5/2P4N/3P3B/Pr1P1P1P/2K1R3 w - - 0 20');
+        expect(chess.checkStatus).toBe('light');
+        expect(chess.checkMateStatus).toBeFalsy();
+        for (const lightPiece of chess.piecesByColor.light) {
+            if (lightPiece.position === 'c-1') {
+                expect(lightPiece.legalMoves).toHaveLength(1);
+                expect(lightPiece.legalMoves?.includes('d-1')).toBeTruthy();
+            }
+            else {
+                expect(lightPiece.legalMoves).toHaveLength(0);
+            }
+        }
+    });
+    test('K c1 to d1 no check', () => {
+        chess.move('c-1', 'd-1');
+        expect(chess.fenString).toBe('2b1k1r1/1p1ppp2/1q6/2p5/2P4N/3P3B/Pr1P1P1P/3KR3 b - - 0 20');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.kings.K.legalMoves).toHaveLength(2);
+        expect(chess.kings.K.legalMoves?.includes('c-1')).toBeTruthy();
+        expect(chess.kings.K.legalMoves?.includes('e-2')).toBeTruthy();
+    });
+    test('q b6 to b3 K check', () => {
+        chess.move('b-6', 'b-3');
+        expect(chess.fenString).toBe('2b1k1r1/1p1ppp2/8/2p5/2P4N/1q1P3B/Pr1P1P1P/3KR3 w - - 0 21');
+        expect(chess.checkStatus).toBe('light');
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.kings.K.legalMoves?.includes('c-1')).toBeTruthy();
+        expect(chess.kings.K.legalMoves?.includes('e-2')).toBeTruthy();
+        for (const lightPiece of chess.piecesByColor.light) {
+            if (lightPiece.position === 'd-1') {
+                expect(lightPiece.legalMoves).toHaveLength(2);
+                expect(lightPiece.legalMoves?.includes('c-1')).toBeTruthy();
+                expect(lightPiece.legalMoves?.includes('e-2')).toBeTruthy();
+            }
+            else if (lightPiece.position === 'a-2') {
+                expect(lightPiece.legalMoves).toHaveLength(1);
+                expect(lightPiece.legalMoves?.includes('b-3')).toBeTruthy();
+            }
+            else {
+                expect(lightPiece.legalMoves).toHaveLength(0);
+            }
+        }
+    });
+    test('K d1 to c1 no check', () => {
+        chess.move('d-1', 'c-1');
+        expect(chess.fenString).toBe('2b1k1r1/1p1ppp2/8/2p5/2P4N/1q1P3B/Pr1P1P1P/2K1R3 b - - 0 21');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+    });
+    test('r b2 to b1 checkmate light', () => {
+        chess.move('b-2', 'b-1');
+        expect(chess.fenString).toBe('2b1k1r1/1p1ppp2/8/2p5/2P4N/1q1P3B/P2P1P1P/1rK1R3 w - - 0 22');
+        expect(chess.checkStatus).toBe('light');
+        expect(chess.checkMateStatus).toBeTruthy();
+        expect(chess.kings.K.legalMoves).toHaveLength(0);
+    });
 });
