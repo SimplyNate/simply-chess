@@ -68,6 +68,7 @@ describe('King', () => {
             const expectation = ['d-8', 'd-7', 'e-7', 'f-7', 'f-8', 'c-8'].sort();
             expect(moves.sort()).toEqual(expectation);
         });
+        // TODO: Add tests where move is physically possible but would put king in or thru danger
     });
     const noCastle = 'rp2kp1r/8/8/8/8/8/8/R1P1K1PR w - - 0 1';
     const castle = 'r3k2r/8/8/8/8/8/8/R3K2R w - - 0 1';

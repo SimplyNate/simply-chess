@@ -161,6 +161,8 @@ export class Chess {
     private updateCastling(movePiece: Piece): void {
         // If Piece is king, check if move is castling
         if (this.fen.castlingAvailability !== '-' && movePiece instanceof King) {
+            const halfMoveClock = this.fen.halfMoveClock;
+            const fullMoveClock = this.fen.fullMoveNumber;
             // check if it has gone to the castling long or short position
             if (movePiece.color === 'light') {
                 if (movePiece.position === 'g-1' && this.fen.castlingAvailability.includes('K')) {
@@ -186,6 +188,9 @@ export class Chess {
                     this.move('a-8', 'd-8', true);
                 }
             }
+            // Reset move number and clock due to moving rook
+            this.fen.halfMoveClock = halfMoveClock;
+            this.fen.fullMoveNumber = fullMoveClock;
             movePiece.canCastleShort = false;
             movePiece.canCastleLong = false;
         }
