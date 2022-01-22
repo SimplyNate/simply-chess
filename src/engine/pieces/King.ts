@@ -37,15 +37,41 @@ export default class King extends Piece {
             this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank}`);
             this.legalMoves = this.filterValidMoves(this.legalMoves, currentBoard);
             if (this.canCastleShort && this.canPerformCastleShort(currentBoard)) {
-                const castleShortPosition = this.color === 'light' ? 'g-1' : 'g-8';
-                this.legalMoves.push(castleShortPosition);
+                const checkPositions = [`${shiftChar(this.file, 1)}-${this.rank}`, `${shiftChar(this.file, 2)}-${this.rank}`];
+                const good = this.checkCastlingForAttackers(checkPositions, currentBoard);
+                if (good === 2) {
+                    const castleShortPosition = this.color === 'light' ? 'g-1' : 'g-8';
+                    this.legalMoves.push(castleShortPosition);
+                }
             }
             if (this.canCastleLong && this.canPerformCastleLong(currentBoard)) {
-                const castleLongPosition = this.color === 'light' ? 'c-1' : 'c-8';
-                this.legalMoves.push(castleLongPosition);
+                const checkPositions = [`${shiftChar(this.file, -1)}-${this.rank}`, `${shiftChar(this.file, -2)}-${this.rank}`];
+                const good = this.checkCastlingForAttackers(checkPositions, currentBoard);
+                if (good === 2) {
+                    const castleLongPosition = this.color === 'light' ? 'c-1' : 'c-8';
+                    this.legalMoves.push(castleLongPosition);
+                }
             }
         }
         return this.legalMoves;
+    }
+
+    public checkCastlingForAttackers(positions: string[], currentBoard: BoardMap): number {
+        const currentCheckStatus = this.checkBy;
+        const currentInCheck = this.isInCheck;
+        let good = 0;
+        for (const pos of positions) {
+            const boardCopy = JSON.parse(JSON.stringify(currentBoard));
+            boardCopy[this.position] = 'x';
+            boardCopy[pos] = this.code;
+            const checkStatus = this.getCheckStatus(boardCopy);
+            if (!checkStatus.check) {
+                good += 1;
+            }
+            this.checkBy = currentCheckStatus;
+            this.isInCheck = currentInCheck;
+        }
+        return good;
     }
 
     public canPerformCastleShort(currentBoard: BoardMap): boolean {
