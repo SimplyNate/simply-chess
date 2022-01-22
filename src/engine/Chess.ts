@@ -37,6 +37,7 @@ export class Chess {
     piecesByColor: PiecesByColor = { light: [], dark: [] };
     checkStatus: CheckStatus = 'none';
     checkMateStatus: boolean = false;
+    tie: boolean = false;
 
     constructor(fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1') {
         this.fen = separateFEN(fen);
@@ -465,6 +466,24 @@ export class Chess {
         this.processMovesForColor(justMoved, false);
         this.updateCheckStatus();
         this.processMovesForColor(activeColor, this.checkStatus !== 'none');
+        this.checkTieStatus();
+    }
+
+    private checkTieStatus(): void {
+        // Tie is declared when active color is not in check but has no legal moves available
+        if (this.checkStatus === 'none') {
+            const activeColor = this.fen.activeColor === 'w' ? 'light' : 'dark';
+            let canMove = false;
+            for (const piece of this.piecesByColor[activeColor]) {
+                if (piece.getLegalMoves(this.boardMap, this.fen).length > 0) {
+                    canMove = true;
+                    break;
+                }
+            }
+            if (!canMove) {
+                this.tie = true;
+            }
+        }
     }
 
     private getPiecesForOppositeColor(color: Color): Piece[] {

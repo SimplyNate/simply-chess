@@ -11,11 +11,16 @@
                 <p>Full Move Number: {{ engine.fen.fullMoveNumber }}</p>
                 <p>Check Status: {{ engine.checkStatus }}</p>
                 <p>Check Mate Status: {{ engine.checkMateStatus }}</p>
+                <p>Tie Status: {{ engine.tie }}</p>
                 <p>Selected Piece: {{ selectedPiece }}</p>
                 <p>Legal Moves: {{ legalMoves }}</p>
             </div>
             <div class="w-100" v-if="engine.checkMateStatus">
                 <h2>Winner: {{ engine.checkStatus === 'light' ? 'dark' : 'light' }}</h2>
+                <button @click="restart">Restart?</button>
+            </div>
+            <div class="w-100" v-if="engine.tie">
+                <h2>Tie game!</h2>
                 <button @click="restart">Restart?</button>
             </div>
         </div>
