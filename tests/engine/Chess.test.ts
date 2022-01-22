@@ -278,7 +278,6 @@ describe('Full game test', () => {
         expect(chess.checkStatus).toBe('none');
         expect(chess.checkMateStatus).toBeFalsy();
         expect(chess.kings.k.legalMoves).toHaveLength(2);
-        expect(chess.kings.k.canCastleShort).toBeFalsy();
         expect(chess.piecesByLocation['d-7'].legalMoves).toBeDefined();
         expect(chess.piecesByLocation['d-7'].legalMoves).toHaveLength(0);
     });
@@ -319,7 +318,7 @@ describe('Full game test', () => {
     test('b c3 to b2, K in check', () => {
         chess.move('c-3', 'b-2');
         expect(chess.fenString).toBe('2b1k1r1/rp1ppp2/1q6/2p5/Q1P4N/B2P4/Pb1P1P1P/2KR1B2 w - - 1 17');
-        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkStatus).toBe('light');
         expect(chess.checkMateStatus).toBeFalsy();
         expect(chess.piecesByLocation['d-7'].legalMoves).toHaveLength(0);
         for (const lightPiece of chess.piecesByColor.light) {
@@ -372,17 +371,10 @@ describe('Full game test', () => {
     test('r b4 to b2 capture B, K in check', () => {
         chess.move('b-4', 'b-2');
         expect(chess.fenString).toBe('2b1k1r1/1p1ppp2/1q6/2p5/2P4N/3P3B/Pr1P1P1P/2K1R3 w - - 0 20');
-        expect(chess.checkStatus).toBe('light');
+        expect(chess.checkStatus).toBe('none');
         expect(chess.checkMateStatus).toBeFalsy();
-        for (const lightPiece of chess.piecesByColor.light) {
-            if (lightPiece.position === 'c-1') {
-                expect(lightPiece.legalMoves).toHaveLength(1);
-                expect(lightPiece.legalMoves?.includes('d-1')).toBeTruthy();
-            }
-            else {
-                expect(lightPiece.legalMoves).toHaveLength(0);
-            }
-        }
+        expect(chess.kings.K.legalMoves).toHaveLength(1);
+        expect(chess.kings.K.legalMoves?.includes('d-1')).toBeTruthy();
     });
     test('K c1 to d1 no check', () => {
         chess.move('c-1', 'd-1');
@@ -398,8 +390,6 @@ describe('Full game test', () => {
         expect(chess.fenString).toBe('2b1k1r1/1p1ppp2/8/2p5/2P4N/1q1P3B/Pr1P1P1P/3KR3 w - - 2 21');
         expect(chess.checkStatus).toBe('light');
         expect(chess.checkMateStatus).toBeFalsy();
-        expect(chess.kings.K.legalMoves?.includes('c-1')).toBeTruthy();
-        expect(chess.kings.K.legalMoves?.includes('e-2')).toBeTruthy();
         for (const lightPiece of chess.piecesByColor.light) {
             if (lightPiece.position === 'd-1') {
                 expect(lightPiece.legalMoves).toHaveLength(2);

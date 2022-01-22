@@ -315,7 +315,7 @@ export class Chess {
                     }
                     // If king is down-right
                     else if (king.file.charCodeAt(0) > checkedByPiece.file.charCodeAt(0) && king.rank < checkedByPiece.rank) {
-                        dangerMoves.push(`${shiftChar(king.file, 1)}-${king.rank + 1}`);
+                        dangerMoves.push(`${shiftChar(king.file, 1)}-${king.rank - 1}`);
                     }
                 }
                 filteredMoves = moves.filter(move => !dangerMoves.includes(move));
@@ -443,7 +443,7 @@ export class Chess {
                 this.filterKingMovesDanger(piece, enemyPieces);
             }
             else {
-                this.filterMovesThatExposeKing(piece, king);
+                piece.legalMoves = this.filterMovesThatExposeKing(piece, king);
             }
         }
     }
