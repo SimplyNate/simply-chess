@@ -68,7 +68,66 @@ describe('King', () => {
             const expectation = ['d-8', 'd-7', 'e-7', 'f-7', 'f-8', 'c-8'].sort();
             expect(moves.sort()).toEqual(expectation);
         });
-        // TODO: Add tests where move is physically possible but would put king in or thru danger
+    });
+    describe('getLegalMoves castling situations', () => {
+        test('castle possible but not available', () => {
+            const { K, k, board, fen } = generateTestingEnvironment('3rk2r/8/8/8/8/8/8/R3KR2 w Qk - 0 1');
+            const lightMoves = K.getLegalMoves(board, fen);
+            const darkMoves = k.getLegalMoves(board, fen);
+            expect(lightMoves.includes('c-1')).toBeFalsy();
+            expect(lightMoves.includes('d-1')).toBeFalsy();
+            expect(darkMoves.includes('f-8')).toBeFalsy();
+            expect(darkMoves.includes('g-8')).toBeFalsy();
+        });
+        test('castle possible but would be in check', () => {
+            const { K, k, board, fen } = generateTestingEnvironment('2r1k2r/8/8/8/8/8/8/R3K1R1 w Qk - 0 1');
+            const lightMoves = K.getLegalMoves(board, fen);
+            const darkMoves = k.getLegalMoves(board, fen);
+            expect(lightMoves.includes('c-1')).toBeFalsy();
+            expect(lightMoves.includes('d-1')).toBeTruthy();
+            expect(darkMoves.includes('f-8')).toBeTruthy();
+            expect(darkMoves.includes('g-8')).toBeFalsy();
+        });
+        test('Both castle available, both blocked by bishops', () => {
+            const { K, k, board, fen } = generateTestingEnvironment('r3k2r/8/B6B/8/8/b6b/8/R3K2R w KQkq - 0 1');
+            const lightMoves = K.getLegalMoves(board, fen);
+            const darkMoves = k.getLegalMoves(board, fen);
+            expect(lightMoves.includes('f-1')).toBeFalsy();
+            expect(lightMoves.includes('g-1')).toBeFalsy();
+            expect(lightMoves.includes('c-1')).toBeFalsy();
+            expect(lightMoves.includes('d-1')).toBeTruthy();
+            expect(darkMoves.includes('f-8')).toBeFalsy();
+            expect(darkMoves.includes('g-8')).toBeFalsy();
+            expect(darkMoves.includes('d-8')).toBeTruthy();
+            expect(darkMoves.includes('c-8')).toBeFalsy();
+        });
+        test('Both castle available, blocked by queen', () => {
+            const { K, k, board, fen } = generateTestingEnvironment('r3k2r/8/8/2Q5/6q1/8/8/R3K2R w KQkq - 0 1');
+            const lightMoves = K.getLegalMoves(board, fen);
+            const darkMoves = k.getLegalMoves(board, fen);
+            expect(lightMoves.includes('c-1')).toBeFalsy();
+            expect(lightMoves.includes('g-1')).toBeFalsy();
+            expect(darkMoves.includes('c-8')).toBeFalsy();
+            expect(darkMoves.includes('g-8')).toBeFalsy();
+        });
+        test('Both castle available, blocked by knights', () => {
+            const { K, k, board, fen } = generateTestingEnvironment('r3k2r/8/3N2N1/8/8/3n2n1/8/R3K2R w KQkq - 0 1');
+            const lightMoves = K.getLegalMoves(board, fen);
+            const darkMoves = k.getLegalMoves(board, fen);
+            expect(darkMoves.includes('c-8')).toBeFalsy();
+            expect(darkMoves.includes('g-8')).toBeFalsy();
+            expect(lightMoves.includes('c-1')).toBeFalsy();
+            expect(lightMoves.includes('g-1')).toBeFalsy();
+        });
+        test('Both castle available, blocked by pawns', () => {
+            const { K, k, board, fen } = generateTestingEnvironment('r3k2r/2P2P2/8/8/8/8/2p2p2/R3K2R w KQkq - 0 1');
+            const darkMoves = k.getLegalMoves(board, fen);
+            const lightMoves = K.getLegalMoves(board, fen);
+            expect(darkMoves.includes('c-8')).toBeFalsy();
+            expect(darkMoves.includes('g-8')).toBeFalsy();
+            expect(lightMoves.includes('c-1')).toBeFalsy();
+            expect(lightMoves.includes('g-1')).toBeFalsy();
+        });
     });
     const noCastle = 'rp2kp1r/8/8/8/8/8/8/R1P1K1PR w - - 0 1';
     const castle = 'r3k2r/8/8/8/8/8/8/R3K2R w - - 0 1';

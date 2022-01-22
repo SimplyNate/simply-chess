@@ -23,19 +23,25 @@ export default class King extends Piece {
     public getLegalMoves(currentBoard: BoardMap, fen: FEN): string[] {
         if (!this.legalMoves) {
             this.legalMoves = [];
+            let moves = [];
             // Up
-            this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank + 1}`);
-            this.legalMoves.push(`${this.file}-${this.rank + 1}`);
-            this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank + 1}`);
+            moves.push(`${shiftChar(this.file, -1)}-${this.rank + 1}`);
+            moves.push(`${this.file}-${this.rank + 1}`);
+            moves.push(`${shiftChar(this.file, 1)}-${this.rank + 1}`);
             // Down
-            this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank - 1}`);
-            this.legalMoves.push(`${this.file}-${this.rank - 1}`);
-            this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank - 1}`);
+            moves.push(`${shiftChar(this.file, -1)}-${this.rank - 1}`);
+            moves.push(`${this.file}-${this.rank - 1}`);
+            moves.push(`${shiftChar(this.file, 1)}-${this.rank - 1}`);
             // Left
-            this.legalMoves.push(`${shiftChar(this.file, -1)}-${this.rank}`);
+            moves.push(`${shiftChar(this.file, -1)}-${this.rank}`);
             // Right
-            this.legalMoves.push(`${shiftChar(this.file, 1)}-${this.rank}`);
-            this.legalMoves = this.filterValidMoves(this.legalMoves, currentBoard);
+            moves.push(`${shiftChar(this.file, 1)}-${this.rank}`);
+            moves = this.filterValidMoves(moves, currentBoard);
+            for (const move of moves) {
+                if (this.checkCastlingForAttackers([move], currentBoard) === 1) {
+                    this.legalMoves.push(move);
+                }
+            }
             if (this.canCastleShort && this.canPerformCastleShort(currentBoard)) {
                 const checkPositions = [`${shiftChar(this.file, 1)}-${this.rank}`, `${shiftChar(this.file, 2)}-${this.rank}`];
                 const good = this.checkCastlingForAttackers(checkPositions, currentBoard);
@@ -59,11 +65,17 @@ export default class King extends Piece {
     public checkCastlingForAttackers(positions: string[], currentBoard: BoardMap): number {
         const currentCheckStatus = this.checkBy;
         const currentInCheck = this.isInCheck;
+        const currentPosition = this.position;
+        const currentRank = this.rank;
+        const currentFile = this.file;
         let good = 0;
         for (const pos of positions) {
             const boardCopy = JSON.parse(JSON.stringify(currentBoard));
             boardCopy[this.position] = 'x';
             boardCopy[pos] = this.code;
+            this.position = pos;
+            this.rank = Number(pos[2]);
+            this.file = pos[0];
             const checkStatus = this.getCheckStatus(boardCopy);
             if (!checkStatus.check) {
                 good += 1;
@@ -71,6 +83,9 @@ export default class King extends Piece {
             this.checkBy = currentCheckStatus;
             this.isInCheck = currentInCheck;
         }
+        this.position = currentPosition;
+        this.rank = currentRank;
+        this.file = currentFile;
         return good;
     }
 
