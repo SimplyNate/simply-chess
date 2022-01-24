@@ -45,6 +45,8 @@ import CanvasBoard from '@/board/CanvasBoard.vue';
 import { Selection } from '@/board/BoardUtils';
 import { FEN } from '@/utils/utils';
 import { Chess } from '@/engine/Chess';
+import AI from '@/engine/ai/AI';
+import { RandomMover } from '@/engine/ai/RandomMover';
 
 interface AppData {
     containerHeight: number,
@@ -53,6 +55,8 @@ interface AppData {
     legalMoves: string[],
     fenString: string,
     fen: FEN,
+    useAi: boolean,
+    ai: null | AI,
     engine: Chess,
     selectedPiece: string,
 }
@@ -83,12 +87,20 @@ export default defineComponent({
                 halfMoveClock: 0,
                 fullMoveNumber: 0,
             },
+            useAi: false,
+            ai: null,
             engine: new Chess(),
             selectedPiece: '',
         };
     },
     mounted() {
         this.fenString = String(this.$route.query.fen);
+        console.log(this.$route.query.ai);
+        this.useAi = this.$route.query.ai === 'true';
+        if (this.useAi) {
+            console.log('Creating AI player');
+            this.ai = new RandomMover('dark');
+        }
         this.engine = new Chess(this.fenString);
         console.log('created new engine');
         this.onResize();
@@ -110,6 +122,12 @@ export default defineComponent({
         },
         makeMove(payload: MovePayload) {
             this.fenString = this.engine.move(payload.from, payload.to);
+            if (this.ai && this.engine.fen.activeColor === 'b') {
+                // @ts-ignore
+                const move = this.ai.move(this.engine.boardMap, this.engine.fen, this.engine.piecesByColor.dark);
+                console.log(`AI move: from ${move.from} to ${move.to}`);
+                this.fenString = this.engine.move(move.from, move.to);
+            }
         },
         restart() {
             this.engine = new Chess(this.fenString);

@@ -1,23 +1,15 @@
 import { Color, Piece } from '../pieces/Piece';
 import { BoardMap, FEN } from '../../utils/utils';
 
-interface MoveAlgorithm {
-    algorithm(board: BoardMap, fen: FEN, pieces: Piece[]): string,
-}
-
-export abstract class AI implements MoveAlgorithm {
+export abstract class AI {
     color: Color;
 
     protected constructor(color: Color) {
         this.color = color;
     }
 
-    move(board: BoardMap, fen: FEN, pieces: Piece[]): string {
-        return this.algorithm(board, fen, pieces);
-    }
-
-    algorithm(board: BoardMap, fen: FEN, pieces: Piece[]): string {
-        return '';
+    move(board: BoardMap, fen: FEN, pieces: Piece[]): { from: string, to: string } {
+        return { from: '', to: '' };
     }
 }
 
