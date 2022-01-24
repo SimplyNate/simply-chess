@@ -48,7 +48,7 @@ export default defineComponent({
             aiList: [
                 'RandomMover',
             ],
-            selectedAi: '',
+            selectedAi: 'RandomMover',
             playAs: 'light',
         };
     },

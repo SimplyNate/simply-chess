@@ -35,6 +35,14 @@ describe('constructor', () => {
         // @ts-ignore
         expect(chess.piecesByLocation['c-8'].legalMoves[0]).toBe('e-6');
     });
+    test('k one move', () => {
+        const chess = new Chess('2Q5/8/8/1k1P4/8/R3B3/PPP1PPP1/R3KBN1 b - - 2 21');
+        expect(chess.checkStatus).toBe('none');
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.tie).toBeFalsy();
+        expect(chess.kings.k.legalMoves).toHaveLength(1);
+        expect(chess.kings.k.legalMoves?.includes('b-4')).toBeTruthy();
+    });
 });
 
 describe('updateCastling', () => {

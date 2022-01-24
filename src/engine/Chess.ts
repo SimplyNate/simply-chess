@@ -244,7 +244,17 @@ export class Chess {
         const dangerMoves: string[] = [];
         for (const enemyPiece of enemyPieces) {
             if (enemyPiece.legalMoves) {
-                dangerMoves.push(...enemyPiece.legalMoves);
+                if (enemyPiece instanceof Pawn) {
+                    for (const move of enemyPiece.legalMoves) {
+                        // If move is a capture move/diagonal move
+                        if (move[0] !== enemyPiece.file) {
+                            dangerMoves.push(move);
+                        }
+                    }
+                }
+                else {
+                    dangerMoves.push(...enemyPiece.legalMoves);
+                }
                 for (const defense of enemyPiece.defending) {
                     dangerMoves.push(defense.position);
                 }

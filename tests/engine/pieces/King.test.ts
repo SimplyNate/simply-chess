@@ -68,6 +68,12 @@ describe('King', () => {
             const expectation = ['d-8', 'd-7', 'e-7', 'f-7', 'f-8', 'c-8'].sort();
             expect(moves.sort()).toEqual(expectation);
         });
+        test('k one legal move', () => {
+            const { K, k, board, fen } = generateTestingEnvironment('2Q5/8/8/1k1P4/8/R3B3/PPP1PPP1/R3KBN1 b - - 2 21');
+            const darkMoves = k.getLegalMoves(board, fen);
+            expect(darkMoves).toHaveLength(1);
+            expect(darkMoves.includes('b-4')).toBeTruthy();
+        });
     });
     describe('getLegalMoves castling situations', () => {
         test('castle possible but not available', () => {

@@ -53,6 +53,7 @@ interface AppData {
     containerWidth: number,
     isMounted: boolean,
     legalMoves: string[],
+    startingFen: string,
     fenString: string,
     fen: FEN,
     useAi: boolean,
@@ -78,6 +79,7 @@ export default defineComponent({
             containerWidth: 300,
             isMounted: false,
             legalMoves: [],
+            startingFen: '',
             fenString: '',
             fen: {
                 piecePlacement: '',
@@ -95,7 +97,7 @@ export default defineComponent({
     },
     mounted() {
         this.fenString = String(this.$route.query.fen);
-        console.log(this.$route.query.ai);
+        this.startingFen = this.fenString;
         this.useAi = this.$route.query.ai === 'true';
         if (this.useAi) {
             console.log('Creating AI player');
@@ -130,6 +132,7 @@ export default defineComponent({
             }
         },
         restart() {
+            this.fenString = this.startingFen;
             this.engine = new Chess(this.fenString);
         },
     },
