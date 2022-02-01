@@ -47,6 +47,7 @@ import { FEN } from '@/utils/utils';
 import { Chess } from '@/engine/Chess';
 import AI from '@/engine/ai/AI';
 import { RandomMover } from '@/engine/ai/RandomMover';
+import { MatrixEvaluator } from '@/engine/ai/MatrixEvaluator';
 
 interface AppData {
     containerHeight: number,
@@ -101,7 +102,12 @@ export default defineComponent({
         this.useAi = this.$route.query.ai === 'true';
         if (this.useAi) {
             console.log('Creating AI player');
-            this.ai = new RandomMover('dark');
+            if (this.$route.query.aiType === 'RandomMover') {
+                this.ai = new RandomMover('dark');
+            }
+            else if (this.$route.query.aiType === 'MatrixEvaluator') {
+                this.ai = new MatrixEvaluator('dark');
+            }
         }
         this.engine = new Chess(this.fenString);
         console.log('created new engine');

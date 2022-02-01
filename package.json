@@ -7,7 +7,8 @@
         "build": "vue-cli-service build --modern",
         "ui": "vue ui",
         "lint": "vue-cli-service lint",
-        "test": "jest ./tests/*"
+        "test": "jest ./tests/*",
+        "deploy": "npm run build && cd dist && git init && git add -A && git commit -m 'deploy' && git push -f https://github.com/SimplyNate/simply-chess.git master:gh-pages"
     },
     "dependencies": {
         "bootstrap": "^5.1.3",

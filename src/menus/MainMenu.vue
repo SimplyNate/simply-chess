@@ -47,6 +47,7 @@ export default defineComponent({
             useAi: false,
             aiList: [
                 'RandomMover',
+                'MatrixEvaluator',
             ],
             selectedAi: 'RandomMover',
             playAs: 'light',

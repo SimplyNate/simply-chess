@@ -53,7 +53,10 @@ export class MatrixEvaluator extends AI {
         if (allMoves.length > 0) {
             // Sort in ascending order
             allMoves.sort((a, b) => a.score - b.score);
-            return { from: allMoves[allMoves.length - 1].from, to: allMoves[allMoves.length - 1].to };
+            const highScore = allMoves[allMoves.length - 1].score;
+            const maxMoveScores = allMoves.filter((move) => move.score === highScore);
+            const randInt = Math.floor(Math.random() * maxMoveScores.length);
+            return { from: maxMoveScores[randInt].from, to: maxMoveScores[randInt].to };
         }
         return { from: '', to: '' };
     }
