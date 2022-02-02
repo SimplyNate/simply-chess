@@ -130,6 +130,13 @@ export class Chess {
                 movePiece.move(to);
                 if (movePiece.name === 'Pawn' && (movePiece.rank === 1 || movePiece.rank === 8)) {
                     movePiece = new Queen(movePiece.color, movePiece.position);
+                    for (let i = 0; i < this.piecesByColor[movePiece.color].length; i++) {
+                        if (this.piecesByColor[movePiece.color][i] === this.piecesByLocation[movePiece.position]) {
+                            this.piecesByColor[movePiece.color].splice(i, 1);
+                            break;
+                        }
+                    }
+                    this.piecesByColor[movePiece.color].push(movePiece);
                 }
                 this.piecesByLocation[to] = movePiece;
                 this.boardMap[to] = movePiece.code;

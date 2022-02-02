@@ -429,14 +429,22 @@ describe('Full game test', () => {
 });
 
 describe('pawn promotions', () => {
-    test('black pawn promotion', () => {
+    test('dark pawn promotion', () => {
         const chess = new Chess('8/P2k4/8/8/8/8/3K2p1/8 b - - 0 1');
         chess.move('g-2', 'g-1');
         expect(chess.fenString).toBe('8/P2k4/8/8/8/8/3K4/6q1 w - - 1 2');
+        const darkQueen = chess.piecesByLocation['g-1'];
+        expect(darkQueen.position).toBe('g-1');
+        expect(darkQueen.legalMoves).toHaveLength(21);
+        expect(darkQueen.legalMoves?.includes('g-1')).toBeFalsy();
     });
-    test('white pawn promotion', () => {
+    test('light pawn promotion', () => {
         const chess = new Chess('8/P2k4/8/8/8/8/3K2p1/8 w - - 0 1');
         chess.move('a-7', 'a-8');
         expect(chess.fenString).toBe('Q7/3k4/8/8/8/8/3K2p1/8 b - - 1 1');
+        const darkQueen = chess.piecesByLocation['a-8'];
+        expect(darkQueen.position).toBe('a-8');
+        expect(darkQueen.legalMoves).toHaveLength(20);
+        expect(darkQueen.legalMoves?.includes('a-8')).toBeFalsy();
     });
 });

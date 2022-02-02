@@ -41,6 +41,7 @@ export class MatrixEvaluator extends AI {
     }
 
     move(board: BoardMap, fen: FEN, pieces: Piece[]): { from: string, to: string } {
+        const ret = { from: '', to: '' };
         const allMoves = [];
         for (const piece of pieces) {
             if (piece.color === this.color) {
@@ -56,9 +57,10 @@ export class MatrixEvaluator extends AI {
             const highScore = allMoves[allMoves.length - 1].score;
             const maxMoveScores = allMoves.filter((move) => move.score === highScore);
             const randInt = Math.floor(Math.random() * maxMoveScores.length);
-            return { from: maxMoveScores[randInt].from, to: maxMoveScores[randInt].to };
+            ret.from = maxMoveScores[randInt].from;
+            ret.to = maxMoveScores[randInt].to;
         }
-        return { from: '', to: '' };
+        return ret;
     }
 
     evaluateMove(evaluatedPiece: Piece, move: string, board: BoardMap, fen: FEN, pieces: Piece[]): number {
