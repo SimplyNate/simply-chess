@@ -65,28 +65,53 @@ export class MatrixEvaluator extends AI {
 
     evaluateMove(evaluatedPiece: Piece, move: string, board: BoardMap, fen: FEN, pieces: Piece[]): number {
         let score = 0;
+        const enemies = pieces.filter((piece) => piece.color !== this.color);
+        const allies = pieces.filter((piece) => piece.color === this.color);
+        // If piece is currently in danger, prioritize moving it first
+        if (this.pieceIsInAnotherPiecesMoveSet(evaluatedPiece, enemies)) {
+            score += 1;
+        }
+        if (this.pieceIsCurrentlyDefended(evaluatedPiece, allies)) {
+            score -= 1;
+        }
         const boardOccupation = board[move];
         if (boardOccupation !== 'x') {
             const piece = this.findPieceAtPosition(move, pieces);
             if (piece) {
                 score += this.scores.pieces[piece.name] * this.scores.capture.multiplier;
             }
-            const piecesWithMovesAtPosition = this.findPiecesWithMovesToPosition(move, pieces);
-            if (piecesWithMovesAtPosition) {
-                const defenders = piecesWithMovesAtPosition.filter((piece) => piece.color === this.color);
-                const attackers = piecesWithMovesAtPosition.filter((piece) => piece.color !== this.color);
-                for (const attacker of attackers) {
-                    score += this.scores.pieces[attacker.name] * this.scores.danger.multiplier;
-                }
-                for (const defender of defenders) {
-                    score += this.scores.pieces[defender.name] * this.scores.defending.multiplier;
-                }
+        }
+        const piecesWithMovesAtPosition = this.findPiecesWithMovesToPosition(move, pieces);
+        if (piecesWithMovesAtPosition) {
+            const defenders = piecesWithMovesAtPosition.filter((piece) => piece.color === this.color);
+            const attackers = piecesWithMovesAtPosition.filter((piece) => piece.color !== this.color);
+            for (const attacker of attackers) {
+                score += this.scores.pieces[attacker.name] * this.scores.danger.multiplier;
             }
-            if (this.moveIsForward(evaluatedPiece, move)) {
-                score += 1;
+            for (const defender of defenders) {
+                score += this.scores.pieces[defender.name] * this.scores.defending.multiplier;
             }
         }
+        if (this.moveIsForward(evaluatedPiece, move)) {
+            score += 1;
+        }
         return score;
+    }
+
+    pieceIsCurrentlyDefended(piece: Piece, allies: Piece[]): boolean {
+        for (const ally of allies) {
+            for (const defense of ally.defending) {
+                if (defense.code === piece.code && defense.position === piece.position) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    pieceIsInAnotherPiecesMoveSet(piece: Piece, enemies: Piece[]): boolean {
+        const attackers = this.findPiecesWithMovesToPosition(piece.position, enemies);
+        return attackers ? attackers.length > 0 : false;
     }
 
     findPieceAtPosition(move: string, pieces: Piece[]): Piece | undefined {

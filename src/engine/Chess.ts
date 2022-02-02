@@ -128,6 +128,7 @@ export class Chess {
                     this.boardMap[deleteLocation] = 'x';
                 }
                 movePiece.move(to);
+                // Handle pawn promotion
                 if (movePiece.name === 'Pawn' && (movePiece.rank === 1 || movePiece.rank === 8)) {
                     movePiece = new Queen(movePiece.color, movePiece.position);
                     for (let i = 0; i < this.piecesByColor[movePiece.color].length; i++) {
@@ -500,11 +501,6 @@ export class Chess {
                 this.tie = true;
             }
         }
-    }
-
-    private getPiecesForOppositeColor(color: Color): Piece[] {
-        const oppositeColor = color === 'light' ? 'dark' : 'light';
-        return this.piecesByColor[oppositeColor];
     }
 
     private updateCheckStatus(): void {
