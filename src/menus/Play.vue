@@ -40,6 +40,7 @@
 </template>
 
 <script lang="ts">
+// TODO: Fix bug where AI stops working on dark pawn promotion
 import { defineComponent } from 'vue';
 import CanvasBoard from '@/board/CanvasBoard.vue';
 import { Selection } from '@/board/BoardUtils';
@@ -132,7 +133,7 @@ export default defineComponent({
             this.fenString = this.engine.move(payload.from, payload.to);
             if (this.ai && this.engine.fen.activeColor === 'b') {
                 // @ts-ignore
-                const move = this.ai.move(this.engine.boardMap, this.engine.fen, this.engine.piecesByColor.dark);
+                const move = this.ai.move(this.engine.boardMap, this.engine.fen, [...this.engine.piecesByColor.dark, ...this.engine.piecesByColor.light]);
                 console.log(`AI move: from ${move.from} to ${move.to}`);
                 this.fenString = this.engine.move(move.from, move.to);
             }
