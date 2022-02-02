@@ -13,8 +13,10 @@ export class RandomMover extends AI {
     move(board: BoardMap, fen: FEN, pieces: Piece[]): { from: string, to: string } {
         const allMoves = [];
         for (const piece of pieces) {
-            for (const move of piece.getLegalMoves(board, fen)) {
-                allMoves.push({ from: piece.position, to: move });
+            if (piece.color === this.color) {
+                for (const move of piece.getLegalMoves(board, fen)) {
+                    allMoves.push({ from: piece.position, to: move });
+                }
             }
         }
         if (allMoves.length > 0) {
