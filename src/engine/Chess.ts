@@ -132,11 +132,10 @@ export class Chess {
                     movePiece = new Queen(movePiece.color, movePiece.position);
                     for (let i = 0; i < this.piecesByColor[movePiece.color].length; i++) {
                         if (this.piecesByColor[movePiece.color][i] === this.piecesByLocation[movePiece.position]) {
-                            this.piecesByColor[movePiece.color].splice(i, 1);
+                            this.piecesByColor[movePiece.color].splice(i, 1, movePiece);
                             break;
                         }
                     }
-                    this.piecesByColor[movePiece.color].push(movePiece);
                 }
                 this.piecesByLocation[to] = movePiece;
                 this.boardMap[to] = movePiece.code;
