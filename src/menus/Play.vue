@@ -33,14 +33,13 @@
                 :legal-moves-for-selection="legalMoves"
                 @selected="calculateLegalMoves"
                 @deselected="clearLegalMoves"
-                @move="makeMove"
+                @move="playerMove"
             />
         </div>
     </div>
 </template>
 
 <script lang="ts">
-// TODO: Fix bug where AI stops working on dark pawn promotion
 import { defineComponent } from 'vue';
 import CanvasBoard from '@/board/CanvasBoard.vue';
 import { Selection } from '@/board/BoardUtils';
@@ -58,10 +57,11 @@ interface AppData {
     startingFen: string,
     fenString: string,
     fen: FEN,
-    useAi: boolean,
-    ai: null | AI,
     engine: Chess,
     selectedPiece: string,
+    lightPlayer: string | AI,
+    darkPlayer: string | AI,
+    aiDelay: number,
 }
 
 interface MovePayload {
@@ -91,23 +91,36 @@ export default defineComponent({
                 halfMoveClock: 0,
                 fullMoveNumber: 0,
             },
-            useAi: false,
-            ai: null,
             engine: new Chess(),
             selectedPiece: '',
+            lightPlayer: '',
+            darkPlayer: '',
+            aiDelay: 50,
         };
     },
     mounted() {
         this.fenString = String(this.$route.query.fen);
         this.startingFen = this.fenString;
-        this.useAi = this.$route.query.ai === 'true';
-        if (this.useAi) {
-            console.log('Creating AI player');
-            if (this.$route.query.aiType === 'RandomMover') {
-                this.ai = new RandomMover('dark');
+        this.lightPlayer = String(this.$route.query.lightPlayer);
+        if (this.lightPlayer === 'AI') {
+            console.log('Creating light AI player');
+            const lightAi = String(this.$route.query.lightAi);
+            if (lightAi === 'RandomMover') {
+                this.lightPlayer = new RandomMover('light');
             }
-            else if (this.$route.query.aiType === 'MatrixEvaluator') {
-                this.ai = new MatrixEvaluator('dark');
+            else if (lightAi === 'MatrixEvaluator') {
+                this.lightPlayer = new MatrixEvaluator('light');
+            }
+        }
+        this.darkPlayer = String(this.$route.query.darkPlayer);
+        if (this.darkPlayer === 'AI') {
+            console.log('Creating dark AI player');
+            const darkAi = String(this.$route.query.darkAi);
+            if (darkAi === 'RandomMover') {
+                this.darkPlayer = new RandomMover('dark');
+            }
+            else if (darkAi === 'MatrixEvaluator') {
+                this.darkPlayer = new MatrixEvaluator('dark');
             }
         }
         this.engine = new Chess(this.fenString);
@@ -115,6 +128,7 @@ export default defineComponent({
         this.onResize();
         window.addEventListener('resize', this.onResize);
         this.isMounted = true;
+        this.checkAiMove();
     },
     methods: {
         onResize() {
@@ -129,14 +143,30 @@ export default defineComponent({
             this.selectedPiece = '';
             this.legalMoves.length = 0;
         },
-        makeMove(payload: MovePayload) {
-            this.fenString = this.engine.move(payload.from, payload.to);
-            if (this.ai && this.engine.fen.activeColor === 'b') {
-                // @ts-ignore
-                const move = this.ai.move(this.engine.boardMap, this.engine.fen, [...this.engine.piecesByColor.dark, ...this.engine.piecesByColor.light]);
-                console.log(`AI move: from ${move.from} to ${move.to}`);
-                this.fenString = this.engine.move(move.from, move.to);
+        aiMove(ai: AI) {
+            // @ts-ignore
+            const move = ai.move(this.engine.boardMap, this.engine.fen, [...this.engine.piecesByColor.dark, ...this.engine.piecesByColor.light]);
+            console.log(`AI move: from ${move.from} to ${move.to}`);
+            this.fenString = this.engine.move(move.from, move.to);
+            // noinspection SuspiciousTypeOfGuard
+            if (this.darkPlayer instanceof AI && this.lightPlayer instanceof AI) {
+                setTimeout(this.checkAiMove, this.aiDelay);
             }
+        },
+        checkAiMove() {
+            // noinspection SuspiciousTypeOfGuard
+            if (this.engine.fen.activeColor === 'w' && this.lightPlayer instanceof AI) {
+                this.aiMove(this.lightPlayer);
+            }
+            else { // noinspection SuspiciousTypeOfGuard
+                if (this.engine.fen.activeColor === 'b' && this.darkPlayer instanceof AI) {
+                    this.aiMove(this.darkPlayer);
+                }
+            }
+        },
+        playerMove(payload: MovePayload) {
+            this.fenString = this.engine.move(payload.from, payload.to);
+            this.checkAiMove();
         },
         restart() {
             this.fenString = this.startingFen;
