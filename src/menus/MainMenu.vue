@@ -19,7 +19,15 @@
             </div>
             <div class="row">
                 <div class="col border border-light rounded-1 ms-3 me-3 mt-3">
-                    <h3>Additional Settings</h3>
+                    <h3 class="mt-3">Additional Settings</h3>
+                    <div class="row">
+                        <div class="col border border-light rounded-1 ms-3 me-3 mt-1">
+                            <h5>Light Player</h5>
+                        </div>
+                        <div class="col border border-light rounded-1 ms-3 me-3 mt-1">
+                            <h5>Dark Player</h5>
+                        </div>
+                    </div>
                     <div>Play as:
                         <select v-model="playAs">
                             <option>light</option>
