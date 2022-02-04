@@ -89,11 +89,11 @@ export class MatrixEvaluator extends AI {
                 score += this.scores.pieces[attacker.name] * this.scores.danger.multiplier;
             }
             for (const defender of defenders) {
-                score += this.scores.pieces[defender.name] * this.scores.defending.multiplier;
+                score += this.scores.pieces[defender.name] * this.scores.defending.multiplier * 0;
             }
         }
         if (this.moveIsForward(evaluatedPiece, move)) {
-            score += 1;
+            score += 0;
         }
         return score;
     }

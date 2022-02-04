@@ -298,7 +298,9 @@ export class Chess {
                 const dangerMoves: string[] = [];
                 for (const enemyPiece of enemyPieces) {
                     if (enemyPiece.legalMoves) {
-                        dangerMoves.push(...enemyPiece.legalMoves);
+                        if (enemyPiece.name !== 'Pawn') {
+                            dangerMoves.push(...enemyPiece.legalMoves);
+                        }
                         for (const defense of enemyPiece.defending) {
                             dangerMoves.push(defense.position);
                         }

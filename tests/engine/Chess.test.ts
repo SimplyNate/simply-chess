@@ -448,3 +448,14 @@ describe('pawn promotions', () => {
         expect(darkQueen.legalMoves?.includes('a-8')).toBeFalsy();
     });
 });
+
+describe('random board makeups', () => {
+    test('dark king check, one move, in front of P', () => {
+        const chess = new Chess('Q3k3/8/5P1p/8/7P/8/8/1NKR4 b - - 2 51');
+        const k = chess.kings.k;
+        expect(k.legalMoves).toHaveLength(1);
+        expect(k.legalMoves?.includes('f-7')).toBeTruthy();
+        expect(chess.checkMateStatus).toBeFalsy();
+        expect(chess.checkStatus).toBe('dark');
+    });
+});

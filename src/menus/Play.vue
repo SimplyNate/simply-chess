@@ -114,7 +114,7 @@ export default defineComponent({
             selectedPiece: '',
             lightPlayer: '',
             darkPlayer: '',
-            aiDelay: 50,
+            aiDelay: 100,
             promotionChoices: [
                 'Knight',
                 'Rook',
@@ -180,7 +180,7 @@ export default defineComponent({
         },
         aiMove(ai: AI) {
             const move = ai.move(this.engine.boardMap, this.engine.fen, this.engine.getAllPieces());
-            console.log(`AI move: from ${move.from} to ${move.to}`);
+            console.log(`${ai.color} AI move: from ${move.from} to ${move.to}`);
             this.fenString = this.engine.move(move.from, move.to);
             // noinspection SuspiciousTypeOfGuard
             if (this.darkPlayer instanceof AI && this.lightPlayer instanceof AI) {
@@ -188,13 +188,15 @@ export default defineComponent({
             }
         },
         checkAiMove() {
-            // noinspection SuspiciousTypeOfGuard
-            if (this.engine.fen.activeColor === 'w' && this.lightPlayer instanceof AI) {
-                this.aiMove(this.lightPlayer);
-            }
-            else { // noinspection SuspiciousTypeOfGuard
-                if (this.engine.fen.activeColor === 'b' && this.darkPlayer instanceof AI) {
-                    this.aiMove(this.darkPlayer);
+            if (!this.engine.checkMateStatus) {
+                // noinspection SuspiciousTypeOfGuard
+                if (this.engine.fen.activeColor === 'w' && this.lightPlayer instanceof AI) {
+                    this.aiMove(this.lightPlayer);
+                }
+                else { // noinspection SuspiciousTypeOfGuard
+                    if (this.engine.fen.activeColor === 'b' && this.darkPlayer instanceof AI) {
+                        this.aiMove(this.darkPlayer);
+                    }
                 }
             }
         },
@@ -205,6 +207,7 @@ export default defineComponent({
         restart() {
             this.fenString = this.startingFen;
             this.engine = new Chess(this.fenString);
+            this.checkAiMove();
         },
     },
 });

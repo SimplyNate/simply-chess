@@ -74,6 +74,12 @@ describe('King', () => {
             expect(darkMoves).toHaveLength(1);
             expect(darkMoves.includes('b-4')).toBeTruthy();
         });
+        test('k one legal move in front of P', () => {
+            const { K, k, board, fen } = generateTestingEnvironment('Q3k3/8/5P1p/8/7P/8/8/1NKR4 b - - 2 51');
+            const darkMoves = k.getLegalMoves(board, fen);
+            expect(darkMoves).toHaveLength(1);
+            expect(darkMoves.includes('f-7')).toBeTruthy();
+        });
     });
     describe('getLegalMoves castling situations', () => {
         test('castle possible but not available', () => {
