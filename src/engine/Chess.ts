@@ -38,6 +38,8 @@ export class Chess {
     checkStatus: CheckStatus = 'none';
     checkMateStatus: boolean = false;
     tie: boolean = false;
+    lightPromotionChoice = 'Queen';
+    darkPromotionChoice = 'Queen';
 
     constructor(fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1') {
         this.fen = separateFEN(fen);
@@ -130,7 +132,22 @@ export class Chess {
                 movePiece.move(to);
                 // Handle pawn promotion
                 if (movePiece.name === 'Pawn' && (movePiece.rank === 1 || movePiece.rank === 8)) {
-                    movePiece = new Queen(movePiece.color, movePiece.position);
+                    let promotionChoice = this.lightPromotionChoice;
+                    if (movePiece.color === 'dark') {
+                        promotionChoice = this.darkPromotionChoice;
+                    }
+                    if (promotionChoice === 'Queen') {
+                        movePiece = new Queen(movePiece.color, movePiece.position);
+                    }
+                    else if (promotionChoice === 'Rook') {
+                        movePiece = new Rook(movePiece.color, movePiece.position, '-');
+                    }
+                    else if (promotionChoice === 'Bishop') {
+                        movePiece = new Bishop(movePiece.color, movePiece.position);
+                    }
+                    else {
+                        movePiece = new Knight(movePiece.color, movePiece.position);
+                    }
                     for (let i = 0; i < this.piecesByColor[movePiece.color].length; i++) {
                         if (this.piecesByColor[movePiece.color][i] === this.piecesByLocation[movePiece.position]) {
                             this.piecesByColor[movePiece.color].splice(i, 1, movePiece);

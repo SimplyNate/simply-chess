@@ -14,6 +14,22 @@
                 <p>Tie Status: {{ engine.tie }}</p>
                 <p>Selected Piece: {{ selectedPiece }}</p>
                 <p>Legal Moves: {{ legalMoves }}</p>
+                <div>
+                    <span>Light Promotion: </span>
+                    <select v-model="lightPromotionChoice">
+                        <option v-for="promo of promotionChoices" :key="promo">
+                            {{ promo }}
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <span>Dark Promotion: </span>
+                    <select v-model="darkPromotionChoice">
+                        <option v-for="promo of promotionChoices" :key="promo">
+                            {{ promo }}
+                        </option>
+                    </select>
+                </div>
             </div>
             <div class="w-100" v-if="engine.checkMateStatus">
                 <h2>Winner: {{ engine.checkStatus === 'light' ? 'dark' : 'light' }}</h2>
@@ -62,6 +78,9 @@ interface AppData {
     lightPlayer: string | AI,
     darkPlayer: string | AI,
     aiDelay: number,
+    promotionChoices: string[]
+    lightPromotionChoice: string,
+    darkPromotionChoice: string,
 }
 
 interface MovePayload {
@@ -96,7 +115,23 @@ export default defineComponent({
             lightPlayer: '',
             darkPlayer: '',
             aiDelay: 50,
+            promotionChoices: [
+                'Knight',
+                'Rook',
+                'Bishop',
+                'Queen',
+            ],
+            lightPromotionChoice: 'Queen',
+            darkPromotionChoice: 'Queen',
         };
+    },
+    watch: {
+        lightPromotionChoice() {
+            this.engine.lightPromotionChoice = this.lightPromotionChoice;
+        },
+        darkPromotionChoice() {
+            this.engine.darkPromotionChoice = this.darkPromotionChoice;
+        },
     },
     mounted() {
         this.fenString = String(this.$route.query.fen);
@@ -144,7 +179,6 @@ export default defineComponent({
             this.legalMoves.length = 0;
         },
         aiMove(ai: AI) {
-            // @ts-ignore
             const move = ai.move(this.engine.boardMap, this.engine.fen, this.engine.getAllPieces());
             console.log(`AI move: from ${move.from} to ${move.to}`);
             this.fenString = this.engine.move(move.from, move.to);
