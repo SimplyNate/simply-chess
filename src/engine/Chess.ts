@@ -545,6 +545,14 @@ export class Chess {
     }
      */
 
+    public getAllPieces(): Piece[] {
+        const pieces = [];
+        for (const position of Object.keys(this.piecesByLocation)) {
+            pieces.push(this.piecesByLocation[position]);
+        }
+        return pieces;
+    }
+
     public print(): void {
         console.log(`
 8|${this.boardMap['a-8']}|${this.boardMap['b-8']}|${this.boardMap['c-8']}|${this.boardMap['d-8']}|${this.boardMap['e-8']}|${this.boardMap['f-8']}|${this.boardMap['g-8']}|${this.boardMap['h-8']}|

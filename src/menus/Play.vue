@@ -145,7 +145,7 @@ export default defineComponent({
         },
         aiMove(ai: AI) {
             // @ts-ignore
-            const move = ai.move(this.engine.boardMap, this.engine.fen, [...this.engine.piecesByColor.dark, ...this.engine.piecesByColor.light]);
+            const move = ai.move(this.engine.boardMap, this.engine.fen, this.engine.getAllPieces());
             console.log(`AI move: from ${move.from} to ${move.to}`);
             this.fenString = this.engine.move(move.from, move.to);
             // noinspection SuspiciousTypeOfGuard
