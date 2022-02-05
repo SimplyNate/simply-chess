@@ -25,13 +25,13 @@ export class MatrixEvaluator extends AI {
         },
         // Danger scores represent how dangerous it is to lose this piece
         danger: {
-            multiplier: -5,
+            multiplier: -10,
         },
         defending: {
             multiplier: 1.5,
         },
         defended: {
-            multiplier: 1.5,
+            multiplier: 1.05,
         },
     }
 
@@ -85,11 +85,11 @@ export class MatrixEvaluator extends AI {
         if (piecesWithMovesAtPosition) {
             const defenders = piecesWithMovesAtPosition.filter((piece) => piece.color === this.color);
             const attackers = piecesWithMovesAtPosition.filter((piece) => piece.color !== this.color);
-            for (const attacker of attackers) {
-                score += this.scores.pieces[attacker.name] * this.scores.danger.multiplier;
+            if (defenders.length > 0) {
+                score *= this.scores.defending.multiplier;
             }
-            for (const defender of defenders) {
-                score += this.scores.pieces[defender.name] * this.scores.defending.multiplier;
+            if (attackers.length > 0) {
+                score += 1 * this.scores.danger.multiplier;
             }
         }
         if (this.moveIsForward(evaluatedPiece, move)) {
