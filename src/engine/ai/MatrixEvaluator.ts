@@ -25,7 +25,7 @@ export class MatrixEvaluator extends AI {
         },
         // Danger scores represent how dangerous it is to lose this piece
         danger: {
-            multiplier: -1,
+            multiplier: -5,
         },
         defending: {
             multiplier: 1.5,
@@ -69,7 +69,7 @@ export class MatrixEvaluator extends AI {
         const allies = pieces.filter((piece) => piece.color === this.color);
         // If piece is currently in danger, prioritize moving it first
         if (this.pieceIsInAnotherPiecesMoveSet(evaluatedPiece, enemies)) {
-            score += 1;
+            score += 10;
         }
         if (this.pieceIsCurrentlyDefended(evaluatedPiece, allies)) {
             score -= 1;
@@ -89,7 +89,7 @@ export class MatrixEvaluator extends AI {
                 score += this.scores.pieces[attacker.name] * this.scores.danger.multiplier;
             }
             for (const defender of defenders) {
-                score += this.scores.pieces[defender.name] * this.scores.defending.multiplier * 0;
+                score += this.scores.pieces[defender.name] * this.scores.defending.multiplier;
             }
         }
         if (this.moveIsForward(evaluatedPiece, move)) {
