@@ -148,8 +148,10 @@ export class Chess {
                     else {
                         movePiece = new Knight(movePiece.color, movePiece.position);
                     }
+                    const pieceAtLocation = this.piecesByLocation[from];
                     for (let i = 0; i < this.piecesByColor[movePiece.color].length; i++) {
-                        if (this.piecesByColor[movePiece.color][i] === this.piecesByLocation[movePiece.position]) {
+                        const iterPiece = this.piecesByColor[movePiece.color][i];
+                        if (iterPiece === pieceAtLocation) {
                             this.piecesByColor[movePiece.color].splice(i, 1, movePiece);
                             break;
                         }
