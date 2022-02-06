@@ -26,7 +26,7 @@ export class MatrixEvaluator extends AI {
         },
         // Danger scores represent how dangerous it is to lose this piece
         danger: {
-            multiplier: -10,
+            multiplier: -25,
         },
         defending: {
             multiplier: 1.5,
