@@ -1,6 +1,7 @@
 import AI from './AI';
 import { Color, Piece } from '../pieces/Piece';
 import { BoardMap, FEN } from '../../utils/utils';
+import King from '../pieces/King';
 
 interface GenericScore {
     [index: string]: any
@@ -32,6 +33,9 @@ export class MatrixEvaluator extends AI {
         },
         defended: {
             multiplier: 1.05,
+        },
+        checks: {
+            multiplier: 4,
         },
     }
 
@@ -95,6 +99,10 @@ export class MatrixEvaluator extends AI {
         if (this.moveIsForward(evaluatedPiece, move)) {
             score += 0;
         }
+        // Simulate move and check if it puts king in check
+        if (this.movePutsEnemyKingInCheck(evaluatedPiece, move, board, fen, pieces)) {
+            score *= this.scores.checks.multiplier;
+        }
         return score;
     }
 
@@ -128,5 +136,22 @@ export class MatrixEvaluator extends AI {
             return Number(move[2]) > evaluatedPiece.rank;
         }
         return Number(move[2]) < evaluatedPiece.rank;
+    }
+
+    movePutsEnemyKingInCheck(piece: Piece, move: string, board: BoardMap, fen: FEN, pieces: Piece[]): boolean {
+        let ret = false;
+        const testBoard: BoardMap = JSON.parse(JSON.stringify(board));
+        testBoard[move] = piece.code;
+        testBoard[piece.position] = 'x';
+        const enemyKing = pieces.find((p) => p.name === 'King' && p.color !== piece.color);
+        if (enemyKing instanceof King) {
+            const originalCheckStatus = enemyKing.isInCheck;
+            const originalCheckBy = enemyKing.checkBy;
+            enemyKing.getCheckStatus(testBoard);
+            ret = enemyKing.isInCheck;
+            enemyKing.isInCheck = originalCheckStatus;
+            enemyKing.checkBy = originalCheckBy;
+        }
+        return ret;
     }
 }
