@@ -52,6 +52,26 @@ export abstract class AI {
     evaluateMove(piece: Piece, move: string): number {
         return 0;
     }
+
+    get allyMoves(): string[] {
+        const moves = [];
+        for (const ally of this.allies) {
+            if (ally.legalMoves) {
+                moves.push(...ally.legalMoves);
+            }
+        }
+        return moves;
+    }
+
+    get enemyMoves(): string[] {
+        const moves = [];
+        for (const enemy of this.enemies) {
+            if (enemy.legalMoves) {
+                moves.push(...enemy.legalMoves);
+            }
+        }
+        return moves;
+    }
 }
 
 export default AI;
