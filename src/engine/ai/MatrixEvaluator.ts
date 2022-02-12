@@ -1,6 +1,6 @@
 import AI from './AI';
 import { Color, Piece } from '../pieces/Piece';
-import { BoardMap, FEN } from '../../utils/utils';
+import { BoardMap } from '../../utils/utils';
 import King from '../pieces/King';
 
 interface GenericScore {
@@ -44,25 +44,23 @@ export class MatrixEvaluator extends AI {
         this.name = 'Matrix Evaluator';
     }
 
-    evaluateMove(evaluatedPiece: Piece, move: string, board: BoardMap, fen: FEN, pieces: Piece[]): number {
+    evaluateMove(evaluatedPiece: Piece, move: string): number {
         let score = 0;
-        const enemies = pieces.filter((piece) => piece.color !== this.color);
-        const allies = pieces.filter((piece) => piece.color === this.color);
         // If piece is currently in danger, prioritize moving it first
-        if (this.pieceIsInAnotherPiecesMoveSet(evaluatedPiece, enemies)) {
+        if (this.pieceIsInAnotherPiecesMoveSet(evaluatedPiece, this.enemies)) {
             score += 10;
         }
-        if (this.pieceIsCurrentlyDefended(evaluatedPiece, allies)) {
+        if (this.pieceIsCurrentlyDefended(evaluatedPiece, this.allies)) {
             score -= 1;
         }
-        const boardOccupation = board[move];
+        const boardOccupation = this.board[move];
         if (boardOccupation !== 'x') {
-            const piece = this.findPieceAtPosition(move, pieces);
+            const piece = this.findPieceAtPosition(move, this.pieces);
             if (piece) {
                 score += this.scores.pieces[piece.name] * this.scores.capture.multiplier;
             }
         }
-        const piecesWithMovesAtPosition = this.findPiecesWithMovesToPosition(move, pieces);
+        const piecesWithMovesAtPosition = this.findPiecesWithMovesToPosition(move, this.pieces);
         if (piecesWithMovesAtPosition) {
             const defenders = piecesWithMovesAtPosition.filter((piece) => piece.color === this.color);
             const attackers = piecesWithMovesAtPosition.filter((piece) => piece.color !== this.color);
@@ -77,7 +75,7 @@ export class MatrixEvaluator extends AI {
             score += 0;
         }
         // Simulate move and check if it puts king in check
-        if (this.movePutsEnemyKingInCheck(evaluatedPiece, move, board, fen, pieces)) {
+        if (this.movePutsEnemyKingInCheck(evaluatedPiece, move)) {
             score *= this.scores.checks.multiplier;
         }
         return score;
@@ -115,12 +113,12 @@ export class MatrixEvaluator extends AI {
         return Number(move[2]) < evaluatedPiece.rank;
     }
 
-    movePutsEnemyKingInCheck(piece: Piece, move: string, board: BoardMap, fen: FEN, pieces: Piece[]): boolean {
+    movePutsEnemyKingInCheck(piece: Piece, move: string): boolean {
         let ret = false;
-        const testBoard: BoardMap = JSON.parse(JSON.stringify(board));
+        const testBoard: BoardMap = JSON.parse(JSON.stringify(this.board));
         testBoard[move] = piece.code;
         testBoard[piece.position] = 'x';
-        const enemyKing = pieces.find((p) => p.name === 'King' && p.color !== piece.color);
+        const enemyKing = this.pieces.find((p) => p.name === 'King' && p.color !== piece.color);
         if (enemyKing instanceof King) {
             const originalCheckStatus = enemyKing.isInCheck;
             const originalCheckBy = enemyKing.checkBy;
