@@ -71,6 +71,7 @@ export default defineComponent({
             aiList: [
                 'RandomMover',
                 'MatrixEvaluator',
+                'Deterministic',
             ],
             lightPlayerType: 'Human',
             darkPlayerType: 'AI',

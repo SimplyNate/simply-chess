@@ -64,6 +64,7 @@ import { Chess } from '@/engine/Chess';
 import AI from '@/engine/ai/AI';
 import { RandomMover } from '@/engine/ai/RandomMover';
 import { MatrixEvaluator } from '@/engine/ai/MatrixEvaluator';
+import { Deterministic } from '@/engine/ai/Deterministic';
 
 interface AppData {
     containerHeight: number,
@@ -146,6 +147,9 @@ export default defineComponent({
             else if (lightAi === 'MatrixEvaluator') {
                 this.lightPlayer = new MatrixEvaluator('light');
             }
+            else if (lightAi === 'Deterministic') {
+                this.lightPlayer = new Deterministic('light');
+            }
         }
         this.darkPlayer = String(this.$route.query.darkPlayer);
         if (this.darkPlayer === 'AI') {
@@ -156,6 +160,9 @@ export default defineComponent({
             }
             else if (darkAi === 'MatrixEvaluator') {
                 this.darkPlayer = new MatrixEvaluator('dark');
+            }
+            else if (darkAi === 'Deterministic') {
+                this.darkPlayer = new Deterministic('dark');
             }
         }
         this.engine = new Chess(this.fenString);
