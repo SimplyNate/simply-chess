@@ -1,6 +1,6 @@
 import AI from './AI';
 import { Color, Piece } from '../pieces/Piece';
-import { BoardMap } from '../../utils/utils';
+import { BoardMap } from '@/utils/utils';
 import King from '../pieces/King';
 
 interface GenericScore {
@@ -8,7 +8,6 @@ interface GenericScore {
 }
 
 export class MatrixEvaluator extends AI {
-    name: string;
     scores: GenericScore = {
         pieces: {
             Pawn: 1,
@@ -40,8 +39,9 @@ export class MatrixEvaluator extends AI {
     }
 
     constructor(color: Color) {
-        super(color);
-        this.name = 'Matrix Evaluator';
+        super(color, 'Matrix Evaluator', new Promise<boolean>((resolve) => {
+            resolve(true);
+        }));
     }
 
     evaluateMove(evaluatedPiece: Piece, move: string): number {

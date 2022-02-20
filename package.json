@@ -11,6 +11,7 @@
         "deploy": "npm run build && cd dist && git init && git add -A && git commit -m 'deploy' && git push -f https://github.com/SimplyNate/simply-chess.git master:gh-pages"
     },
     "dependencies": {
+        "@tensorflow/tfjs": "^3.13.0",
         "bootstrap": "^5.1.3",
         "core-js": "^3.19.1",
         "pixi.js": "^6.2.0",

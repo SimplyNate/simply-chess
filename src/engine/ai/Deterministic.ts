@@ -2,11 +2,12 @@ import AI from './AI';
 import { Color, Piece } from '../pieces/Piece';
 
 export class Deterministic extends AI {
-    name: string;
+    highestScore: number = 0;
 
     constructor(color: Color) {
-        super(color);
-        this.name = 'Deterministic';
+        super(color, 'Deterministic', new Promise<boolean>((resolve) => {
+            resolve(true);
+        }));
     }
 
     evaluateMove(piece: Piece, move: string): number {

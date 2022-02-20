@@ -1,8 +1,10 @@
 import { Color, Piece } from '../pieces/Piece';
-import { BoardMap, FEN } from '../../utils/utils';
+import { BoardMap, FEN } from '@/utils/utils';
 
 export abstract class AI {
     color: Color;
+    name: string;
+    ready: Promise<boolean>;
     board: BoardMap = {};
     fen: FEN = {
         activeColor: '',
@@ -17,8 +19,10 @@ export abstract class AI {
     enemies: Piece[] = [];
     allies: Piece[] = [];
 
-    protected constructor(color: Color) {
+    protected constructor(color: Color, name: string, readyPromise: Promise<boolean>) {
         this.color = color;
+        this.name = name;
+        this.ready = readyPromise;
     }
 
     move(board: BoardMap, fen: FEN, pieces: Piece[]): { from: string, to: string } {
