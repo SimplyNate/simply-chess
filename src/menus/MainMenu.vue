@@ -72,6 +72,7 @@ export default defineComponent({
                 'RandomMover',
                 'MatrixEvaluator',
                 'Deterministic',
+                'Neural Net',
             ],
             lightPlayerType: 'Human',
             darkPlayerType: 'AI',

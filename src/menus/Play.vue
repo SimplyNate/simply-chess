@@ -65,6 +65,7 @@ import AI from '@/engine/ai/AI';
 import { RandomMover } from '@/engine/ai/RandomMover';
 import { MatrixEvaluator } from '@/engine/ai/MatrixEvaluator';
 import { Deterministic } from '@/engine/ai/Deterministic';
+import { NeuralNet } from '@/engine/ai/NeuralNet';
 
 interface AppData {
     containerHeight: number,
@@ -134,7 +135,7 @@ export default defineComponent({
             this.engine.darkPromotionChoice = this.darkPromotionChoice;
         },
     },
-    mounted() {
+    async mounted() {
         this.fenString = String(this.$route.query.fen);
         this.startingFen = this.fenString;
         this.lightPlayer = String(this.$route.query.lightPlayer);
@@ -150,6 +151,13 @@ export default defineComponent({
             else if (lightAi === 'Deterministic') {
                 this.lightPlayer = new Deterministic('light');
             }
+            else if (lightAi === 'Neural Net') {
+                this.lightPlayer = new NeuralNet('light');
+            }
+            else {
+                this.lightPlayer = new RandomMover('light');
+            }
+            await this.lightPlayer.ready;
         }
         this.darkPlayer = String(this.$route.query.darkPlayer);
         if (this.darkPlayer === 'AI') {
@@ -164,6 +172,13 @@ export default defineComponent({
             else if (darkAi === 'Deterministic') {
                 this.darkPlayer = new Deterministic('dark');
             }
+            else if (darkAi === 'Neural Net') {
+                this.darkPlayer = new NeuralNet('dark');
+            }
+            else {
+                this.darkPlayer = new RandomMover('dark');
+            }
+            await this.darkPlayer.ready;
         }
         this.engine = new Chess(this.fenString);
         console.log('created new engine');
