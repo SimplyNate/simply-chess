@@ -8,7 +8,7 @@ export class NeuralNet extends AI {
 
     constructor(color: Color) {
         super(color, 'Neural Net', new Promise((resolve, reject) => {
-            tf.loadLayersModel(require('./model.json')).then((model) => {
+            tf.loadLayersModel(require('./model/model.json')).then((model) => {
                 this.model = model;
                 resolve(true);
             }).catch((err) => {
