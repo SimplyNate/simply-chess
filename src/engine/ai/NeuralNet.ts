@@ -30,7 +30,15 @@ export class NeuralNet extends AI {
             }
         }
         const body = JSON.stringify({ fen: this.fen, move: uciMove });
-        const output = await fetch('http://127.0.0.1:8000/model/predict', { method: 'POST', body: body });
+        const output = await fetch('http://127.0.0.1:8000/model/predict', {
+            method: 'POST',
+            body: body,
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const score = await output.json();
         /*
         const encodedFen = convertFenToOneHot(this.fen);
         const encodedMove = convertMoveToOneHot(uciMove);
@@ -41,6 +49,6 @@ export class NeuralNet extends AI {
         }
         const output = this.model?.predict(tensors);
          */
-        return Number(output);
+        return Number(score);
     }
 }
