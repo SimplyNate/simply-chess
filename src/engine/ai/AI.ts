@@ -25,7 +25,7 @@ export abstract class AI {
         this.ready = readyPromise;
     }
 
-    move(board: BoardMap, fen: FEN, pieces: Piece[]): { from: string, to: string } {
+    async move(board: BoardMap, fen: FEN, pieces: Piece[]): Promise<{ from: string, to: string }> {
         this.board = board;
         this.fen = fen;
         this.pieces = pieces;
@@ -36,7 +36,7 @@ export abstract class AI {
         for (const piece of pieces) {
             if (piece.color === this.color) {
                 for (const move of piece.getLegalMoves(board, fen)) {
-                    const score = this.evaluateMove(piece, move);
+                    const score = await this.evaluateMove(piece, move);
                     allMoves.push({ from: piece.position, to: move, score });
                 }
             }
@@ -53,7 +53,7 @@ export abstract class AI {
         return ret;
     }
 
-    evaluateMove(piece: Piece, move: string): number {
+    async evaluateMove(piece: Piece, move: string): Promise<number> {
         return 0;
     }
 

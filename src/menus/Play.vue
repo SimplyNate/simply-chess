@@ -200,8 +200,8 @@ export default defineComponent({
             this.selectedPiece = '';
             this.legalMoves.length = 0;
         },
-        aiMove(ai: AI) {
-            const move = ai.move(this.engine.boardMap, this.engine.fen, this.engine.getAllPieces());
+        async aiMove(ai: AI) {
+            const move = await ai.move(this.engine.boardMap, this.engine.fen, this.engine.getAllPieces());
             console.log(`${ai.color} AI move: from ${move.from} to ${move.to}`);
             this.fenString = this.engine.move(move.from, move.to);
             // noinspection SuspiciousTypeOfGuard
@@ -209,15 +209,15 @@ export default defineComponent({
                 setTimeout(this.checkAiMove, this.aiDelay);
             }
         },
-        checkAiMove() {
+        async checkAiMove() {
             if (!this.engine.checkMateStatus) {
                 // noinspection SuspiciousTypeOfGuard
                 if (this.engine.fen.activeColor === 'w' && this.lightPlayer instanceof AI) {
-                    this.aiMove(this.lightPlayer);
+                    await this.aiMove(this.lightPlayer);
                 }
                 else { // noinspection SuspiciousTypeOfGuard
                     if (this.engine.fen.activeColor === 'b' && this.darkPlayer instanceof AI) {
-                        this.aiMove(this.darkPlayer);
+                        await this.aiMove(this.darkPlayer);
                     }
                 }
             }

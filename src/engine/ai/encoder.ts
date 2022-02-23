@@ -102,7 +102,6 @@ export function convertFenToOneHot(fen: FEN): number[] {
 }
 
 export function convertMoveToOneHot(move: string): number[] {
-    console.log(move);
     const encodedMove = [];
     if (move.length > 4) {
         for (let i = 0; i < move.length; i++) {

@@ -44,13 +44,13 @@ export class MatrixEvaluator extends AI {
         }));
     }
 
-    evaluateMove(evaluatedPiece: Piece, move: string): number {
+    async evaluateMove(piece: Piece, move: string): Promise<number> {
         let score = 0;
         // If piece is currently in danger, prioritize moving it first
-        if (this.pieceIsInAnotherPiecesMoveSet(evaluatedPiece, this.enemies)) {
+        if (this.pieceIsInAnotherPiecesMoveSet(piece, this.enemies)) {
             score += 10;
         }
-        if (this.pieceIsCurrentlyDefended(evaluatedPiece, this.allies)) {
+        if (this.pieceIsCurrentlyDefended(piece, this.allies)) {
             score -= 1;
         }
         const boardOccupation = this.board[move];
@@ -71,11 +71,11 @@ export class MatrixEvaluator extends AI {
                 score += 1 * this.scores.danger.multiplier;
             }
         }
-        if (this.moveIsForward(evaluatedPiece, move)) {
+        if (this.moveIsForward(piece, move)) {
             score += 0;
         }
         // Simulate move and check if it puts king in check
-        if (this.movePutsEnemyKingInCheck(evaluatedPiece, move)) {
+        if (this.movePutsEnemyKingInCheck(piece, move)) {
             score *= this.scores.checks.multiplier;
         }
         return score;

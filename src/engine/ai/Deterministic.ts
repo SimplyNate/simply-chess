@@ -10,7 +10,7 @@ export class Deterministic extends AI {
         }));
     }
 
-    evaluateMove(piece: Piece, move: string): number {
+    async evaluateMove(piece: Piece, move: string): Promise<number> {
         if (piece.name === 'Pawn') {
             return this.evaluatePawn(piece, move);
         }

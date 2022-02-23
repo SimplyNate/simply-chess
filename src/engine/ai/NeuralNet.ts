@@ -18,7 +18,7 @@ export class NeuralNet extends AI {
         }));
     }
 
-    evaluateMove(piece: Piece, move: string): number {
+    async evaluateMove(piece: Piece, move: string): Promise<number> {
         const isPawnPromotion = piece.name === 'Pawn' && (move.includes('8') || move.includes('1'));
         let uciMove = `${piece.position}${move}`.replaceAll('-', '');
         if (isPawnPromotion) {
@@ -29,14 +29,18 @@ export class NeuralNet extends AI {
                 uciMove += 'q';
             }
         }
+        const body = JSON.stringify({ fen: this.fen, move: uciMove });
+        const output = await fetch('http://127.0.0.1:8000/model/predict', { method: 'POST', body: body });
+        /*
         const encodedFen = convertFenToOneHot(this.fen);
         const encodedMove = convertMoveToOneHot(uciMove);
         const input = [...encodedFen, ...encodedMove];
         const tensors = [];
         for (const enc of input) {
-            tensors.push(tf.tensor([enc]));
+            tensors.push(tf.tensor([[[enc]]]));
         }
         const output = this.model?.predict(tensors);
+         */
         return Number(output);
     }
 }

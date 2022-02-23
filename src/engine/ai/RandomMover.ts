@@ -8,7 +8,7 @@ export class RandomMover extends AI {
         }));
     }
 
-    evaluateMove(piece: Piece, move: string): number {
+    async evaluateMove(piece: Piece, move: string): Promise<number> {
         return Math.floor(Math.random() * 10);
     }
 }
