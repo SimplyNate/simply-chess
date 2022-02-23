@@ -8,7 +8,7 @@ export class NeuralNet extends AI {
 
     constructor(color: Color) {
         super(color, 'Neural Net', new Promise((resolve, reject) => {
-            tf.loadLayersModel(require('./model/model.json')).then((model) => {
+            tf.loadLayersModel('http://127.0.0.1:8000/model.json').then((model) => {
                 this.model = model;
                 resolve(true);
             }).catch((err) => {
@@ -20,7 +20,7 @@ export class NeuralNet extends AI {
 
     evaluateMove(piece: Piece, move: string): number {
         const isPawnPromotion = piece.name === 'Pawn' && (move.includes('8') || move.includes('1'));
-        let uciMove = `${piece.position}${move}`;
+        let uciMove = `${piece.position}${move}`.replaceAll('-', '');
         if (isPawnPromotion) {
             if (piece.color === 'light') {
                 uciMove += 'Q';
@@ -31,8 +31,12 @@ export class NeuralNet extends AI {
         }
         const encodedFen = convertFenToOneHot(this.fen);
         const encodedMove = convertMoveToOneHot(uciMove);
-        const input = tf.tensor([encodedFen, encodedMove]);
-        const output = this.model?.predict(input);
+        const input = [...encodedFen, ...encodedMove];
+        const tensors = [];
+        for (const enc of input) {
+            tensors.push(tf.tensor([enc]));
+        }
+        const output = this.model?.predict(tensors);
         return Number(output);
     }
 }

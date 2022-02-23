@@ -86,33 +86,47 @@ const fileOneHot: GenericObject = {
     h: [0, 0, 0, 0, 0, 0, 1],
 };
 
-export function convertFenToOneHot(fen: FEN) {
+export function convertFenToOneHot(fen: FEN): number[] {
     const encodedFen = [];
     const rows = fen.piecePlacement.split('/');
     for (const row of rows) {
         const rowArray = convertRowToArray(row);
         for (const token of rowArray) {
-            encodedFen.push(pieceOneHot[token]);
+            encodedFen.push(...pieceOneHot[token]);
         }
     }
-    encodedFen.push(activeColorOneHot[fen.activeColor]);
-    encodedFen.push(castlingOneHot[fen.castlingAvailability]);
-    encodedFen.push(enPassantOneHot[fen.enPassantTargetSquare]);
+    encodedFen.push(...activeColorOneHot[fen.activeColor]);
+    encodedFen.push(...castlingOneHot[fen.castlingAvailability]);
+    encodedFen.push(...enPassantOneHot[fen.enPassantTargetSquare]);
     return encodedFen;
 }
 
-export function convertMoveToOneHot(move: string) {
+export function convertMoveToOneHot(move: string): number[] {
+    console.log(move);
     const encodedMove = [];
-    for (let i = 0; i < move.length; i++) {
-        if (i === 0 || i === 2) {
-            encodedMove.push(fileOneHot[move[i]]);
+    if (move.length > 4) {
+        for (let i = 0; i < move.length; i++) {
+            if (i === 0 || i === 2) {
+                encodedMove.push(...fileOneHot[move[i]]);
+            }
+            else if (i === 1 || i === 3) {
+                encodedMove.push(...rankOneHot[move[i]]);
+            }
+            else {
+                encodedMove.push(...pieceOneHot[move[i]]);
+            }
         }
-        else if (i === 1 || i === 3) {
-            encodedMove.push(rankOneHot[move[i]]);
+    }
+    else {
+        for (let i = 0; i < move.length; i++) {
+            if (i === 0 || i === 2) {
+                encodedMove.push(...fileOneHot[move[i]]);
+            }
+            else {
+                encodedMove.push(...rankOneHot[move[i]]);
+            }
         }
-        else {
-            encodedMove.push(pieceOneHot[move[i]]);
-        }
+        encodedMove.push(...pieceOneHot.x);
     }
     return encodedMove;
 }
