@@ -4,12 +4,12 @@ import * as tf from '@tensorflow/tfjs';
 import { convertFenToOneHot, convertMoveToOneHot } from '@/engine/ai/encoder';
 
 export class NeuralNet extends AI {
-    model: tf.LayersModel | null = null;
+    model: Readonly<tf.LayersModel> | null = null;
 
     constructor(color: Color) {
         super(color, 'Neural Net', new Promise((resolve, reject) => {
             tf.loadLayersModel('http://127.0.0.1:8000/model/model.json').then((model) => {
-                this.model = model;
+                this.model = Object.freeze(model);
                 resolve(true);
             }).catch((err) => {
                 console.error(err);
