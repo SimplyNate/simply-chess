@@ -8,7 +8,7 @@ export class NeuralNet extends AI {
 
     constructor(color: Color) {
         super(color, 'Neural Net', new Promise((resolve, reject) => {
-            tf.loadLayersModel('http://127.0.0.1:8000/model.json').then((model) => {
+            tf.loadLayersModel('http://127.0.0.1:8000/model/model.json').then((model) => {
                 this.model = model;
                 resolve(true);
             }).catch((err) => {
@@ -29,8 +29,9 @@ export class NeuralNet extends AI {
                 uciMove += 'q';
             }
         }
-        const body = JSON.stringify({ fen: this.fen, move: uciMove });
-        const output = await fetch('http://127.0.0.1:8000/model/predict', {
+        /*
+        const body = JSON.stringify({ fen: this.fenString, move: [uciMove] });
+        const output = await fetch('http://127.0.0.1:8000/predict', {
             method: 'POST',
             body: body,
             mode: 'cors',
@@ -39,16 +40,13 @@ export class NeuralNet extends AI {
             },
         });
         const score = await output.json();
-        /*
+         */
         const encodedFen = convertFenToOneHot(this.fen);
         const encodedMove = convertMoveToOneHot(uciMove);
         const input = [...encodedFen, ...encodedMove];
-        const tensors = [];
-        for (const enc of input) {
-            tensors.push(tf.tensor([[[enc]]]));
-        }
-        const output = this.model?.predict(tensors);
-         */
-        return Number(score);
+        const tensor = tf.tensor(input, [829], 'int32').expandDims(0);
+        const output = this.model?.predict(tensor);
+        console.log(output);
+        return Number(output);
     }
 }

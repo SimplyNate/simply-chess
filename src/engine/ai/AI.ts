@@ -1,5 +1,5 @@
 import { Color, Piece } from '../pieces/Piece';
-import { BoardMap, FEN } from '@/utils/utils';
+import { BoardMap, FEN, stringifyFEN } from '@/utils/utils';
 
 export abstract class AI {
     color: Color;
@@ -75,6 +75,10 @@ export abstract class AI {
             }
         }
         return moves;
+    }
+
+    get fenString(): string {
+        return stringifyFEN(this.fen);
     }
 }
 
