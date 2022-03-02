@@ -1,6 +1,12 @@
 import { Color, Piece } from '../pieces/Piece';
 import { BoardMap, FEN, stringifyFEN } from '@/utils/utils';
 
+export interface MoveEvaluation {
+    from: string,
+    to: string,
+    score: number,
+}
+
 export abstract class AI {
     color: Color;
     name: string;
@@ -32,20 +38,12 @@ export abstract class AI {
         this.enemies = this.pieces.filter((piece) => piece.color !== this.color);
         this.allies = this.pieces.filter((piece) => piece.color === this.color);
         const ret = { from: '', to: '' };
-        const allMoves = [];
-        for (const piece of pieces) {
-            if (piece.color === this.color) {
-                for (const move of piece.getLegalMoves(board, fen)) {
-                    const score = await this.evaluateMove(piece, move);
-                    allMoves.push({ from: piece.position, to: move, score });
-                }
-            }
-        }
-        if (allMoves.length > 0) {
+        const scores = await this.evaluateMoves(this.allies);
+        if (scores.length > 0) {
             // Sort in ascending order
-            allMoves.sort((a, b) => a.score - b.score);
-            const highScore = allMoves[allMoves.length - 1].score;
-            const maxMoveScores = allMoves.filter((move) => move.score === highScore);
+            scores.sort((a, b) => a.score - b.score);
+            const highScore = scores[scores.length - 1].score;
+            const maxMoveScores = scores.filter((move) => move.score === highScore);
             const randInt = Math.floor(Math.random() * maxMoveScores.length);
             ret.from = maxMoveScores[randInt].from;
             ret.to = maxMoveScores[randInt].to;
@@ -53,8 +51,8 @@ export abstract class AI {
         return ret;
     }
 
-    async evaluateMove(piece: Piece, move: string): Promise<number> {
-        return 0;
+    async evaluateMoves(pieces: Piece[]): Promise<MoveEvaluation[]> {
+        return [];
     }
 
     get allyMoves(): string[] {
