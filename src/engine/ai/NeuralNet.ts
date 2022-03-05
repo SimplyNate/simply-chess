@@ -50,14 +50,21 @@ export class NeuralNet extends AI {
              */
             const encodedFen = convertFenToOneHot(this.fen);
             const moveEvaluations = [];
+            const preprocessed = [];
             for (const move of uciMoves) {
                 const encodedMove = convertMoveToOneHot(move);
                 const input = [...encodedFen, ...encodedMove];
-                const tensor = tf.tensor(input, [829], 'int32').expandDims(0);
-                const output = this.model.predict(tensor);
-                // @ts-ignore
-                const value = await output.data();
-                moveEvaluations.push({ from: move.slice(0, 2), to: move.slice(2, 4), score: value });
+                preprocessed.push(input);
+                const from = `${move[0]}-${move[1]}`;
+                const to = `${move[2]}-${move[3]}`;
+                moveEvaluations.push({ from, to, score: 0 });
+            }
+            const tensor = tf.tensor(preprocessed, [preprocessed.length, 829], 'int32');
+            const output = this.model.predict(tensor);
+            // @ts-ignore
+            const values = await output.data();
+            for (let i = 0; i < values.length; i++) {
+                moveEvaluations[i].score = values[i];
             }
             return moveEvaluations;
         }
