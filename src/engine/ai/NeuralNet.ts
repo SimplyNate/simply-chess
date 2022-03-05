@@ -37,7 +37,7 @@ export class NeuralNet extends AI {
                 }
             }
             /*
-            const body = JSON.stringify({ fen: this.fenString, move: [uciMove] });
+            const body = JSON.stringify({ fen: this.fenString, moves: uciMoves });
             const output = await fetch('http://127.0.0.1:8000/predict', {
                 method: 'POST',
                 body: body,
