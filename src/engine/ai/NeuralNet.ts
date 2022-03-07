@@ -1,7 +1,7 @@
-import AI, {MoveEvaluation} from './AI';
-import {Color, Piece} from '../pieces/Piece';
+import AI, { MoveEvaluation } from './AI';
+import { Color, Piece } from '../pieces/Piece';
 import * as tf from '@tensorflow/tfjs';
-import {convertFenToOneHot, convertMoveToOneHot} from '@/engine/ai/encoder';
+import { convertFenToOneHot, convertMoveToOneHot } from '@/engine/ai/encoder';
 
 export class NeuralNet extends AI {
     model: Readonly<tf.LayersModel> | null = null;
