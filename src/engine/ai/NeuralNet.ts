@@ -24,27 +24,24 @@ export class NeuralNet extends AI {
     }
 
     async evaluateMoves(pieces: Piece[]): Promise<MoveEvaluation[]> {
-        if (this.model) {
-            const uciMoves = [];
-            for (const piece of pieces) {
-                for (const move of piece.getLegalMoves(this.board, this.fen)) {
-                    const isPawnPromotion = piece.name === 'Pawn' && (move.includes('8') || move.includes('1'));
-                    let uciMove = `${piece.position}${move}`.replaceAll('-', '');
-                    if (isPawnPromotion) {
-                        if (piece.color === 'light') {
-                            uciMove += 'Q';
-                        }
-                        else {
-                            uciMove += 'q';
-                        }
+        const uciMoves = [];
+        for (const piece of pieces) {
+            for (const move of piece.getLegalMoves(this.board, this.fen)) {
+                const isPawnPromotion = piece.name === 'Pawn' && (move.includes('8') || move.includes('1'));
+                let uciMove = `${piece.position}${move}`.replaceAll('-', '');
+                if (isPawnPromotion) {
+                    if (piece.color === 'light') {
+                        uciMove += 'Q';
                     }
-                    uciMoves.push(uciMove);
+                    else {
+                        uciMove += 'q';
+                    }
                 }
+                uciMoves.push(uciMove);
             }
-            return await this.remoteEvaluate(uciMoves);
-            // return await this.localEvaluate(uciMoves);
         }
-        return [];
+        return await this.remoteEvaluate(uciMoves);
+        // return await this.localEvaluate(uciMoves);
     }
 
     createUnscoredEvaluations(uciMoves: string[]): MoveEvaluation[] {
@@ -80,16 +77,17 @@ export class NeuralNet extends AI {
     }
 
     async remoteEvaluate(uciMoves: string[]): Promise<MoveEvaluation[]> {
+        console.log('Performing remote evaluation');
         const body = JSON.stringify({ fen: this.fenString, moves: uciMoves });
         const output = await fetch('http://127.0.0.1:8000/predict', {
             method: 'POST',
             body: body,
-            mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
             },
         });
-        const scores = await output.json() as number[];
+        const out = await output.json();
+        const scores = out.scores;
         const moveEvaluations = this.createUnscoredEvaluations(uciMoves);
         for (let i = 0; i < moveEvaluations.length; i++) {
             moveEvaluations[i].score = scores[i];
