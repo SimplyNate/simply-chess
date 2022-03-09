@@ -7,6 +7,10 @@ export class NeuralNet extends AI {
     model: Readonly<tf.LayersModel> | null = null;
 
     constructor(color: Color) {
+        super(color, 'Neural Net', new Promise((resolve) => {
+            resolve(true);
+        }));
+        /*
         super(color, 'Neural Net', new Promise((resolve, reject) => {
             tf.loadLayersModel('http://127.0.0.1:8000/model/model.json').then((model) => {
                 this.model = Object.freeze(model);
@@ -16,6 +20,7 @@ export class NeuralNet extends AI {
                 reject(err);
             });
         }));
+         */
     }
 
     async evaluateMoves(pieces: Piece[]): Promise<MoveEvaluation[]> {
