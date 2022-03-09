@@ -36,8 +36,8 @@ export class NeuralNet extends AI {
                     uciMoves.push(uciMove);
                 }
             }
-            // return await this.remoteEvaluate(uciMoves);
-            return await this.localEvaluate(uciMoves);
+            return await this.remoteEvaluate(uciMoves);
+            // return await this.localEvaluate(uciMoves);
         }
         return [];
     }
