@@ -1,16 +1,29 @@
-import AI from './AI';
+import AI, { MoveEvaluation } from './AI';
 import { Color, Piece } from '../pieces/Piece';
 
 export class Deterministic extends AI {
-    highestScore: number = 0;
-
     constructor(color: Color) {
         super(color, 'Deterministic', new Promise<boolean>((resolve) => {
             resolve(true);
         }));
     }
 
-    async evaluateMove(piece: Piece, move: string): Promise<number> {
+    async evaluateMoves(pieces: Piece[]): Promise<MoveEvaluation[]> {
+        const moveEvaluations = [];
+        for (const piece of pieces) {
+            for (const move of piece.getLegalMoves(this.board, this.fen)) {
+                const score = this.evaluateMove(piece, move);
+                moveEvaluations.push({
+                    from: piece.position,
+                    to: move.split('-')[1],
+                    score,
+                });
+            }
+        }
+        return moveEvaluations;
+    }
+
+    evaluateMove(piece: Piece, move: string): number {
         if (piece.name === 'Pawn') {
             return this.evaluatePawn(piece, move);
         }
