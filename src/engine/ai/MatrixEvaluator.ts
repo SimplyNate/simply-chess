@@ -1,4 +1,4 @@
-import AI from './AI';
+import AI, { MoveEvaluation } from './AI';
 import { Color, Piece } from '../pieces/Piece';
 import { BoardMap } from '@/utils/utils';
 import King from '../pieces/King';
@@ -44,7 +44,22 @@ export class MatrixEvaluator extends AI {
         }));
     }
 
-    async evaluateMove(piece: Piece, move: string): Promise<number> {
+    async evaluateMoves(pieces: Piece[]): Promise<MoveEvaluation[]> {
+        const moveEvaluations = [];
+        for (const piece of pieces) {
+            for (const move of piece.getLegalMoves(this.board, this.fen)) {
+                const score = this.evaluateMove(piece, move);
+                moveEvaluations.push({
+                    from: piece.position,
+                    to: move.split('-')[1],
+                    score,
+                });
+            }
+        }
+        return moveEvaluations;
+    }
+
+    evaluateMove(piece: Piece, move: string): number {
         let score = 0;
         // If piece is currently in danger, prioritize moving it first
         if (this.pieceIsInAnotherPiecesMoveSet(piece, this.enemies)) {
