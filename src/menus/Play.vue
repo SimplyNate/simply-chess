@@ -92,6 +92,7 @@ interface MovePayload {
 }
 
 export default defineComponent({
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Play',
     components: {
         CanvasBoard,

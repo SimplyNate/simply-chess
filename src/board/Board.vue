@@ -31,6 +31,7 @@ import { defineComponent } from 'vue';
 import { BoardMap, parsePlacementToMap, separateFEN } from '@/utils/utils';
 
 export default defineComponent({
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Board',
     props: {
         currentBoardRepresentation: {
@@ -52,11 +53,11 @@ export default defineComponent({
     },
     emits: ['selected', 'deselect'],
     computed: {
-        cellHeight() {
+        cellHeight(): number {
             return this.sideLength / this.height.length;
         },
         // Return the value with the smallest length
-        sideLength() {
+        sideLength(): number {
             return this.containerWidth > this.containerHeight ? this.containerHeight : this.containerWidth;
         },
     },

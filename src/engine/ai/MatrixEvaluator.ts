@@ -36,7 +36,7 @@ export class MatrixEvaluator extends AI {
         checks: {
             multiplier: 4,
         },
-    }
+    };
 
     constructor(color: Color) {
         super(color, 'Matrix Evaluator', new Promise<boolean>((resolve) => {
